@@ -1,7 +1,8 @@
 # ==============================================================================
 # PLAYER CONTROLLER
 # ------------------------------------------------------------------------------
-# Responsabilidade: movimento, câmera, gravidade, interação.
+# Responsabilidade: movimento, câmera, gravidade, interação. em breve sera
+#fragmentado pra não se tornar um god_entity (muito código em um lugar)
 #
 # TODO (Refatoração 3): extrair Health, Stamina e Inventory para componentes.
 #
