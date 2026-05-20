@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://cg7q5p701ptq7"]
+
+[ext_resource type="Script" uid="uid://bekkum8dpl0gx" path="res://Scripts/UI/pause_menu.gd" id="1_rrvs5"]
+
+[sub_resource type="Theme" id="Theme_8rf44"]
+default_font_size = 50
+
+[sub_resource type="Theme" id="Theme_r2i2h"]
+default_font_size = 40
+
+[sub_resource type="Theme" id="Theme_oykix"]
+default_font_size = 40
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1259609672]
+script = ExtResource("1_rrvs5")
+
+[node name="Panel" type="Panel" parent="." unique_id=1174605292]
+custom_minimum_size = Vector2(800, 500)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=571714305]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -375.0
+offset_top = -250.0
+offset_right = 375.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=179977191]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = SubResource("Theme_8rf44")
+text = "PAUSADO"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer" unique_id=1439209132]
+layout_mode = 2
+theme = SubResource("Theme_r2i2h")
+text = "Retomar"
+
+[node name="Button2" type="Button" parent="Panel/VBoxContainer" unique_id=467118159]
+layout_mode = 2
+size_flags_vertical = 4
+theme = SubResource("Theme_oykix")
+text = "Sair"
+
+[connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Button2" to="." method="_on_quit_button_pressed"]

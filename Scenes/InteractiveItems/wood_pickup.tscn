@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dbybuogphvl03"]
+
+[ext_resource type="Script" uid="uid://cx3jlb80fpmbe" path="res://Scripts/Interactables/wood_pickup.gd" id="1_ffmj5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b61cx"]
+albedo_color = Color(0.62352943, 0.14117648, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ffmj5"]
+material = SubResource("StandardMaterial3D_b61cx")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_j2a4c"]
+height = 1.0
+radius = 0.2
+
+[node name="WoodPickup" type="Node3D" unique_id=1366707345 groups=["interactable"]]
+script = ExtResource("1_ffmj5")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1839515064]
+collision_layer = 73
+collision_mask = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=2045263908]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_ffmj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=87322294]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_j2a4c")

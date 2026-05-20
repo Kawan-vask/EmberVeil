@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bocummn7gseom"]
+
+[ext_resource type="Script" uid="uid://bei66gepspqr6" path="res://Scripts/Enemies/enemy_base.gd" id="1_rnxs8"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rnxs8"]
+radius = 0.51953125
+height = 1.4765625
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu4yt"]
+radius = 0.70410156
+height = 2.2492676
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wmxvo"]
+radius = 1.566622
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmxvo"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_b1gup"]
+material = SubResource("StandardMaterial3D_wmxvo")
+
+[node name="Enemy Base" type="CharacterBody3D" unique_id=1238140130 groups=["enemy"]]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_rnxs8")
+move_speed = 4.3
+max_health = 50.0
+attack_damage = 100.0
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=2041973148]
+debug_path_custom_color = Color(1, 0, 0, 1)
+
+[node name="EnemyCollision" type="CollisionShape3D" parent="." unique_id=362681658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015655518, 0)
+shape = SubResource("CapsuleShape3D_rnxs8")
+
+[node name="Hurtbox" type="Area3D" parent="." unique_id=107665255]
+collision_layer = 4
+collision_mask = 128
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox" unique_id=484542268]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.381958, 0)
+shape = SubResource("CapsuleShape3D_vu4yt")
+debug_color = Color(0.70196074, 0.641636, 0, 0.41960785)
+
+[node name="EnemyAttackArea" type="Area3D" parent="." unique_id=1437865527]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyAttackArea" unique_id=793419876]
+shape = SubResource("SphereShape3D_wmxvo")
+debug_color = Color(0.99609375, 0, 0, 0.41960785)
+
+[node name="Visual" type="Node3D" parent="." unique_id=1593986139]
+
+[node name="Corpo (capsule shape)" type="MeshInstance3D" parent="Visual" unique_id=1629291334]
+transform = Transform3D(1, 0, 0, 0, 0.7244302, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_b1gup")
+
+[connection signal="body_entered" from="EnemyAttackArea" to="." method="_on_enemy_attack_area_body_entered"]
+[connection signal="body_exited" from="EnemyAttackArea" to="." method="_on_enemy_attack_area_body_exited"]

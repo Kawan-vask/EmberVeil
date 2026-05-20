@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://ct0u67yagptc4"]
+
+[ext_resource type="Script" uid="uid://pt5e1lrrqn82" path="res://Scripts/Managers/enemy_director.gd" id="1_htnh3"]
+[ext_resource type="PackedScene" uid="uid://bocummn7gseom" path="res://Scenes/Enemies/enemy_base.tscn" id="2_alfm2"]
+
+[node name="EnemyDirector" type="Node" unique_id=2109909734]
+script = ExtResource("1_htnh3")
+enemy_scene = ExtResource("2_alfm2")

@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://c280liru581cq"]
+
+[ext_resource type="Script" uid="uid://dymj0qfqtthmp" path="res://Scripts/Systems/safe_zone.gd" id="1_p4sc5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mak75"]
+size = Vector3(10, 10, 10)
+
+[node name="SafeZone" type="Area3D" unique_id=808384328]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_p4sc5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=433977761]
+shape = SubResource("BoxShape3D_mak75")
+debug_color = Color(0.03125, 1, 0, 0.41960785)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

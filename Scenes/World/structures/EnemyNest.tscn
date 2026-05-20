@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cey6e8akomi1x"]
+
+[ext_resource type="Script" uid="uid://camy4sc1ninq5" path="res://Scripts/Enemies/enemy_nest.gd" id="1_jtbyl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1qw8y"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 1.89
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jtbyl"]
+material = SubResource("StandardMaterial3D_1qw8y")
+top_radius = 0.3
+height = 0.2
+
+[node name="EnemyNest" type="Marker3D" unique_id=1636461375]
+script = ExtResource("1_jtbyl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1151568913]
+mesh = SubResource("CylinderMesh_jtbyl")

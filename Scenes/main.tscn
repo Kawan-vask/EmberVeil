@@ -1,0 +1,304 @@
+[gd_scene format=3 uid="uid://xweh4jd5jbfj"]
+
+[ext_resource type="Texture2D" uid="uid://6leytow5hr8a" path="res://Assets/Textures/DevTextures/PNG/Dark/texture_09.png" id="1_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://crlmxwvc46sks" path="res://Scenes/Player/player.tscn" id="2_8gbba"]
+[ext_resource type="Texture2D" uid="uid://bguck1xsgobpr" path="res://Assets/Textures/DevTextures/PNG/Light/texture_08.png" id="2_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://c280liru581cq" path="res://Scenes/World/zones/safe_zone.tscn" id="3_344ge"]
+[ext_resource type="PackedScene" uid="uid://dbybuogphvl03" path="res://Scenes/InteractiveItems/wood_pickup.tscn" id="3_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://ct0u67yagptc4" path="res://Scenes/Systems/enemy_director.tscn" id="3_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://cey6e8akomi1x" path="res://Scenes/World/structures/EnemyNest.tscn" id="4_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://b24mj6kwai2au" path="res://Scenes/World/fireplace.tscn" id="5_kry3j"]
+[ext_resource type="PackedScene" uid="uid://i6tfdq5qp1l1" path="res://Scenes/World/bed.tscn" id="6_21xkr"]
+[ext_resource type="PackedScene" uid="uid://cg7q5p701ptq7" path="res://Scenes/UI/pause_menu.tscn" id="10_hptm8"]
+[ext_resource type="PackedScene" uid="uid://beyki1aqk1qfd" path="res://Scenes/UI/death_screen.tscn" id="11_d1ilt"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8gbba"]
+sky_top_color = Color(0.26138005, 0.3149584, 0.38998, 1)
+sky_horizon_color = Color(0.26620203, 0.2697507, 0.28394997, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0.20775539, 0.21259311, 0.22227898, 1)
+
+[sub_resource type="Sky" id="Sky_jjvhh"]
+sky_material = SubResource("ProceduralSkyMaterial_8gbba")
+
+[sub_resource type="Environment" id="Environment_8gbba"]
+background_mode = 1
+background_color = Color(0.019607844, 0.019607844, 0.039215688, 1)
+background_energy_multiplier = 0.2
+sky = SubResource("Sky_jjvhh")
+ambient_light_color = Color(0.050980393, 0.050980393, 0.078431375, 1)
+tonemap_mode = 4
+glow_enabled = true
+glow_bloom = 0.2
+fog_enabled = true
+fog_light_color = Color(0.019607844, 0.019607844, 0.050980393, 1)
+fog_density = 0.03
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_21xkr"]
+vertices = PackedVector3Array(1.25, 0.5, -9.228043, 1.5, 0.5, -8.228043, 5.25, 0.5, -8.228043, 5.5, 0.5, -9.228043, 49.5, 0.5, -150.22804, -49.5, 0.5, -150.22804, -5.5, 0.5, -9.228043, 11.25, 0.5, -9.228043, 11.5, 0.5, -6.9780426, 49.5, 0.5, -6.9780426, -49.5, 0.5, -7.7280426, -5.75, 0.5, -7.4780426, 10.5, 3.5, -8.228043, 6.25, 3.5, -8.228043, 10.25, 3.5, -7.7280426, -4.5, 3.5, -7.7280426, 0.5, 3.5, -8.228043, -4.75, 3.5, -8.228043, 10.5, 3.5, 7.0219574, 10.25, 3.5, 6.5219574, -4.75, 3.5, 7.0219574, -4.25, 3.5, 6.7719574, 1.25, 0.5, -6.9780426, 5.5, 0.5, -6.9780426, -3.5, 0.5, 5.7719574, 9.25, 0.5, 5.7719574, 9.25, 0.5, -6.9780426, -3.5, 0.5, -6.9780426, -49.5, 0.5, 6.5219574, -5.75, 0.5, 6.2719574, 11.5, 0.5, 5.7719574, 49.5, 0.5, 5.7719574, 11.25, 0.5, 8.021957, 9.25, 0.5, 49.521957, 49.5, 0.5, 49.521957, 9.25, 0.5, 8.021957, -3.5, 0.5, 49.521957, -3.5, 0.5, 8.021957, -5.5, 0.5, 8.021957, -49.5, 0.5, 49.521957)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(6, 5, 0), PackedInt32Array(0, 5, 4), PackedInt32Array(8, 7, 9), PackedInt32Array(9, 7, 4), PackedInt32Array(11, 10, 6), PackedInt32Array(6, 10, 5), PackedInt32Array(4, 3, 0), PackedInt32Array(4, 7, 3), PackedInt32Array(14, 13, 12), PackedInt32Array(17, 16, 15), PackedInt32Array(19, 14, 18), PackedInt32Array(18, 14, 12), PackedInt32Array(21, 20, 15), PackedInt32Array(15, 20, 17), PackedInt32Array(19, 18, 21), PackedInt32Array(21, 18, 20), PackedInt32Array(2, 23, 1), PackedInt32Array(1, 23, 22), PackedInt32Array(23, 25, 22), PackedInt32Array(22, 25, 24), PackedInt32Array(23, 26, 25), PackedInt32Array(24, 27, 22), PackedInt32Array(29, 28, 11), PackedInt32Array(11, 28, 10), PackedInt32Array(8, 9, 30), PackedInt32Array(30, 9, 31), PackedInt32Array(30, 31, 32), PackedInt32Array(32, 31, 34), PackedInt32Array(32, 34, 33), PackedInt32Array(33, 35, 32), PackedInt32Array(38, 37, 36), PackedInt32Array(38, 36, 29), PackedInt32Array(29, 36, 28), PackedInt32Array(28, 36, 39), PackedInt32Array(37, 35, 36), PackedInt32Array(36, 35, 33)]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jjvhh"]
+albedo_texture = ExtResource("1_bo1nx")
+uv1_scale = Vector3(10, 10, 10)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kry3j"]
+material = SubResource("StandardMaterial3D_jjvhh")
+size = Vector2(10, 10)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_jjvhh"]
+data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kry3j"]
+albedo_color = Color(0.7411765, 0.69411767, 1, 1)
+albedo_texture = ExtResource("2_jjvhh")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_21xkr"]
+material = SubResource("StandardMaterial3D_kry3j")
+size = Vector3(1, 3, 5)
+subdivide_width = 1
+subdivide_height = 1
+subdivide_depth = 1
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_6bp64"]
+points = PackedVector3Array(-0.5, -1.5, -2.5, -0.5, 1.5, -2.5, 0.5, -1.5, -2.5, -0.5, -1.5, 2.5, 0.5, 1.5, -2.5, -0.5, 1.5, 2.5, 0.5, -1.5, 2.5, 0.5, 1.5, 2.5)
+
+[node name="Main" type="Node3D" unique_id=552916765]
+
+[node name="World" type="Node3D" parent="." unique_id=63189926]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=1777614209]
+environment = SubResource("Environment_8gbba")
+
+[node name="EnemyDirector" parent="World" unique_id=1800559500 instance=ExtResource("3_ynf5e")]
+
+[node name="Zones" type="Node3D" parent="World" unique_id=1691288822]
+
+[node name="SafeZone" parent="World/Zones" unique_id=808384328 instance=ExtResource("3_344ge")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 3.5, 0, -0.5)
+
+[node name="Player" type="Node3D" parent="World" unique_id=272005501]
+
+[node name="Player2" parent="World/Player" unique_id=492244781 instance=ExtResource("2_8gbba")]
+transform = Transform3D(0.032771397, 0, -0.9994629, 0, 1, 0, 0.9994629, 0, 0.032771397, 0, 0, 0)
+
+[node name="Ilumination" type="Node3D" parent="World" unique_id=1955161380]
+visible = false
+
+[node name="Nests" type="Node3D" parent="World" unique_id=1209334911]
+
+[node name="EnemyNest" parent="World/Nests" unique_id=1636461375 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0, -31)
+
+[node name="EnemyNest2" parent="World/Nests" unique_id=251359277 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5, 0, -31)
+
+[node name="EnemyNest3" parent="World/Nests" unique_id=1248851436 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -83)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="World" unique_id=671041340]
+navigation_mesh = SubResource("NavigationMesh_21xkr")
+
+[node name="Ground" type="StaticBody3D" parent="World/NavigationRegion3D" unique_id=1133362286]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+
+[node name="Plane" type="MeshInstance3D" parent="World/NavigationRegion3D/Ground" unique_id=648879852]
+mesh = SubResource("PlaneMesh_kry3j")
+
+[node name="groundCollision" type="CollisionShape3D" parent="World/NavigationRegion3D/Ground" unique_id=1463824744]
+shape = SubResource("ConcavePolygonShape3D_jjvhh")
+debug_color = Color(1, 0.003921569, 0.09411765, 0.20784314)
+debug_fill = false
+
+[node name="Ground2" type="StaticBody3D" parent="World/NavigationRegion3D" unique_id=38179699]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, -100.72804)
+collision_mask = 0
+
+[node name="Plane" type="MeshInstance3D" parent="World/NavigationRegion3D/Ground2" unique_id=1550676930]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.010000001, 0.065000534)
+mesh = SubResource("PlaneMesh_kry3j")
+
+[node name="groundCollision" type="CollisionShape3D" parent="World/NavigationRegion3D/Ground2" unique_id=1376035690]
+shape = SubResource("ConcavePolygonShape3D_jjvhh")
+debug_color = Color(1, 0.003921569, 0.09411765, 0.20784314)
+debug_fill = false
+
+[node name="Walls" type="Node3D" parent="World/NavigationRegion3D" unique_id=467387634]
+
+[node name="Wall1" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1624089405]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.300257, 1.5, 0)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=241624151]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=1428909197]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=1989168866]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall2" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=728695245]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.300257, 1.5, -5)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall2" unique_id=302216210]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall2" unique_id=1514608701]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall3" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1209541061]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.300257, 1.5, 5)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall3" unique_id=1240506999]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall3" unique_id=781292431]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall4" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1249270341]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.3002567, 1.5, 7)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall4" unique_id=939142053]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall4" unique_id=1238018483]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall5" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=129315468]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.3002567, 1.5, 7)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall5" unique_id=15844259]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall5" unique_id=2092441084]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall6" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=2101558722]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.6997433, 1.5, 7)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall6" unique_id=2031249515]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall6" unique_id=691833706]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall7" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1071298203]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6997433, 1.5, 4)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall7" unique_id=1592785911]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall7" unique_id=226601667]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall8" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1692439992]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6997433, 1.5, -1)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall8" unique_id=1531958603]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall8" unique_id=1061633647]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall9" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=712462467]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6997433, 1.5, -6)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall9" unique_id=893419793]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall9" unique_id=28540766]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall10" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=256374538]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.300257, 1.5, -8)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall10" unique_id=73969524]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall10" unique_id=669458309]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall11" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=229314090]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.6997433, 1.5, -8)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall11" unique_id=2130121736]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall11" unique_id=2091856659]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Interactibles" type="Node3D" parent="." unique_id=1845153640]
+
+[node name="Madeira" type="Node3D" parent="Interactibles" unique_id=1083452393]
+
+[node name="WoodPickup6" parent="Interactibles/Madeira" unique_id=1366707345 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9460673, 0.219414, 3.20542)
+
+[node name="WoodPickup11" parent="Interactibles/Madeira" unique_id=541892152 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3314974, 0.219414, 3.20542)
+
+[node name="WoodPickup18" parent="Interactibles/Madeira" unique_id=2046175972 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.61482394, 0.219414, 3.20542)
+
+[node name="WoodPickup19" parent="Interactibles/Madeira" unique_id=1004731098 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03554082, 0.219414, 3.20542)
+
+[node name="WoodPickup20" parent="Interactibles/Madeira" unique_id=425483914 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.57856417, 0.219414, 3.20542)
+
+[node name="WoodPickup7" parent="Interactibles/Madeira" unique_id=1677206236 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5969148, 0.219414, 3.20542)
+
+[node name="WoodPickup8" parent="Interactibles/Madeira" unique_id=1600524912 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1919293, 0.219414, 3.20542)
+
+[node name="WoodPickup9" parent="Interactibles/Madeira" unique_id=370207553 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8461661, 0.219414, 3.20542)
+
+[node name="WoodPickup10" parent="Interactibles/Madeira" unique_id=1308219499 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.438615, 0.219414, 3.20542)
+
+[node name="WoodPickup12" parent="Interactibles/Madeira" unique_id=1597005832 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1074853, 0.219414, 3.20542)
+
+[node name="WoodPickup13" parent="Interactibles/Madeira" unique_id=1137081849 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.628059, 0.219414, 3.20542)
+
+[node name="WoodPickup14" parent="Interactibles/Madeira" unique_id=506818761 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.249879, 0.219414, 3.20542)
+
+[node name="WoodPickup15" parent="Interactibles/Madeira" unique_id=1566943997 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9231405, 0.219414, 3.20542)
+
+[node name="WoodPickup16" parent="Interactibles/Madeira" unique_id=628238924 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6854744, 0.219414, 3.20542)
+
+[node name="WoodPickup17" parent="Interactibles/Madeira" unique_id=1879791915 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.31316, 0.219414, 3.20542)
+
+[node name="WoodPickup21" parent="Interactibles/Madeira" unique_id=52083835 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.010398, 0.219414, 3.20542)
+
+[node name="Fireplace" parent="Interactibles" unique_id=1933277327 instance=ExtResource("5_kry3j")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.345, 0.8181734, -0.039)
+
+[node name="Bed" parent="Interactibles" unique_id=828787208 instance=ExtResource("6_21xkr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 8.00922, 0, -3.3993378)
+
+[node name="UI" type="Node3D" parent="." unique_id=1408421820]
+
+[node name="PauseMenu" parent="UI" unique_id=1259609672 instance=ExtResource("10_hptm8")]
+
+[node name="DeathScreen" parent="UI" unique_id=1132231461 instance=ExtResource("11_d1ilt")]
