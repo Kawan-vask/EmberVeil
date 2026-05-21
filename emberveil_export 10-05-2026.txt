@@ -3,6 +3,99 @@
 ============================================================
 
 ============================================================
+ARQUIVO: Resources\night_config.gd
+============================================================
+# ==============================================================================
+# NIGHT CONFIG
+# ------------------------------------------------------------------------------
+# Resource que centraliza todas as fórmulas de escalada por noite.
+#
+# Uso:
+# - Crie um .tres no Inspector herdando deste script
+# - Arraste o .tres no GameManager e no EnemyDirector
+# - Para dificuldades diferentes: crie novos .tres (night_config_hard.tres, etc)
+# ==============================================================================
+
+class_name NightConfig
+extends Resource
+
+
+# ==============================================================================
+#region MADEIRA
+# ==============================================================================
+
+## Objetivo de madeira na noite 1
+@export var base_wood_goal: int = 5
+
+## Madeira adicional por noite
+## Noite 1: 5 | Noite 2: 7 | Noite 3: 9...
+@export var wood_per_night: int = 2
+
+#endregion
+
+
+# ==============================================================================
+#region INIMIGOS — LIMITE DE VIVOS
+# ==============================================================================
+
+## Máximo de inimigos vivos simultâneos na noite 1
+@export var base_max_alive: int = 3
+
+## Inimigos vivos adicionais por noite
+## Noite 1: 3 | Noite 2: 4 | Noite 3: 5...
+@export var max_alive_per_night: int = 1
+
+#endregion
+
+
+# ==============================================================================
+#region INIMIGOS — WAVE SIZE
+# ==============================================================================
+
+## Tamanho da wave na noite 1
+@export var base_wave_size: int = 4
+
+## Inimigos adicionais por wave a cada noite
+## Noite 1: 4 | Noite 2: 6 | Noite 3: 8...
+@export var wave_size_per_night: int = 2
+
+#endregion
+
+
+# ==============================================================================
+#region API PÚBLICA
+# ==============================================================================
+
+## Retorna o objetivo de madeira para a noite informada
+func get_wood_goal(night: int) -> int:
+	return base_wood_goal + (night - 1) * wood_per_night
+
+
+## Retorna o máximo de inimigos vivos para a noite informada
+func get_max_alive(night: int) -> int:
+	return base_max_alive + (night - 1) * max_alive_per_night
+
+
+## Retorna o tamanho da wave para a noite informada
+func get_wave_size(night: int) -> int:
+	return base_wave_size + (night - 1) * wave_size_per_night
+
+#endregion
+
+
+============================================================
+ARQUIVO: Resources\night_config_normal.tres
+============================================================
+[gd_resource type="Resource" script_class="NightConfig" format=3 uid="uid://bhfbphbw6oajl"]
+
+[ext_resource type="Script" uid="uid://bdb3evu26j527" path="res://Resources/night_config.gd" id="1_ad5ht"]
+
+[resource]
+script = ExtResource("1_ad5ht")
+metadata/_custom_type_script = "uid://bdb3evu26j527"
+
+
+============================================================
 ARQUIVO: Scenes\main.tscn
 ============================================================
 [gd_scene format=3 uid="uid://xweh4jd5jbfj"]
@@ -317,6 +410,7 @@ ARQUIVO: Scenes\Enemies\enemy_base.tscn
 [gd_scene format=3 uid="uid://bocummn7gseom"]
 
 [ext_resource type="Script" uid="uid://bei66gepspqr6" path="res://Scripts/Enemies/enemy_base.gd" id="1_rnxs8"]
+[ext_resource type="Resource" uid="uid://dmgyv0ju03whq" path="res://Scripts/Enemies/Resources/enemy_base_data.tres" id="2_vu4yt"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rnxs8"]
 radius = 0.51953125
@@ -341,9 +435,7 @@ material = SubResource("StandardMaterial3D_wmxvo")
 collision_layer = 4
 collision_mask = 7
 script = ExtResource("1_rnxs8")
-move_speed = 4.3
-max_health = 50.0
-attack_damage = 100.0
+data = ExtResource("2_vu4yt")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=2041973148]
 debug_path_custom_color = Color(1, 0, 0, 1)
@@ -424,7 +516,9 @@ ARQUIVO: Scenes\Player\player.tscn
 [ext_resource type="Script" uid="uid://cp38dqgyol01f" path="res://Scripts/Player/Components/health_component.gd" id="2_htcer"]
 [ext_resource type="Script" uid="uid://cg5iafgr1e52o" path="res://Scripts/Player/lantern.gd" id="2_mtuoh"]
 [ext_resource type="Texture2D" uid="uid://d28vy5r0mdhe4" path="res://Assets/UI/Crosshairs/crosshair001.png" id="2_xpcdj"]
+[ext_resource type="Script" uid="uid://b4efv4gcpxm88" path="res://Scripts/Player/Components/stamina_component.gd" id="3_dd0ac"]
 [ext_resource type="Texture2D" uid="uid://mddhx3c1a2b6" path="res://Assets/UI/Crosshairs/crosshair123.png" id="3_mtuoh"]
+[ext_resource type="Script" uid="uid://mg8ohbpohli" path="res://Scripts/Player/Components/inventory_component.gd" id="4_0u5uq"]
 
 [sub_resource type="Curve" id="Curve_mtuoh"]
 _data = [Vector2(0.06074766, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.20224726), 0.0, 0.0, 0, 0]
@@ -492,23 +586,18 @@ size = Vector3(0.15, 0.1, 1)
 collision_layer = 2
 collision_mask = 77
 script = ExtResource("1_uvnfx")
-walk_speed = null
-sprint_speed = null
-gravity = null
 mouse_sensitivity = 0.001
-acceleration = null
-deceleration = null
-max_stamina = null
-stamina_drain = 20.0
-stamina_recovery = 15.0
-stamina_recovery_delay = 2.0
-max_health = null
-invincibility_duration = null
 
 [node name="Components" type="Node" parent="." unique_id=121071798]
 
 [node name="HealthComponent" type="Node" parent="Components" unique_id=382712998]
 script = ExtResource("2_htcer")
+
+[node name="StaminaComponent" type="Node" parent="Components" unique_id=344412697]
+script = ExtResource("3_dd0ac")
+
+[node name="InventoryComponent" type="Node" parent="Components" unique_id=84566596]
+script = ExtResource("4_0u5uq")
 
 [node name="Head" type="Node3D" parent="." unique_id=718504675]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3784182, 0)
@@ -640,10 +729,12 @@ ARQUIVO: Scenes\Systems\enemy_director.tscn
 
 [ext_resource type="Script" uid="uid://pt5e1lrrqn82" path="res://Scripts/Managers/enemy_director.gd" id="1_htnh3"]
 [ext_resource type="PackedScene" uid="uid://bocummn7gseom" path="res://Scenes/Enemies/enemy_base.tscn" id="2_alfm2"]
+[ext_resource type="Resource" uid="uid://bhfbphbw6oajl" path="res://Resources/night_config_normal.tres" id="3_fup4f"]
 
 [node name="EnemyDirector" type="Node" unique_id=2109909734]
 script = ExtResource("1_htnh3")
 enemy_scene = ExtResource("2_alfm2")
+night_config = ExtResource("3_fup4f")
 
 
 ============================================================
@@ -1143,6 +1234,55 @@ ARQUIVO: Scripts\Enemies\enemy_base.gd
 class_name EnemyBase
 extends CharacterBody3D
 
+# ==============================================================================
+#region DADOS
+# ==============================================================================
+
+## Resource com todos os stats deste inimigo.
+## Arraste o .tres correspondente no Inspector.
+@export var data: EnemyData
+
+#endregion
+
+# ==============================================================================
+#region CONFIGURAÇÃO — MOVIMENTO
+# ==============================================================================
+
+var move_speed: float     = 3.5
+var rotation_speed: float = 6.0
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — VIDA
+# ==============================================================================
+
+var max_health: float     = 50.0
+var current_health: float = max_health
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — ATAQUE
+# ==============================================================================
+
+var attack_damage: float  = 10.0
+var attack_cooldown: float = 1.0
+var attack_timer: float   = 0.0
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — DESPAWN
+# ==============================================================================
+
+var despawn_distance: float = 65.0
+
+#endregion
+
 
 # ==============================================================================
 #region ESTADOS
@@ -1155,51 +1295,6 @@ enum State {
 }
 
 var current_state: State = State.CHASE
-
-#endregion
-
-
-# ==============================================================================
-#region CONFIGURAÇÃO — MOVIMENTO
-# ==============================================================================
-
-@export var move_speed: float = 3.5
-@export var rotation_speed: float = 6.0
-
-#endregion
-
-
-# ==============================================================================
-#region CONFIGURAÇÃO — VIDA
-# ==============================================================================
-
-@export var max_health: float = 100.0
-
-var current_health: float = max_health
-
-#endregion
-
-
-# ==============================================================================
-#region CONFIGURAÇÃO — ATAQUE
-# ==============================================================================
-
-@export var attack_damage: float = 10.0
-@export var attack_cooldown: float = 1.0
-
-var attack_timer: float = 0.0
-
-#endregion
-
-
-# ==============================================================================
-#region CONFIGURAÇÃO — DESPAWN
-# ------------------------------------------------------------------------------
-# IMPORTANTE: despawn_distance DEVE ser maior que max_spawn_distance do Director
-# (atualmente 50.0) para evitar que inimigos sejam despawnados logo após spawnar.
-# ==============================================================================
-
-@export var despawn_distance: float = 65.0
 
 #endregion
 
@@ -1252,6 +1347,11 @@ var _is_active: bool = false
 ## do Jolt ter registrado o CharacterBody3D no espaço físico.
 var _frames_since_activate: int = 0
 
+## Throttle de navegação — evita recalcular path todo frame (caro)
+## NavigationAgent atualiza a cada 0.15s em vez de 60x por segundo
+var _nav_timer: float = 0.0
+const NAV_THROTTLE: float = 0.15
+
 #endregion
 
 
@@ -1260,6 +1360,18 @@ var _frames_since_activate: int = 0
 # ==============================================================================
 
 func activate() -> void:
+	# Lê stats do Resource
+	if data != null:
+		max_health      = data.max_health
+		move_speed      = data.move_speed
+		rotation_speed  = data.rotation_speed
+		attack_damage   = data.attack_damage
+		attack_cooldown = data.attack_cooldown
+		despawn_distance = data.despawn_distance
+
+	current_health         = max_health
+	current_state          = State.CHASE
+	
 	player = get_tree().get_first_node_in_group("player")
 	current_health = max_health
 	current_state = State.CHASE
@@ -1273,6 +1385,7 @@ func activate() -> void:
 func reset() -> void:
 	_is_active = false
 	_frames_since_activate = 0
+	_nav_timer = 0.0
 	player = null
 	current_state = State.DEAD
 	slow_multiplier = 1.0
@@ -1332,7 +1445,11 @@ func _handle_chase(delta: float) -> void:
 		_change_state(State.ATTACK)
 		return
 
-	nav_agent.target_position = player.global_position
+	# Throttle — só recalcula o path a cada 0.15s
+	_nav_timer -= delta
+	if _nav_timer <= 0.0:
+		_nav_timer = NAV_THROTTLE
+		nav_agent.target_position = player.global_position
 
 	var next_position: Vector3 = nav_agent.get_next_path_position()
 	var direction: Vector3 = (next_position - global_position).normalized()
@@ -1448,7 +1565,6 @@ func _on_enemy_attack_area_body_exited(body: Node3D) -> void:
 
 #endregion
 
-
 # ==============================================================================
 #region SIGNAL BUS — SAFE ZONE
 # ==============================================================================
@@ -1471,6 +1587,84 @@ extends Marker3D
 func can_spawn() -> bool:
 
 	return enabled
+
+
+============================================================
+ARQUIVO: Scripts\Enemies\Resources\enemy_base_data.tres
+============================================================
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dmgyv0ju03whq"]
+
+[ext_resource type="Script" uid="uid://ccyj3irl40o6a" path="res://Scripts/Enemies/Resources/enemy_data.gd" id="1_s17tj"]
+
+[resource]
+script = ExtResource("1_s17tj")
+metadata/_custom_type_script = "uid://ccyj3irl40o6a"
+
+
+============================================================
+ARQUIVO: Scripts\Enemies\Resources\enemy_data.gd
+============================================================
+# ==============================================================================
+# ENEMY DATA
+# ------------------------------------------------------------------------------
+# Resource que armazena todos os stats configuráveis de um inimigo.
+#
+# Uso:
+# - Crie um .tres no Inspector herdando deste script
+# - Arraste o .tres no campo "data" do enemy_base.gd
+# - Para variantes futuras (rápido, tanque): crie novos .tres com valores diferentes
+# ==============================================================================
+
+class_name EnemyData
+extends Resource
+
+
+# ==============================================================================
+#region MOVIMENTO
+# ==============================================================================
+
+## Velocidade base de movimento
+@export var move_speed: float = 3.5
+
+## Velocidade de rotação ao encarar o player
+@export var rotation_speed: float = 6.0
+
+#endregion
+
+
+# ==============================================================================
+#region VIDA
+# ==============================================================================
+
+## Vida máxima
+@export var max_health: float = 50.0
+
+#endregion
+
+
+# ==============================================================================
+#region ATAQUE
+# ==============================================================================
+
+## Dano por ataque
+@export var attack_damage: float = 10.0
+
+## Tempo entre ataques em segundos
+@export var attack_cooldown: float = 1.0
+
+#endregion
+
+
+# ==============================================================================
+#region DESPAWN
+# ------------------------------------------------------------------------------
+# IMPORTANTE: deve ser sempre maior que max_spawn_distance do EnemyDirector (50.0)
+# ==============================================================================
+
+## Distância máxima do player antes de ser devolvido ao pool
+@export var despawn_distance: float = 65.0
+
+#endregion
 
 
 ============================================================
@@ -1540,22 +1734,20 @@ func _ready() -> void:
 
 func interact() -> void:
 	var player: Node3D = get_tree().get_first_node_in_group("player")
-
 	if player == null:
 		return
 
-	if player.wood_count <= 0:
+	var wood_count: int = player.inventory.get_wood_count()
+	if wood_count <= 0:
 		return
 
 	var missing_wood: int = GameManager.wood_goal - GameManager.delivered_wood
-	var wood_to_deliver: int = min(player.wood_count, missing_wood)
+	var wood_to_deliver: int = min(wood_count, missing_wood)
 
-	player.wood_count -= wood_to_deliver
+	player.inventory.remove_wood(wood_to_deliver)
 	GameManager.add_delivered_wood(wood_to_deliver)
 
-	# Emite evento global — HUD e outros sistemas podem reagir
 	SignalBus.wood_delivered.emit(wood_to_deliver)
-
 	update_visual()
 
 	DebugManager.log("Fireplace",
@@ -1673,8 +1865,6 @@ static var instance: EnemyDirector
 #region CONFIGURAÇÃO BASE DE WAVES
 # ==============================================================================
 
-@export var base_max_alive: int        = 3
-@export var base_wave_size: int        = 4
 @export var wave_cooldown: float       = 8.0
 @export var spawn_interval: float      = 1.5
 @export var min_spawn_distance: float  = 5.0
@@ -1686,6 +1876,8 @@ static var instance: EnemyDirector
 # ==============================================================================
 #region ESTADO CALCULADO DA NOITE ATUAL
 # ==============================================================================
+
+@export var night_config: NightConfig
 
 var max_enemies_alive: int = 3
 var wave_size: int         = 4
@@ -1765,8 +1957,11 @@ func _on_night_started() -> void:
 
 func _on_player_entered_safe_zone() -> void:
 	player_inside_safe_zone = true
-	for enemy in active_enemies.duplicate():
-		return_to_pool(enemy)
+
+	# Itera de trás pra frente — evita .duplicate() durante remoção
+	for i in range(active_enemies.size() - 1, -1, -1):
+		return_to_pool(active_enemies[i])
+
 	state = DirectorState.IDLE
 	DebugManager.log("EnemyDirector", "Safe zone. Inimigos devolvidos ao pool.")
 
@@ -1785,14 +1980,18 @@ func _on_player_exited_safe_zone() -> void:
 # ==============================================================================
 
 func apply_night_settings(night: int) -> void:
-	max_enemies_alive = base_max_alive + (night - 1)
-	wave_size         = base_wave_size + (night - 1) * 2
+	if night_config != null:
+		max_enemies_alive = night_config.get_max_alive(night)
+		wave_size         = night_config.get_wave_size(night)
+	else:
+		max_enemies_alive = 3 + (night - 1)
+		wave_size         = 4 + (night - 1) * 2
 	DebugManager.log("EnemyDirector",
 		"Noite " + str(night) +
 		" | Max vivos: " + str(max_enemies_alive) +
 		" | Wave size: " + str(wave_size)
 	)
-
+	
 #endregion
 
 
@@ -2021,7 +2220,7 @@ signal night_objective_reached
 ## Noite atual — ÚNICA fonte da verdade de todo o jogo.
 ## Nunca modifique diretamente de fora — use as funções abaixo.
 var current_night: int = 1
-
+@export var night_config: NightConfig
 #endregion
 
 
@@ -2056,6 +2255,8 @@ var night_active: bool = false
 # ==============================================================================
 
 func _ready() -> void:
+	if night_config == null:
+		night_config = load("res://Resources/night_config_normal.tres")
 	_apply_night_settings()
 
 #endregion
@@ -2069,17 +2270,16 @@ func _ready() -> void:
 # ==============================================================================
 
 func _apply_night_settings() -> void:
-	# Noite 1: 5 | Noite 2: 7 | Noite 3: 9...
-	wood_goal = 3 + (current_night * 2)
-
-	delivered_wood = 0
+	if night_config != null:
+		wood_goal = night_config.get_wood_goal(current_night)
+	else:
+		wood_goal = 3 + (current_night * 2) # fallback
+	delivered_wood  = 0
 	night_completed = false
-
 	DebugManager.log("GameManager",
 		"Noite " + str(current_night) +
 		" | Objetivo de madeira: " + str(wood_goal)
 	)
-
 
 ## Retorna um valor escalado pela noite.
 ## Exemplo: get_scaled_value(10.0, 0.2) na noite 3 = 14.0
@@ -2102,7 +2302,6 @@ func start_night() -> void:
 
 ## Chamado pela cama quando o player vai dormir.
 ## Recebe referência do player para resetar inventário.
-## TODO (Refatoração 3): substituir player.wood_count = 0 por player.inventory.reset()
 func advance_to_next_night(player: Node) -> void:
 	if not night_completed:
 		DebugManager.log("GameManager", "Ainda falta madeira!")
@@ -2111,7 +2310,7 @@ func advance_to_next_night(player: Node) -> void:
 	current_night += 1
 
 	# TODO (Refatoração 3): player.inventory.reset()
-	player.wood_count = 0
+	player.inventory.reset()
 
 	night_active = false
 	_apply_night_settings()
@@ -2355,13 +2554,17 @@ func set_combat_mode(active: bool):
 #region DANO CONTÍNUO
 # ==============================================================================
 
-func handle_damage(delta):
+func handle_damage(delta: float) -> void:
 	if not is_active:
 		return
 
-	for enemy in enemies_in_cone.duplicate():
+	# Itera de trás pra frente — evita .duplicate() e é mais eficiente
+	# Remover elemento durante iteração forward corrompe os índices
+	for i in range(enemies_in_cone.size() - 1, -1, -1):
+		var enemy: Node3D = enemies_in_cone[i]
+
 		if not is_instance_valid(enemy):
-			enemies_in_cone.erase(enemy)
+			enemies_in_cone.remove_at(i)
 			continue
 
 		if enemy.has_method("take_damage"):
@@ -2555,41 +2758,16 @@ var mouse_delta: Vector2 = Vector2.ZERO
 
 
 # ==============================================================================
-#region STAMINA
-# ------------------------------------------------------------------------------
-# TODO (Refatoração 3): mover para StaminaComponent
+#region NODE REFERENCES
 # ==============================================================================
 
-@export var max_stamina: float             = 100.0
-@export var stamina_drain: float           = 25.0
-@export var stamina_recovery: float        = 20.0
-@export var stamina_recovery_delay: float  = 1.5
-
-var current_stamina: float       = max_stamina
-var stamina_recovery_timer: float = 0.0
-
-#endregion
-
-
-# ==============================================================================
-#region INVENTÁRIO
-# ------------------------------------------------------------------------------
-# TODO (Refatoração 3): mover para InventoryComponent
-# ==============================================================================
-
-var wood_count: int = 0
-
-#endregion
-
-
-# ==============================================================================
-#region REFERÊNCIAS DE NÓS
-# ==============================================================================
-
-@onready var head: Node3D             = $Head
+@onready var head: Node3D = $Head
 @onready var interaction_ray: RayCast3D = $Head/Camera/InteractionRay
 @onready var interaction_ring: TextureRect = $UI/CenterContainer/InteractionRing
+
 @onready var health: HealthComponent = $Components/HealthComponent
+@onready var stamina: StaminaComponent = $Components/StaminaComponent
+@onready var inventory: InventoryComponent = $Components/InventoryComponent
 
 
 #endregion
@@ -2602,7 +2780,6 @@ var wood_count: int = 0
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	interaction_ray.add_exception(self)
-	current_stamina = max_stamina
 
 #endregion
 
@@ -2630,8 +2807,11 @@ func _process(_delta: float) -> void:
 		return
 
 	_handle_camera()
-	DebugManager.label(debug_label_stamina, "Stamina: " + str(int(current_stamina)))
-	DebugManager.label(debug_label_madeira, "Madeira: " + str(wood_count) + "/" + str(GameManager.wood_goal))
+	DebugManager.label(debug_label_stamina, "Stamina: " + str(int(stamina.get_percent() * stamina.max_stamina)))
+	
+	DebugManager.label(debug_label_madeira,
+	"Madeira: " + str(inventory.get_wood_count()) + "/" + str(GameManager.wood_goal))
+	
 	DebugManager.label(
 	debug_label_health,
 	"Vida: " + str(int(health.get_percent() * health.max_health))
@@ -2719,17 +2899,15 @@ func _handle_stamina(delta: float) -> void:
 	var is_sprinting: bool = Input.is_action_pressed("sprint")
 	var is_moving: bool    = input_direction != Vector2.ZERO
 
-	if is_sprinting and is_moving and current_stamina > 0:
+	stamina.tick_recovery_timer(delta)
+
+	if is_sprinting and is_moving and stamina.can_sprint():
 		current_speed = sprint_speed
-		current_stamina -= stamina_drain * delta
-		stamina_recovery_timer = stamina_recovery_delay
+		stamina.consume(stamina.drain_rate * delta)
 	else:
 		current_speed = walk_speed
-		stamina_recovery_timer -= delta
-		if stamina_recovery_timer <= 0:
-			current_stamina += stamina_recovery * delta
-
-	current_stamina = clamp(current_stamina, 0.0, max_stamina)
+		if not stamina.is_in_recovery_delay():
+			stamina.restore(stamina.recovery_rate * delta)
 
 #endregion
 
@@ -2753,15 +2931,11 @@ func _handle_interaction() -> void:
 			return
 		node = node.get_parent()
 
-
 func add_wood(amount: int) -> void:
-	wood_count += amount
-	DebugManager.log("Player", "Madeira coletada. Total: " + str(wood_count))
-
+	inventory.add_wood(amount)
 
 func can_collect_wood(amount: int) -> bool:
-	var total_wood: int = wood_count + GameManager.delivered_wood
-	return total_wood + amount <= GameManager.wood_goal
+	return inventory.can_collect_wood(amount)
 
 #endregion
 
@@ -2795,27 +2969,16 @@ func _update_crosshair() -> void:
 
 # ==============================================================================
 #region SAÚDE
+# ------------------------------------------------------------------------------
+# Fachadas públicas — delegam ao HealthComponent.
+# Nenhum estado de vida é armazenado aqui.
 # ==============================================================================
 
+func take_damage(amount: float) -> void:
+	health.take_damage(amount)
+
 func heal(amount: float) -> void:
-	if is_dead:
-		return
-	current_health = min(current_health + amount, max_health)
-	DebugManager.log("Player", "Curado! Vida atual: " + str(current_health))
-
-
-func _die() -> void:
-	is_dead = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
-	# Emite evento global — DeathScreen e outros sistemas reagem via SignalBus
-	SignalBus.player_died.emit()
-
-	DebugManager.log("Player", "MORREU!")
-
-	var death_screen: Node = get_tree().get_first_node_in_group("death_screen")
-	if death_screen:
-		death_screen.show_death_screen()
+	health.heal(amount)
 
 #endregion
 
@@ -2989,13 +3152,9 @@ func get_percent() -> float:
 func _die() -> void:
 	_is_dead = true
 	_is_invincible = false
-
-	# Emite no SignalBus para sistemas desacoplados (DeathScreen, etc)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	SignalBus.player_died.emit()
-
-	# Emite localmente para qualquer listener direto do componente
 	player_died.emit()
-
 	DebugManager.log("HealthComponent", "Player morreu.")
 
 #endregion
@@ -3013,6 +3172,186 @@ func _tick_invincibility(delta: float) -> void:
 
 	if _invincibility_timer <= 0.0:
 		_is_invincible = false
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Player\Components\inventory_component.gd
+============================================================
+# ==============================================================================
+# INVENTORY COMPONENT
+# ------------------------------------------------------------------------------
+# Responsabilidade única: gerenciar o inventário de madeira do player.
+#
+# O PlayerController não armazena wood_count — toda verdade está aqui.
+# ==============================================================================
+
+class_name InventoryComponent
+extends Node
+
+
+# ==============================================================================
+#region SIGNALS
+# ==============================================================================
+
+## Emitido sempre que a quantidade de madeira muda.
+## Ouvido por: HUD
+signal wood_changed(current: int, goal: int)
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO INTERNO
+# ==============================================================================
+
+var _wood_count: int = 0
+
+#endregion
+
+
+# ==============================================================================
+#region API PÚBLICA
+# ==============================================================================
+
+## Adiciona madeira ao inventário.
+func add_wood(amount: int) -> void:
+	_wood_count += amount
+	wood_changed.emit(_wood_count, GameManager.wood_goal)
+	DebugManager.log("InventoryComponent", "Madeira: " + str(_wood_count))
+
+
+## Remove madeira do inventário.
+func remove_wood(amount: int) -> void:
+	_wood_count -= amount
+	_wood_count = maxi(_wood_count, 0)
+	wood_changed.emit(_wood_count, GameManager.wood_goal)
+
+
+## Retorna true se ainda é possível coletar mais madeira.
+func can_collect_wood(amount: int) -> bool:
+	var total: int = _wood_count + GameManager.delivered_wood
+	return total + amount <= GameManager.wood_goal
+
+
+## Retorna a quantidade atual de madeira.
+func get_wood_count() -> int:
+	return _wood_count
+
+
+## Reseta o inventário — chamado pelo GameManager ao avançar de noite.
+func reset() -> void:
+	_wood_count = 0
+	wood_changed.emit(_wood_count, GameManager.wood_goal)
+	DebugManager.log("InventoryComponent", "Inventário resetado.")
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Player\Components\stamina_component.gd
+============================================================
+# ==============================================================================
+# STAMINA COMPONENT
+# ------------------------------------------------------------------------------
+# Responsabilidade única: gerenciar o estado de stamina do player.
+#
+# - Stamina atual e máxima
+# - Consumo ao correr
+# - Recuperação com delay
+#
+# O PlayerController não armazena stamina — toda verdade está aqui.
+# ==============================================================================
+
+class_name StaminaComponent
+extends Node
+
+
+# ==============================================================================
+#region SIGNALS
+# ==============================================================================
+
+## Emitido sempre que a stamina muda.
+## Ouvido por: HUD
+signal stamina_changed(new_value: float, max_value: float)
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO
+# ==============================================================================
+
+@export var max_stamina: float            = 100.0
+@export var drain_rate: float             = 25.0
+@export var recovery_rate: float          = 20.0
+@export var recovery_delay: float         = 1.5
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO INTERNO
+# ==============================================================================
+
+var _current_stamina: float       = 0.0
+var _recovery_timer: float        = 0.0
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	_current_stamina = max_stamina
+
+#endregion
+
+
+# ==============================================================================
+#region API PÚBLICA
+# ==============================================================================
+
+## Consome stamina por delta — chamado pelo PlayerController ao correr.
+func consume(amount: float) -> void:
+	_current_stamina -= amount
+	_current_stamina = maxf(_current_stamina, 0.0)
+	_recovery_timer = recovery_delay
+	stamina_changed.emit(_current_stamina, max_stamina)
+
+
+## Recupera stamina por delta — chamado pelo PlayerController quando não corre.
+func restore(amount: float) -> void:
+	var before := _current_stamina
+	_current_stamina = minf(_current_stamina + amount, max_stamina)
+	if _current_stamina != before:
+		stamina_changed.emit(_current_stamina, max_stamina)
+
+
+## Tick do delay de recuperação — chamado pelo PlayerController no _physics_process.
+func tick_recovery_timer(delta: float) -> void:
+	if _recovery_timer > 0.0:
+		_recovery_timer -= delta
+
+
+## Retorna true se pode correr (tem stamina e delay zerado).
+func can_sprint() -> bool:
+	return _current_stamina > 0.0
+
+
+## Retorna true se o delay de recuperação ainda está ativo.
+func is_in_recovery_delay() -> bool:
+	return _recovery_timer > 0.0
+
+
+## Retorna stamina como porcentagem (0.0 a 1.0).
+func get_percent() -> float:
+	if max_stamina <= 0.0:
+		return 0.0
+	return _current_stamina / max_stamina
 
 #endregion
 
@@ -3102,14 +3441,13 @@ var death_messages := [
 #region READY
 # ==============================================================================
 
-func _ready():
-	# Começa invisível
+func _ready() -> void:
 	visible = false
 	fade_rect.modulate.a = 0.0
 	content.visible = false
-
-	# Sempre processa mesmo com jogo pausado
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Ouve SignalBus — completamente desacoplado do player
+	SignalBus.player_died.connect(show_death_screen)
 
 #endregion
 
@@ -3120,18 +3458,19 @@ func _ready():
 # Chamado pelo player ao morrer.
 # ==============================================================================
 
-func show_death_screen():
+func show_death_screen() -> void:
 	visible = true
-
-	# Escolhe mensagem aleatória
+	# Esconde o cursor do jogo (crosshair) ao mostrar a tela de morte
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	death_label.text = death_messages.pick_random()
-
-	# Inicia o fade
+	var player := get_tree().get_first_node_in_group("player")
+	if player:
+		var ring := player.get_node_or_null("UI/CenterContainer/InteractionRing")
+		var dot := player.get_node_or_null("UI/CenterContainer/CrosshairDot")
+		if ring: ring.visible = false
+		if dot: dot.visible = false
 	await fade_in()
-
-	# Mostra o conteúdo após o fade
 	content.visible = true
-
 
 func fade_in():
 	# Anima o alpha do fundo preto de 0 a 1
@@ -3265,5 +3604,5 @@ func _on_quit_button_pressed():
 
 
 ============================================================
-TOTAL DE ARQUIVOS EXPORTADOS: 28
+TOTAL DE ARQUIVOS EXPORTADOS: 34
 ============================================================

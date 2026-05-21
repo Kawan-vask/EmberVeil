@@ -244,9 +244,9 @@ func remove_slow(enemy: Node3D):
 		enemy.slow_multiplier = 1.0
 
 
-func restore_all_slow():
-	for enemy in enemies_in_cone.duplicate():
-		remove_slow(enemy)
+func restore_all_slow() -> void:
+	for i in range(enemies_in_cone.size() - 1, -1, -1):
+		remove_slow(enemies_in_cone[i])
 	enemies_in_cone.clear()
 
 #endregion

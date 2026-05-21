@@ -212,8 +212,8 @@ func start_night() -> void:
 
 
 func _reset_for_new_night() -> void:
-	for enemy in active_enemies.duplicate():
-		return_to_pool(enemy)
+	for i in range(active_enemies.size() - 1, -1, -1):
+		return_to_pool(active_enemies[i])
 	current_wave              = 0
 	enemies_remaining_in_wave = 0
 	spawn_timer               = 0.0
