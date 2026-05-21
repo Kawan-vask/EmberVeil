@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 DebugManager="*uid://bqo3eyqa1jycn"
 SignalBus="*uid://c7v6du1kbbgc1"
 GameManager="*uid://dw7u2aulva3fh"
+Layers="*uid://mngkneehkcvj"
 
 [display]
 
@@ -88,7 +89,7 @@ pause_menu={
 
 [layer_names]
 
-3d_physics/layer_1="World"
+3d_physics/layer_1="Ground"
 3d_physics/layer_2="Player"
 3d_physics/layer_3="Enemy"
 3d_physics/layer_4="Interactable"

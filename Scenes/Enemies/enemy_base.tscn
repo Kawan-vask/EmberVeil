@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bocummn7gseom"]
 
 [ext_resource type="Script" uid="uid://bei66gepspqr6" path="res://Scripts/Enemies/enemy_base.gd" id="1_rnxs8"]
+[ext_resource type="Resource" uid="uid://dmgyv0ju03whq" path="res://Scripts/Enemies/Resources/enemy_base_data.tres" id="2_vu4yt"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rnxs8"]
 radius = 0.51953125
@@ -25,9 +26,7 @@ material = SubResource("StandardMaterial3D_wmxvo")
 collision_layer = 4
 collision_mask = 7
 script = ExtResource("1_rnxs8")
-move_speed = 4.3
-max_health = 50.0
-attack_damage = 100.0
+data = ExtResource("2_vu4yt")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=2041973148]
 debug_path_custom_color = Color(1, 0, 0, 1)

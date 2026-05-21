@@ -29,11 +29,11 @@ extends CharacterBody3D
 #region MOVIMENTO
 # ==============================================================================
 
-@export var walk_speed: float     = 4.0
-@export var sprint_speed: float   = 10.0
-@export var gravity: float        = 20.0
+@export var walk_speed: float = 4.0
+@export var sprint_speed: float = 10.0
+@export var gravity: float = 20.0
 @export var mouse_sensitivity: float = 0.002
-@export var acceleration: float   = 30.0
+@export var acceleration: float = 30.0
 @export var deceleration: float   = 45.0
 
 var current_speed: float      = walk_speed
@@ -56,57 +56,17 @@ var mouse_delta: Vector2 = Vector2.ZERO
 
 
 # ==============================================================================
-#region STAMINA
-# ------------------------------------------------------------------------------
-# TODO (Refatoração 3): mover para StaminaComponent
+#region NODE REFERENCES
 # ==============================================================================
 
-@export var max_stamina: float             = 100.0
-@export var stamina_drain: float           = 25.0
-@export var stamina_recovery: float        = 20.0
-@export var stamina_recovery_delay: float  = 1.5
-
-var current_stamina: float       = max_stamina
-var stamina_recovery_timer: float = 0.0
-
-#endregion
-
-
-# ==============================================================================
-#region INVENTÁRIO
-# ------------------------------------------------------------------------------
-# TODO (Refatoração 3): mover para InventoryComponent
-# ==============================================================================
-
-var wood_count: int = 0
-
-#endregion
-
-
-# ==============================================================================
-#region SAÚDE
-# ------------------------------------------------------------------------------
-# TODO (Refatoração 3): mover para HealthComponent
-# ==============================================================================
-
-@export var max_health: float          = 100.0
-@export var invincibility_duration: float = 1.0
-
-var current_health: float   = max_health
-var invincibility_timer: float = 0.0
-var is_invincible: bool     = false
-var is_dead: bool           = false
-
-#endregion
-
-
-# ==============================================================================
-#region REFERÊNCIAS DE NÓS
-# ==============================================================================
-
-@onready var head: Node3D             = $Head
+@onready var head: Node3D = $Head
 @onready var interaction_ray: RayCast3D = $Head/Camera/InteractionRay
 @onready var interaction_ring: TextureRect = $UI/CenterContainer/InteractionRing
+
+@onready var health: HealthComponent = $Components/HealthComponent
+@onready var stamina: StaminaComponent = $Components/StaminaComponent
+@onready var inventory: InventoryComponent = $Components/InventoryComponent
+
 
 #endregion
 
@@ -118,8 +78,6 @@ var is_dead: bool           = false
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	interaction_ray.add_exception(self)
-	current_health = max_health
-	current_stamina = max_stamina
 
 #endregion
 
@@ -143,10 +101,19 @@ func _unhandled_input(event: InputEvent) -> void:
 # ==============================================================================
 
 func _process(_delta: float) -> void:
+	if health.is_dead():
+		return
+
 	_handle_camera()
-	DebugManager.label(debug_label_stamina, "Stamina: " + str(int(current_stamina)))
-	DebugManager.label(debug_label_madeira, "Madeira: " + str(wood_count) + "/" + str(GameManager.wood_goal))
-	DebugManager.label(debug_label_health,  "Vida: "    + str(int(current_health)))
+	DebugManager.label(debug_label_stamina, "Stamina: " + str(int(stamina.get_percent() * stamina.max_stamina)))
+	
+	DebugManager.label(debug_label_madeira,
+	"Madeira: " + str(inventory.get_wood_count()) + "/" + str(GameManager.wood_goal))
+	
+	DebugManager.label(
+	debug_label_health,
+	"Vida: " + str(int(health.get_percent() * health.max_health))
+	)
 
 #endregion
 
@@ -159,7 +126,8 @@ func _process(_delta: float) -> void:
 # ==============================================================================
 
 func _physics_process(delta: float) -> void:
-	if is_dead:
+	
+	if health.is_dead():
 		return
 
 	_handle_gravity(delta)
@@ -169,7 +137,6 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	_handle_interaction()
 	_update_crosshair()
-	_handle_invincibility(delta)
 
 #endregion
 
@@ -230,17 +197,15 @@ func _handle_stamina(delta: float) -> void:
 	var is_sprinting: bool = Input.is_action_pressed("sprint")
 	var is_moving: bool    = input_direction != Vector2.ZERO
 
-	if is_sprinting and is_moving and current_stamina > 0:
+	stamina.tick_recovery_timer(delta)
+
+	if is_sprinting and is_moving and stamina.can_sprint():
 		current_speed = sprint_speed
-		current_stamina -= stamina_drain * delta
-		stamina_recovery_timer = stamina_recovery_delay
+		stamina.consume(stamina.drain_rate * delta)
 	else:
 		current_speed = walk_speed
-		stamina_recovery_timer -= delta
-		if stamina_recovery_timer <= 0:
-			current_stamina += stamina_recovery * delta
-
-	current_stamina = clamp(current_stamina, 0.0, max_stamina)
+		if not stamina.is_in_recovery_delay():
+			stamina.restore(stamina.recovery_rate * delta)
 
 #endregion
 
@@ -264,15 +229,11 @@ func _handle_interaction() -> void:
 			return
 		node = node.get_parent()
 
-
 func add_wood(amount: int) -> void:
-	wood_count += amount
-	DebugManager.log("Player", "Madeira coletada. Total: " + str(wood_count))
-
+	inventory.add_wood(amount)
 
 func can_collect_wood(amount: int) -> bool:
-	var total_wood: int = wood_count + GameManager.delivered_wood
-	return total_wood + amount <= GameManager.wood_goal
+	return inventory.can_collect_wood(amount)
 
 #endregion
 
@@ -306,50 +267,15 @@ func _update_crosshair() -> void:
 
 # ==============================================================================
 #region SAÚDE
+# ------------------------------------------------------------------------------
+# Fachadas públicas — delegam ao HealthComponent.
+# Nenhum estado de vida é armazenado aqui.
 # ==============================================================================
 
-func take_damage(damage: float) -> void:
-	if is_invincible or is_dead:
-		return
-
-	current_health -= damage
-	current_health = max(current_health, 0.0)
-
-	DebugManager.log("Player", "Tomou dano! Vida restante: " + str(current_health))
-
-	is_invincible = true
-	invincibility_timer = invincibility_duration
-
-	if current_health <= 0:
-		_die()
-
-
-func _handle_invincibility(delta: float) -> void:
-	if not is_invincible:
-		return
-	invincibility_timer -= delta
-	if invincibility_timer <= 0:
-		is_invincible = false
-
+func take_damage(amount: float) -> void:
+	health.take_damage(amount)
 
 func heal(amount: float) -> void:
-	if is_dead:
-		return
-	current_health = min(current_health + amount, max_health)
-	DebugManager.log("Player", "Curado! Vida atual: " + str(current_health))
-
-
-func _die() -> void:
-	is_dead = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
-	# Emite evento global — DeathScreen e outros sistemas reagem via SignalBus
-	SignalBus.player_died.emit()
-
-	DebugManager.log("Player", "MORREU!")
-
-	var death_screen: Node = get_tree().get_first_node_in_group("death_screen")
-	if death_screen:
-		death_screen.show_death_screen()
+	health.heal(amount)
 
 #endregion

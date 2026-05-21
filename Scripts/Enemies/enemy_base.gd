@@ -15,6 +15,55 @@
 class_name EnemyBase
 extends CharacterBody3D
 
+# ==============================================================================
+#region DADOS
+# ==============================================================================
+
+## Resource com todos os stats deste inimigo.
+## Arraste o .tres correspondente no Inspector.
+@export var data: EnemyData
+
+#endregion
+
+# ==============================================================================
+#region CONFIGURAÇÃO — MOVIMENTO
+# ==============================================================================
+
+var move_speed: float     = 3.5
+var rotation_speed: float = 6.0
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — VIDA
+# ==============================================================================
+
+var max_health: float     = 50.0
+var current_health: float = max_health
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — ATAQUE
+# ==============================================================================
+
+var attack_damage: float  = 10.0
+var attack_cooldown: float = 1.0
+var attack_timer: float   = 0.0
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — DESPAWN
+# ==============================================================================
+
+var despawn_distance: float = 65.0
+
+#endregion
+
 
 # ==============================================================================
 #region ESTADOS
@@ -27,51 +76,6 @@ enum State {
 }
 
 var current_state: State = State.CHASE
-
-#endregion
-
-
-# ==============================================================================
-#region CONFIGURAÇÃO — MOVIMENTO
-# ==============================================================================
-
-@export var move_speed: float = 3.5
-@export var rotation_speed: float = 6.0
-
-#endregion
-
-
-# ==============================================================================
-#region CONFIGURAÇÃO — VIDA
-# ==============================================================================
-
-@export var max_health: float = 100.0
-
-var current_health: float = max_health
-
-#endregion
-
-
-# ==============================================================================
-#region CONFIGURAÇÃO — ATAQUE
-# ==============================================================================
-
-@export var attack_damage: float = 10.0
-@export var attack_cooldown: float = 1.0
-
-var attack_timer: float = 0.0
-
-#endregion
-
-
-# ==============================================================================
-#region CONFIGURAÇÃO — DESPAWN
-# ------------------------------------------------------------------------------
-# IMPORTANTE: despawn_distance DEVE ser maior que max_spawn_distance do Director
-# (atualmente 50.0) para evitar que inimigos sejam despawnados logo após spawnar.
-# ==============================================================================
-
-@export var despawn_distance: float = 65.0
 
 #endregion
 
@@ -124,6 +128,11 @@ var _is_active: bool = false
 ## do Jolt ter registrado o CharacterBody3D no espaço físico.
 var _frames_since_activate: int = 0
 
+## Throttle de navegação — evita recalcular path todo frame (caro)
+## NavigationAgent atualiza a cada 0.15s em vez de 60x por segundo
+var _nav_timer: float = 0.0
+const NAV_THROTTLE: float = 0.15
+
 #endregion
 
 
@@ -132,6 +141,18 @@ var _frames_since_activate: int = 0
 # ==============================================================================
 
 func activate() -> void:
+	# Lê stats do Resource
+	if data != null:
+		max_health      = data.max_health
+		move_speed      = data.move_speed
+		rotation_speed  = data.rotation_speed
+		attack_damage   = data.attack_damage
+		attack_cooldown = data.attack_cooldown
+		despawn_distance = data.despawn_distance
+
+	current_health         = max_health
+	current_state          = State.CHASE
+	
 	player = get_tree().get_first_node_in_group("player")
 	current_health = max_health
 	current_state = State.CHASE
@@ -145,6 +166,7 @@ func activate() -> void:
 func reset() -> void:
 	_is_active = false
 	_frames_since_activate = 0
+	_nav_timer = 0.0
 	player = null
 	current_state = State.DEAD
 	slow_multiplier = 1.0
@@ -204,7 +226,11 @@ func _handle_chase(delta: float) -> void:
 		_change_state(State.ATTACK)
 		return
 
-	nav_agent.target_position = player.global_position
+	# Throttle — só recalcula o path a cada 0.15s
+	_nav_timer -= delta
+	if _nav_timer <= 0.0:
+		_nav_timer = NAV_THROTTLE
+		nav_agent.target_position = player.global_position
 
 	var next_position: Vector3 = nav_agent.get_next_path_position()
 	var direction: Vector3 = (next_position - global_position).normalized()
@@ -319,7 +345,6 @@ func _on_enemy_attack_area_body_exited(body: Node3D) -> void:
 		player_inside_attack = false
 
 #endregion
-
 
 # ==============================================================================
 #region SIGNAL BUS — SAFE ZONE

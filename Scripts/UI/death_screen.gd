@@ -53,14 +53,13 @@ var death_messages := [
 #region READY
 # ==============================================================================
 
-func _ready():
-	# Começa invisível
+func _ready() -> void:
 	visible = false
 	fade_rect.modulate.a = 0.0
 	content.visible = false
-
-	# Sempre processa mesmo com jogo pausado
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Ouve SignalBus — completamente desacoplado do player
+	SignalBus.player_died.connect(show_death_screen)
 
 #endregion
 
@@ -71,18 +70,19 @@ func _ready():
 # Chamado pelo player ao morrer.
 # ==============================================================================
 
-func show_death_screen():
+func show_death_screen() -> void:
 	visible = true
-
-	# Escolhe mensagem aleatória
+	# Esconde o cursor do jogo (crosshair) ao mostrar a tela de morte
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	death_label.text = death_messages.pick_random()
-
-	# Inicia o fade
+	var player := get_tree().get_first_node_in_group("player")
+	if player:
+		var ring := player.get_node_or_null("UI/CenterContainer/InteractionRing")
+		var dot := player.get_node_or_null("UI/CenterContainer/CrosshairDot")
+		if ring: ring.visible = false
+		if dot: dot.visible = false
 	await fade_in()
-
-	# Mostra o conteúdo após o fade
 	content.visible = true
-
 
 func fade_in():
 	# Anima o alpha do fundo preto de 0 a 1

@@ -33,8 +33,6 @@ static var instance: EnemyDirector
 #region CONFIGURAÇÃO BASE DE WAVES
 # ==============================================================================
 
-@export var base_max_alive: int        = 3
-@export var base_wave_size: int        = 4
 @export var wave_cooldown: float       = 8.0
 @export var spawn_interval: float      = 1.5
 @export var min_spawn_distance: float  = 5.0
@@ -46,6 +44,8 @@ static var instance: EnemyDirector
 # ==============================================================================
 #region ESTADO CALCULADO DA NOITE ATUAL
 # ==============================================================================
+
+@export var night_config: NightConfig
 
 var max_enemies_alive: int = 3
 var wave_size: int         = 4
@@ -125,8 +125,11 @@ func _on_night_started() -> void:
 
 func _on_player_entered_safe_zone() -> void:
 	player_inside_safe_zone = true
-	for enemy in active_enemies.duplicate():
-		return_to_pool(enemy)
+
+	# Itera de trás pra frente — evita .duplicate() durante remoção
+	for i in range(active_enemies.size() - 1, -1, -1):
+		return_to_pool(active_enemies[i])
+
 	state = DirectorState.IDLE
 	DebugManager.log("EnemyDirector", "Safe zone. Inimigos devolvidos ao pool.")
 
@@ -145,14 +148,18 @@ func _on_player_exited_safe_zone() -> void:
 # ==============================================================================
 
 func apply_night_settings(night: int) -> void:
-	max_enemies_alive = base_max_alive + (night - 1)
-	wave_size         = base_wave_size + (night - 1) * 2
+	if night_config != null:
+		max_enemies_alive = night_config.get_max_alive(night)
+		wave_size         = night_config.get_wave_size(night)
+	else:
+		max_enemies_alive = 3 + (night - 1)
+		wave_size         = 4 + (night - 1) * 2
 	DebugManager.log("EnemyDirector",
 		"Noite " + str(night) +
 		" | Max vivos: " + str(max_enemies_alive) +
 		" | Wave size: " + str(wave_size)
 	)
-
+	
 #endregion
 
 

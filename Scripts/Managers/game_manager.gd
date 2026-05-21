@@ -36,7 +36,7 @@ signal night_objective_reached
 ## Noite atual — ÚNICA fonte da verdade de todo o jogo.
 ## Nunca modifique diretamente de fora — use as funções abaixo.
 var current_night: int = 1
-
+@export var night_config: NightConfig
 #endregion
 
 
@@ -71,6 +71,8 @@ var night_active: bool = false
 # ==============================================================================
 
 func _ready() -> void:
+	if night_config == null:
+		night_config = load("res://Resources/night_config_normal.tres")
 	_apply_night_settings()
 
 #endregion
@@ -84,17 +86,16 @@ func _ready() -> void:
 # ==============================================================================
 
 func _apply_night_settings() -> void:
-	# Noite 1: 5 | Noite 2: 7 | Noite 3: 9...
-	wood_goal = 3 + (current_night * 2)
-
-	delivered_wood = 0
+	if night_config != null:
+		wood_goal = night_config.get_wood_goal(current_night)
+	else:
+		wood_goal = 3 + (current_night * 2) # fallback
+	delivered_wood  = 0
 	night_completed = false
-
 	DebugManager.log("GameManager",
 		"Noite " + str(current_night) +
 		" | Objetivo de madeira: " + str(wood_goal)
 	)
-
 
 ## Retorna um valor escalado pela noite.
 ## Exemplo: get_scaled_value(10.0, 0.2) na noite 3 = 14.0
@@ -117,7 +118,6 @@ func start_night() -> void:
 
 ## Chamado pela cama quando o player vai dormir.
 ## Recebe referência do player para resetar inventário.
-## TODO (Refatoração 3): substituir player.wood_count = 0 por player.inventory.reset()
 func advance_to_next_night(player: Node) -> void:
 	if not night_completed:
 		DebugManager.log("GameManager", "Ainda falta madeira!")
@@ -126,7 +126,7 @@ func advance_to_next_night(player: Node) -> void:
 	current_night += 1
 
 	# TODO (Refatoração 3): player.inventory.reset()
-	player.wood_count = 0
+	player.inventory.reset()
 
 	night_active = false
 	_apply_night_settings()

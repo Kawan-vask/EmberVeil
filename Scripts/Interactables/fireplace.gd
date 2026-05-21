@@ -31,22 +31,20 @@ func _ready() -> void:
 
 func interact() -> void:
 	var player: Node3D = get_tree().get_first_node_in_group("player")
-
 	if player == null:
 		return
 
-	if player.wood_count <= 0:
+	var wood_count: int = player.inventory.get_wood_count()
+	if wood_count <= 0:
 		return
 
 	var missing_wood: int = GameManager.wood_goal - GameManager.delivered_wood
-	var wood_to_deliver: int = min(player.wood_count, missing_wood)
+	var wood_to_deliver: int = min(wood_count, missing_wood)
 
-	player.wood_count -= wood_to_deliver
+	player.inventory.remove_wood(wood_to_deliver)
 	GameManager.add_delivered_wood(wood_to_deliver)
 
-	# Emite evento global — HUD e outros sistemas podem reagir
 	SignalBus.wood_delivered.emit(wood_to_deliver)
-
 	update_visual()
 
 	DebugManager.log("Fireplace",

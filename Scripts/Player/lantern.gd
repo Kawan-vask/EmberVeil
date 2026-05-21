@@ -205,13 +205,17 @@ func set_combat_mode(active: bool):
 #region DANO CONTÍNUO
 # ==============================================================================
 
-func handle_damage(delta):
+func handle_damage(delta: float) -> void:
 	if not is_active:
 		return
 
-	for enemy in enemies_in_cone.duplicate():
+	# Itera de trás pra frente — evita .duplicate() e é mais eficiente
+	# Remover elemento durante iteração forward corrompe os índices
+	for i in range(enemies_in_cone.size() - 1, -1, -1):
+		var enemy: Node3D = enemies_in_cone[i]
+
 		if not is_instance_valid(enemy):
-			enemies_in_cone.erase(enemy)
+			enemies_in_cone.remove_at(i)
 			continue
 
 		if enemy.has_method("take_damage"):

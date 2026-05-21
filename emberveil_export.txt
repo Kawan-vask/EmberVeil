@@ -1,0 +1,3269 @@
+============================================================
+  EMBERVEIL — EXPORT COMPLETO DO PROJETO
+============================================================
+
+============================================================
+ARQUIVO: Scenes\main.tscn
+============================================================
+[gd_scene format=3 uid="uid://xweh4jd5jbfj"]
+
+[ext_resource type="Texture2D" uid="uid://6leytow5hr8a" path="res://Assets/Textures/DevTextures/PNG/Dark/texture_09.png" id="1_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://crlmxwvc46sks" path="res://Scenes/Player/player.tscn" id="2_8gbba"]
+[ext_resource type="Texture2D" uid="uid://bguck1xsgobpr" path="res://Assets/Textures/DevTextures/PNG/Light/texture_08.png" id="2_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://c280liru581cq" path="res://Scenes/World/zones/safe_zone.tscn" id="3_344ge"]
+[ext_resource type="PackedScene" uid="uid://dbybuogphvl03" path="res://Scenes/InteractiveItems/wood_pickup.tscn" id="3_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://ct0u67yagptc4" path="res://Scenes/Systems/enemy_director.tscn" id="3_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://cey6e8akomi1x" path="res://Scenes/World/structures/EnemyNest.tscn" id="4_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://b24mj6kwai2au" path="res://Scenes/World/fireplace.tscn" id="5_kry3j"]
+[ext_resource type="PackedScene" uid="uid://i6tfdq5qp1l1" path="res://Scenes/World/bed.tscn" id="6_21xkr"]
+[ext_resource type="PackedScene" uid="uid://cg7q5p701ptq7" path="res://Scenes/UI/pause_menu.tscn" id="10_hptm8"]
+[ext_resource type="PackedScene" uid="uid://beyki1aqk1qfd" path="res://Scenes/UI/death_screen.tscn" id="11_d1ilt"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8gbba"]
+sky_top_color = Color(0.26138005, 0.3149584, 0.38998, 1)
+sky_horizon_color = Color(0.26620203, 0.2697507, 0.28394997, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0.20775539, 0.21259311, 0.22227898, 1)
+
+[sub_resource type="Sky" id="Sky_jjvhh"]
+sky_material = SubResource("ProceduralSkyMaterial_8gbba")
+
+[sub_resource type="Environment" id="Environment_8gbba"]
+background_mode = 1
+background_color = Color(0.019607844, 0.019607844, 0.039215688, 1)
+background_energy_multiplier = 0.2
+sky = SubResource("Sky_jjvhh")
+ambient_light_color = Color(0.050980393, 0.050980393, 0.078431375, 1)
+tonemap_mode = 4
+glow_enabled = true
+glow_bloom = 0.2
+fog_enabled = true
+fog_light_color = Color(0.019607844, 0.019607844, 0.050980393, 1)
+fog_density = 0.03
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_21xkr"]
+vertices = PackedVector3Array(1.25, 0.5, -9.228043, 1.5, 0.5, -8.228043, 5.25, 0.5, -8.228043, 5.5, 0.5, -9.228043, 49.5, 0.5, -150.22804, -49.5, 0.5, -150.22804, -5.5, 0.5, -9.228043, 11.25, 0.5, -9.228043, 11.5, 0.5, -6.9780426, 49.5, 0.5, -6.9780426, -49.5, 0.5, -7.7280426, -5.75, 0.5, -7.4780426, 10.5, 3.5, -8.228043, 6.25, 3.5, -8.228043, 10.25, 3.5, -7.7280426, -4.5, 3.5, -7.7280426, 0.5, 3.5, -8.228043, -4.75, 3.5, -8.228043, 10.5, 3.5, 7.0219574, 10.25, 3.5, 6.5219574, -4.75, 3.5, 7.0219574, -4.25, 3.5, 6.7719574, 1.25, 0.5, -6.9780426, 5.5, 0.5, -6.9780426, -3.5, 0.5, 5.7719574, 9.25, 0.5, 5.7719574, 9.25, 0.5, -6.9780426, -3.5, 0.5, -6.9780426, -49.5, 0.5, 6.5219574, -5.75, 0.5, 6.2719574, 11.5, 0.5, 5.7719574, 49.5, 0.5, 5.7719574, 11.25, 0.5, 8.021957, 9.25, 0.5, 49.521957, 49.5, 0.5, 49.521957, 9.25, 0.5, 8.021957, -3.5, 0.5, 49.521957, -3.5, 0.5, 8.021957, -5.5, 0.5, 8.021957, -49.5, 0.5, 49.521957)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(6, 5, 0), PackedInt32Array(0, 5, 4), PackedInt32Array(8, 7, 9), PackedInt32Array(9, 7, 4), PackedInt32Array(11, 10, 6), PackedInt32Array(6, 10, 5), PackedInt32Array(4, 3, 0), PackedInt32Array(4, 7, 3), PackedInt32Array(14, 13, 12), PackedInt32Array(17, 16, 15), PackedInt32Array(19, 14, 18), PackedInt32Array(18, 14, 12), PackedInt32Array(21, 20, 15), PackedInt32Array(15, 20, 17), PackedInt32Array(19, 18, 21), PackedInt32Array(21, 18, 20), PackedInt32Array(2, 23, 1), PackedInt32Array(1, 23, 22), PackedInt32Array(23, 25, 22), PackedInt32Array(22, 25, 24), PackedInt32Array(23, 26, 25), PackedInt32Array(24, 27, 22), PackedInt32Array(29, 28, 11), PackedInt32Array(11, 28, 10), PackedInt32Array(8, 9, 30), PackedInt32Array(30, 9, 31), PackedInt32Array(30, 31, 32), PackedInt32Array(32, 31, 34), PackedInt32Array(32, 34, 33), PackedInt32Array(33, 35, 32), PackedInt32Array(38, 37, 36), PackedInt32Array(38, 36, 29), PackedInt32Array(29, 36, 28), PackedInt32Array(28, 36, 39), PackedInt32Array(37, 35, 36), PackedInt32Array(36, 35, 33)]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jjvhh"]
+albedo_texture = ExtResource("1_bo1nx")
+uv1_scale = Vector3(10, 10, 10)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kry3j"]
+material = SubResource("StandardMaterial3D_jjvhh")
+size = Vector2(10, 10)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_jjvhh"]
+data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kry3j"]
+albedo_color = Color(0.7411765, 0.69411767, 1, 1)
+albedo_texture = ExtResource("2_jjvhh")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_21xkr"]
+material = SubResource("StandardMaterial3D_kry3j")
+size = Vector3(1, 3, 5)
+subdivide_width = 1
+subdivide_height = 1
+subdivide_depth = 1
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_6bp64"]
+points = PackedVector3Array(-0.5, -1.5, -2.5, -0.5, 1.5, -2.5, 0.5, -1.5, -2.5, -0.5, -1.5, 2.5, 0.5, 1.5, -2.5, -0.5, 1.5, 2.5, 0.5, -1.5, 2.5, 0.5, 1.5, 2.5)
+
+[node name="Main" type="Node3D" unique_id=552916765]
+
+[node name="World" type="Node3D" parent="." unique_id=63189926]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=1777614209]
+environment = SubResource("Environment_8gbba")
+
+[node name="EnemyDirector" parent="World" unique_id=1800559500 instance=ExtResource("3_ynf5e")]
+
+[node name="Zones" type="Node3D" parent="World" unique_id=1691288822]
+
+[node name="SafeZone" parent="World/Zones" unique_id=808384328 instance=ExtResource("3_344ge")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 3.5, 0, -0.5)
+
+[node name="Player" type="Node3D" parent="World" unique_id=272005501]
+
+[node name="Player2" parent="World/Player" unique_id=492244781 instance=ExtResource("2_8gbba")]
+transform = Transform3D(0.032771397, 0, -0.9994629, 0, 1, 0, 0.9994629, 0, 0.032771397, 0, 0, 0)
+
+[node name="Ilumination" type="Node3D" parent="World" unique_id=1955161380]
+visible = false
+
+[node name="Nests" type="Node3D" parent="World" unique_id=1209334911]
+
+[node name="EnemyNest" parent="World/Nests" unique_id=1636461375 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0, -31)
+
+[node name="EnemyNest2" parent="World/Nests" unique_id=251359277 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5, 0, -31)
+
+[node name="EnemyNest3" parent="World/Nests" unique_id=1248851436 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -83)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="World" unique_id=671041340]
+navigation_mesh = SubResource("NavigationMesh_21xkr")
+
+[node name="Ground" type="StaticBody3D" parent="World/NavigationRegion3D" unique_id=1133362286]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+
+[node name="Plane" type="MeshInstance3D" parent="World/NavigationRegion3D/Ground" unique_id=648879852]
+mesh = SubResource("PlaneMesh_kry3j")
+
+[node name="groundCollision" type="CollisionShape3D" parent="World/NavigationRegion3D/Ground" unique_id=1463824744]
+shape = SubResource("ConcavePolygonShape3D_jjvhh")
+debug_color = Color(1, 0.003921569, 0.09411765, 0.20784314)
+debug_fill = false
+
+[node name="Ground2" type="StaticBody3D" parent="World/NavigationRegion3D" unique_id=38179699]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, -100.72804)
+collision_mask = 0
+
+[node name="Plane" type="MeshInstance3D" parent="World/NavigationRegion3D/Ground2" unique_id=1550676930]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.010000001, 0.065000534)
+mesh = SubResource("PlaneMesh_kry3j")
+
+[node name="groundCollision" type="CollisionShape3D" parent="World/NavigationRegion3D/Ground2" unique_id=1376035690]
+shape = SubResource("ConcavePolygonShape3D_jjvhh")
+debug_color = Color(1, 0.003921569, 0.09411765, 0.20784314)
+debug_fill = false
+
+[node name="Walls" type="Node3D" parent="World/NavigationRegion3D" unique_id=467387634]
+
+[node name="Wall1" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1624089405]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.300257, 1.5, 0)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=241624151]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=1428909197]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=1989168866]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall2" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=728695245]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.300257, 1.5, -5)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall2" unique_id=302216210]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall2" unique_id=1514608701]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall3" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1209541061]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.300257, 1.5, 5)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall3" unique_id=1240506999]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall3" unique_id=781292431]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall4" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1249270341]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.3002567, 1.5, 7)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall4" unique_id=939142053]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall4" unique_id=1238018483]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall5" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=129315468]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.3002567, 1.5, 7)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall5" unique_id=15844259]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall5" unique_id=2092441084]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall6" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=2101558722]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.6997433, 1.5, 7)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall6" unique_id=2031249515]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall6" unique_id=691833706]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall7" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1071298203]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6997433, 1.5, 4)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall7" unique_id=1592785911]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall7" unique_id=226601667]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall8" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1692439992]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6997433, 1.5, -1)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall8" unique_id=1531958603]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall8" unique_id=1061633647]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall9" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=712462467]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6997433, 1.5, -6)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall9" unique_id=893419793]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall9" unique_id=28540766]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall10" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=256374538]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.300257, 1.5, -8)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall10" unique_id=73969524]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall10" unique_id=669458309]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Wall11" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=229314090]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.6997433, 1.5, -8)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall11" unique_id=2130121736]
+mesh = SubResource("BoxMesh_21xkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall11" unique_id=2091856659]
+shape = SubResource("ConvexPolygonShape3D_6bp64")
+
+[node name="Interactibles" type="Node3D" parent="." unique_id=1845153640]
+
+[node name="Madeira" type="Node3D" parent="Interactibles" unique_id=1083452393]
+
+[node name="WoodPickup6" parent="Interactibles/Madeira" unique_id=1366707345 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9460673, 0.219414, 3.20542)
+
+[node name="WoodPickup11" parent="Interactibles/Madeira" unique_id=541892152 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3314974, 0.219414, 3.20542)
+
+[node name="WoodPickup18" parent="Interactibles/Madeira" unique_id=2046175972 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.61482394, 0.219414, 3.20542)
+
+[node name="WoodPickup19" parent="Interactibles/Madeira" unique_id=1004731098 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03554082, 0.219414, 3.20542)
+
+[node name="WoodPickup20" parent="Interactibles/Madeira" unique_id=425483914 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.57856417, 0.219414, 3.20542)
+
+[node name="WoodPickup7" parent="Interactibles/Madeira" unique_id=1677206236 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5969148, 0.219414, 3.20542)
+
+[node name="WoodPickup8" parent="Interactibles/Madeira" unique_id=1600524912 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1919293, 0.219414, 3.20542)
+
+[node name="WoodPickup9" parent="Interactibles/Madeira" unique_id=370207553 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8461661, 0.219414, 3.20542)
+
+[node name="WoodPickup10" parent="Interactibles/Madeira" unique_id=1308219499 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.438615, 0.219414, 3.20542)
+
+[node name="WoodPickup12" parent="Interactibles/Madeira" unique_id=1597005832 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1074853, 0.219414, 3.20542)
+
+[node name="WoodPickup13" parent="Interactibles/Madeira" unique_id=1137081849 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.628059, 0.219414, 3.20542)
+
+[node name="WoodPickup14" parent="Interactibles/Madeira" unique_id=506818761 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.249879, 0.219414, 3.20542)
+
+[node name="WoodPickup15" parent="Interactibles/Madeira" unique_id=1566943997 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9231405, 0.219414, 3.20542)
+
+[node name="WoodPickup16" parent="Interactibles/Madeira" unique_id=628238924 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6854744, 0.219414, 3.20542)
+
+[node name="WoodPickup17" parent="Interactibles/Madeira" unique_id=1879791915 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.31316, 0.219414, 3.20542)
+
+[node name="WoodPickup21" parent="Interactibles/Madeira" unique_id=52083835 instance=ExtResource("3_jjvhh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.010398, 0.219414, 3.20542)
+
+[node name="Fireplace" parent="Interactibles" unique_id=1933277327 instance=ExtResource("5_kry3j")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.345, 0.8181734, -0.039)
+
+[node name="Bed" parent="Interactibles" unique_id=828787208 instance=ExtResource("6_21xkr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 8.00922, 0, -3.3993378)
+
+[node name="UI" type="Node3D" parent="." unique_id=1408421820]
+
+[node name="PauseMenu" parent="UI" unique_id=1259609672 instance=ExtResource("10_hptm8")]
+
+[node name="DeathScreen" parent="UI" unique_id=1132231461 instance=ExtResource("11_d1ilt")]
+
+
+============================================================
+ARQUIVO: Scenes\Enemies\enemy_base.tscn
+============================================================
+[gd_scene format=3 uid="uid://bocummn7gseom"]
+
+[ext_resource type="Script" uid="uid://bei66gepspqr6" path="res://Scripts/Enemies/enemy_base.gd" id="1_rnxs8"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rnxs8"]
+radius = 0.51953125
+height = 1.4765625
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu4yt"]
+radius = 0.70410156
+height = 2.2492676
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wmxvo"]
+radius = 1.566622
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmxvo"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_b1gup"]
+material = SubResource("StandardMaterial3D_wmxvo")
+
+[node name="Enemy Base" type="CharacterBody3D" unique_id=1238140130 groups=["enemy"]]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_rnxs8")
+move_speed = 4.3
+max_health = 50.0
+attack_damage = 100.0
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=2041973148]
+debug_path_custom_color = Color(1, 0, 0, 1)
+
+[node name="EnemyCollision" type="CollisionShape3D" parent="." unique_id=362681658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015655518, 0)
+shape = SubResource("CapsuleShape3D_rnxs8")
+
+[node name="Hurtbox" type="Area3D" parent="." unique_id=107665255]
+collision_layer = 4
+collision_mask = 128
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox" unique_id=484542268]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.381958, 0)
+shape = SubResource("CapsuleShape3D_vu4yt")
+debug_color = Color(0.70196074, 0.641636, 0, 0.41960785)
+
+[node name="EnemyAttackArea" type="Area3D" parent="." unique_id=1437865527]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyAttackArea" unique_id=793419876]
+shape = SubResource("SphereShape3D_wmxvo")
+debug_color = Color(0.99609375, 0, 0, 0.41960785)
+
+[node name="Visual" type="Node3D" parent="." unique_id=1593986139]
+
+[node name="Corpo (capsule shape)" type="MeshInstance3D" parent="Visual" unique_id=1629291334]
+transform = Transform3D(1, 0, 0, 0, 0.7244302, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_b1gup")
+
+[connection signal="body_entered" from="EnemyAttackArea" to="." method="_on_enemy_attack_area_body_entered"]
+[connection signal="body_exited" from="EnemyAttackArea" to="." method="_on_enemy_attack_area_body_exited"]
+
+
+============================================================
+ARQUIVO: Scenes\InteractiveItems\wood_pickup.tscn
+============================================================
+[gd_scene format=3 uid="uid://dbybuogphvl03"]
+
+[ext_resource type="Script" uid="uid://cx3jlb80fpmbe" path="res://Scripts/Interactables/wood_pickup.gd" id="1_ffmj5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b61cx"]
+albedo_color = Color(0.62352943, 0.14117648, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ffmj5"]
+material = SubResource("StandardMaterial3D_b61cx")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_j2a4c"]
+height = 1.0
+radius = 0.2
+
+[node name="WoodPickup" type="Node3D" unique_id=1366707345 groups=["interactable"]]
+script = ExtResource("1_ffmj5")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1839515064]
+collision_layer = 73
+collision_mask = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=2045263908]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_ffmj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=87322294]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_j2a4c")
+
+
+============================================================
+ARQUIVO: Scenes\Player\player.tscn
+============================================================
+[gd_scene format=3 uid="uid://crlmxwvc46sks"]
+
+[ext_resource type="Script" uid="uid://fdj3t8udvlw8" path="res://Scripts/Player/player_controller.gd" id="1_uvnfx"]
+[ext_resource type="Script" uid="uid://cp38dqgyol01f" path="res://Scripts/Player/Components/health_component.gd" id="2_htcer"]
+[ext_resource type="Script" uid="uid://cg5iafgr1e52o" path="res://Scripts/Player/lantern.gd" id="2_mtuoh"]
+[ext_resource type="Texture2D" uid="uid://d28vy5r0mdhe4" path="res://Assets/UI/Crosshairs/crosshair001.png" id="2_xpcdj"]
+[ext_resource type="Texture2D" uid="uid://mddhx3c1a2b6" path="res://Assets/UI/Crosshairs/crosshair123.png" id="3_mtuoh"]
+
+[sub_resource type="Curve" id="Curve_mtuoh"]
+_data = [Vector2(0.06074766, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.20224726), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_htcer"]
+curve = SubResource("Curve_mtuoh")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mtuoh"]
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0, 0, -1)
+spread = 15.0
+initial_velocity_min = 8.0
+initial_velocity_max = 12.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.03
+scale_max = 0.08
+scale_curve = SubResource("CurveTexture_htcer")
+color = Color(0.7058824, 0.38039216, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mtuoh"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.7058824, 0.38039216, 1, 0.16078432)
+
+[sub_resource type="SphereMesh" id="SphereMesh_htcer"]
+material = SubResource("StandardMaterial3D_mtuoh")
+radius = 0.2
+height = 0.4
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_htcer"]
+height = 15.785828
+radius = 1.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tugb3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uvnfx"]
+albedo_color = Color(1, 0.85882354, 0.6745098, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_a3d8c"]
+material = SubResource("StandardMaterial3D_uvnfx")
+radius = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xpcdj"]
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.60784316, 0, 1)
+emission_energy_multiplier = 3.75
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_uvnfx"]
+material = SubResource("StandardMaterial3D_xpcdj")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a3d8c"]
+albedo_color = Color(1, 0.85882354, 0.6745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xpcdj"]
+material = SubResource("StandardMaterial3D_a3d8c")
+size = Vector3(0.15, 0.1, 1)
+
+[node name="Player" type="CharacterBody3D" unique_id=492244781 groups=["player"]]
+collision_layer = 2
+collision_mask = 77
+script = ExtResource("1_uvnfx")
+walk_speed = null
+sprint_speed = null
+gravity = null
+mouse_sensitivity = 0.001
+acceleration = null
+deceleration = null
+max_stamina = null
+stamina_drain = 20.0
+stamina_recovery = 15.0
+stamina_recovery_delay = 2.0
+max_health = null
+invincibility_duration = null
+
+[node name="Components" type="Node" parent="." unique_id=121071798]
+
+[node name="HealthComponent" type="Node" parent="Components" unique_id=382712998]
+script = ExtResource("2_htcer")
+
+[node name="Head" type="Node3D" parent="." unique_id=718504675]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3784182, 0)
+
+[node name="Camera" type="Camera3D" parent="Head" unique_id=1209531644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11293316, 0)
+
+[node name="InteractionRay" type="RayCast3D" parent="Head/Camera" unique_id=1444318979]
+target_position = Vector3(0, 0, -4)
+
+[node name="LanternPivot" type="Node3D" parent="Head/Camera" unique_id=1499613278]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2173998, 0, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Head/Camera/LanternPivot" unique_id=1477728392]
+transform = Transform3D(0.9982728, -4.6548515e-10, 0.05874884, 0.0026639989, 0.9989714, -0.04526723, -0.05868841, 0.045345552, 0.99724597, -0.2735262, -0.65729094, -1.1437237)
+light_color = Color(0.70401, 0.37890625, 1, 1)
+light_energy = 16.0
+light_indirect_energy = 10.0
+light_volumetric_fog_energy = 6.0
+shadow_enabled = true
+spot_range = 18.0
+spot_attenuation = 0.5
+spot_angle = 14.0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Head/Camera/LanternPivot" unique_id=1867184387]
+light_color = Color(1, 0.60784316, 0, 1)
+light_energy = 5.0
+light_indirect_energy = 3.0
+light_volumetric_fog_energy = 2.0
+omni_range = 15.0
+
+[node name="BeamParticles" type="GPUParticles3D" parent="Head/Camera/LanternPivot" unique_id=489297084]
+transform = Transform3D(0.99384934, 0, 0.11074044, 0, 1, 0, -0.11074044, 0, 0.99384934, -0.082012415, -0.7136507, -1.7617629)
+amount = 40
+lifetime = 0.8
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_mtuoh")
+draw_pass_1 = SubResource("SphereMesh_htcer")
+
+[node name="CombatOmniLight" type="OmniLight3D" parent="Head/Camera/LanternPivot" unique_id=645998108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25589705, -0.4587388, -1.069139)
+light_color = Color(0.7058824, 0.38039216, 1, 1)
+light_energy = 4.0
+light_indirect_energy = 2.0
+light_volumetric_fog_energy = 4.0
+omni_range = 8.0
+omni_attenuation = 3.0
+
+[node name="LanternHitbox" type="Node3D" parent="Head/Camera" unique_id=54492552]
+script = ExtResource("2_mtuoh")
+damage_per_second = 40.0
+omni_base_energy = 4.0
+omni_flicker_amount = 0.2
+
+[node name="LanternRay" type="Area3D" parent="Head/Camera/LanternHitbox" unique_id=1957607858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.005, 0, -6.2)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Head/Camera/LanternHitbox/LanternRay" unique_id=103248291]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -1.7171326)
+shape = SubResource("CylinderShape3D_htcer")
+
+[node name="Debug2" type="CanvasLayer" parent="Head/Camera/LanternHitbox" unique_id=670312380]
+
+[node name="Energia" type="Label" parent="Head/Camera/LanternHitbox/Debug2" unique_id=1684891079]
+offset_top = 79.0
+offset_right = 40.0
+offset_bottom = 102.0
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=508324019]
+
+[node name="CenterContainer" type="CenterContainer" parent="UI" unique_id=989631159]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CrosshairDot" type="TextureRect" parent="UI/CenterContainer" unique_id=62245230]
+layout_mode = 2
+texture = ExtResource("2_xpcdj")
+
+[node name="InteractionRing" type="TextureRect" parent="UI/CenterContainer" unique_id=1504638937]
+visible = false
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = ExtResource("3_mtuoh")
+expand_mode = 5
+
+[node name="Colisão Player" type="CollisionShape3D" parent="." unique_id=286306206]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_tugb3")
+
+[node name="Visual" type="Node3D" parent="." unique_id=826975719]
+
+[node name="Body (placeholder)" type="MeshInstance3D" parent="Visual" unique_id=980242945]
+transform = Transform3D(1.6, 0, 0, 0, 1, 0, 0, 0, 0.576, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_a3d8c")
+
+[node name="Lamp (placeholder)" type="MeshInstance3D" parent="Visual" unique_id=203697482]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9644263, 1.4796568, -1.0732619)
+mesh = SubResource("CylinderMesh_uvnfx")
+
+[node name="Arm (placeholder)" type="MeshInstance3D" parent="Visual" unique_id=385533420]
+transform = Transform3D(0.92703336, -0.15243985, -0.3425947, 0, 0.9136378, -0.40652937, 0.37497875, 0.37686625, 0.8469728, 0.7883005, 1.7554803, -0.6552728)
+mesh = SubResource("BoxMesh_xpcdj")
+
+[node name="Debug" type="CanvasLayer" parent="." unique_id=97975937]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Debug" unique_id=1880270808]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Health" type="Label" parent="Debug/VBoxContainer" unique_id=650688545]
+layout_mode = 2
+
+[node name="Stamina" type="Label" parent="Debug/VBoxContainer" unique_id=2116642855]
+layout_mode = 2
+
+[node name="Madeira" type="Label" parent="Debug/VBoxContainer" unique_id=1989329305]
+layout_mode = 2
+
+
+============================================================
+ARQUIVO: Scenes\Systems\enemy_director.tscn
+============================================================
+[gd_scene format=3 uid="uid://ct0u67yagptc4"]
+
+[ext_resource type="Script" uid="uid://pt5e1lrrqn82" path="res://Scripts/Managers/enemy_director.gd" id="1_htnh3"]
+[ext_resource type="PackedScene" uid="uid://bocummn7gseom" path="res://Scenes/Enemies/enemy_base.tscn" id="2_alfm2"]
+
+[node name="EnemyDirector" type="Node" unique_id=2109909734]
+script = ExtResource("1_htnh3")
+enemy_scene = ExtResource("2_alfm2")
+
+
+============================================================
+ARQUIVO: Scenes\UI\death_screen.tscn
+============================================================
+[gd_scene format=3 uid="uid://beyki1aqk1qfd"]
+
+[ext_resource type="Script" uid="uid://x0pkm0ln46c0" path="res://Scripts/UI/death_screen.gd" id="1_u28jg"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ss3k6"]
+line_spacing = 4.0
+paragraph_spacing = 10.0
+font_size = 50
+
+[sub_resource type="Theme" id="Theme_u28jg"]
+default_font_size = 30
+
+[node name="DeathScreen" type="CanvasLayer" unique_id=1132231461 groups=["death_screen"]]
+script = ExtResource("1_u28jg")
+
+[node name="FadeRect" type="ColorRect" parent="." unique_id=107272587]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Content" type="VBoxContainer" parent="." unique_id=808027906]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -248.0
+offset_top = -61.5
+offset_right = 248.0
+offset_bottom = 61.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="DeathLabel" type="Label" parent="Content" unique_id=16710826]
+layout_mode = 2
+text = "A FLORESTA VENCEU"
+label_settings = SubResource("LabelSettings_ss3k6")
+
+[node name="RetryButton" type="Button" parent="Content" unique_id=1117631958]
+layout_mode = 2
+theme = SubResource("Theme_u28jg")
+theme_override_colors/font_focus_color = Color(0.0546875, 1, 0, 1)
+text = "Tentar novamente
+"
+
+[connection signal="pressed" from="Content/RetryButton" to="." method="_on_retry_button_pressed"]
+
+
+============================================================
+ARQUIVO: Scenes\UI\pause_menu.tscn
+============================================================
+[gd_scene format=3 uid="uid://cg7q5p701ptq7"]
+
+[ext_resource type="Script" uid="uid://bekkum8dpl0gx" path="res://Scripts/UI/pause_menu.gd" id="1_rrvs5"]
+
+[sub_resource type="Theme" id="Theme_8rf44"]
+default_font_size = 50
+
+[sub_resource type="Theme" id="Theme_r2i2h"]
+default_font_size = 40
+
+[sub_resource type="Theme" id="Theme_oykix"]
+default_font_size = 40
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1259609672]
+script = ExtResource("1_rrvs5")
+
+[node name="Panel" type="Panel" parent="." unique_id=1174605292]
+custom_minimum_size = Vector2(800, 500)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=571714305]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -375.0
+offset_top = -250.0
+offset_right = 375.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=179977191]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = SubResource("Theme_8rf44")
+text = "PAUSADO"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer" unique_id=1439209132]
+layout_mode = 2
+theme = SubResource("Theme_r2i2h")
+text = "Retomar"
+
+[node name="Button2" type="Button" parent="Panel/VBoxContainer" unique_id=467118159]
+layout_mode = 2
+size_flags_vertical = 4
+theme = SubResource("Theme_oykix")
+text = "Sair"
+
+[connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Button2" to="." method="_on_quit_button_pressed"]
+
+
+============================================================
+ARQUIVO: Scenes\World\bed.tscn
+============================================================
+[gd_scene format=3 uid="uid://i6tfdq5qp1l1"]
+
+[ext_resource type="PackedScene" uid="uid://sd8mtjch7ysp" path="res://Assets/Models/Interactable/Bed/scene.gltf" id="1_iwor0"]
+[ext_resource type="Script" uid="uid://c51vwb5n7jpx" path="res://Scripts/Interactables/bed.gd" id="1_p2xx2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p2xx2"]
+size = Vector3(1.4578323, 1.5117188, 3.1779175)
+
+[node name="Bed" type="Node3D" unique_id=828787208 groups=["interactable"]]
+script = ExtResource("1_p2xx2")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1396802197]
+collision_layer = 9
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=360524657]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0055732727, 0.7596216, 0.017791748)
+shape = SubResource("BoxShape3D_p2xx2")
+
+[node name="Visual" type="Node3D" parent="StaticBody3D" unique_id=737631850]
+
+[node name="BedModel" parent="StaticBody3D/Visual" unique_id=1386611539 instance=ExtResource("1_iwor0")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+
+============================================================
+ARQUIVO: Scenes\World\fireplace.tscn
+============================================================
+[gd_scene format=3 uid="uid://b24mj6kwai2au"]
+
+[ext_resource type="PackedScene" uid="uid://du7iubswvfnwd" path="res://Assets/Models/Interactable/Fireplace/fireplace.gltf" id="1_0u8w3"]
+[ext_resource type="Script" uid="uid://bq4b2y4itn5cr" path="res://Scripts/Interactables/fireplace.gd" id="1_bs57g"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bs57g"]
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(2.324857, 1.1510681, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_htiny"]
+material = SubResource("StandardMaterial3D_bs57g")
+radius = 0.2
+height = 0.4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bs57g"]
+size = Vector3(0.6129761, 1.0891113, 1.4712524)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bs57g"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Fireplace" type="Node3D" unique_id=1933277327 groups=["fireplace", "interactable"]]
+script = ExtResource("1_bs57g")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=31211944]
+collision_layer = 9
+collision_mask = 2
+
+[node name="Visual" type="Node3D" parent="StaticBody3D" unique_id=1664812115]
+
+[node name="Sketchfab_Scene" parent="StaticBody3D/Visual" unique_id=54042284 instance=ExtResource("1_0u8w3")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Visual" unique_id=1315941969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07053387, -0.42656434, 0)
+mesh = SubResource("SphereMesh_htiny")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=480542054]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -0.0055236816, -0.0018310547, -0.0020446777)
+shape = SubResource("BoxShape3D_bs57g")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1081344042]
+transparent_bg = true
+size = Vector2i(300, 100)
+
+[node name="Label" type="Label" parent="SubViewport" unique_id=1207498146]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(2.6034334, 2.6034334, 2.6034334, 1)
+theme_override_font_sizes/font_size = 40
+text = "0/5"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=42691138]
+transform = Transform3D(1.1920929e-07, 0, 1, 0, 1, 0, -1, 0, 1.1920929e-07, 0.35131216, 0.61371005, 0)
+texture = SubResource("ViewportTexture_bs57g")
+
+
+============================================================
+ARQUIVO: Scenes\World\structures\EnemyNest.tscn
+============================================================
+[gd_scene format=3 uid="uid://cey6e8akomi1x"]
+
+[ext_resource type="Script" uid="uid://camy4sc1ninq5" path="res://Scripts/Enemies/enemy_nest.gd" id="1_jtbyl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1qw8y"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 1.89
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jtbyl"]
+material = SubResource("StandardMaterial3D_1qw8y")
+top_radius = 0.3
+height = 0.2
+
+[node name="EnemyNest" type="Marker3D" unique_id=1636461375]
+script = ExtResource("1_jtbyl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1151568913]
+mesh = SubResource("CylinderMesh_jtbyl")
+
+
+============================================================
+ARQUIVO: Scenes\World\zones\safe_zone.tscn
+============================================================
+[gd_scene format=3 uid="uid://c280liru581cq"]
+
+[ext_resource type="Script" uid="uid://dymj0qfqtthmp" path="res://Scripts/Systems/safe_zone.gd" id="1_p4sc5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mak75"]
+size = Vector3(10, 10, 10)
+
+[node name="SafeZone" type="Area3D" unique_id=808384328]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_p4sc5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=433977761]
+shape = SubResource("BoxShape3D_mak75")
+debug_color = Color(0.03125, 1, 0, 0.41960785)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
+
+
+============================================================
+ARQUIVO: Scripts\Autoloads\debug_manager.gd
+============================================================
+# ==============================================================================
+# DEBUG MANAGER
+# ------------------------------------------------------------------------------
+# Centraliza todo código de debug do projeto.
+# Em produção, basta setar DEBUG_ENABLED = false — zero custo de performance.
+#
+# REGRA: nenhum script usa print() ou label.text = diretamente.
+# Tudo passa por aqui.
+# ==============================================================================
+
+extends Node
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO
+# ==============================================================================
+
+## Mude para false antes de fazer o build de produção.
+const DEBUG_ENABLED := true
+
+#endregion
+
+
+# ==============================================================================
+#region API PÚBLICA
+# ==============================================================================
+
+## Substitui print() direto — desligado automaticamente em produção.
+func log(system: String, message: String) -> void:
+	if not DEBUG_ENABLED:
+		return
+	print("[", system, "] ", message)
+
+
+## Substitui label.text = direto — desligado automaticamente em produção.
+func label(label_node: Label, text: String) -> void:
+	if not DEBUG_ENABLED:
+		return
+	if is_instance_valid(label_node):
+		label_node.text = text
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Autoloads\layers.gd
+============================================================
+# ==============================================================================
+# LAYERS
+# ------------------------------------------------------------------------------
+# Constantes nomeadas para todas as collision layers do projeto.
+#
+# REGRA: nunca use números mágicos para collision layers em cenas ou scripts.
+# Sempre use Layers.NOME_DA_LAYER.
+#
+# Como funciona:
+# Cada layer é uma potência de 2 (bit flag).
+# Para combinar layers, use o operador | (OR bit a bit).
+#
+# Exemplos:
+#   collision_layer = Layers.ENEMY
+#   collision_mask  = Layers.GROUND | Layers.PLAYER
+#   ray_query.collision_mask = Layers.GROUND
+# ==============================================================================
+
+extends Node
+
+
+# ==============================================================================
+#region LAYERS DO PROJETO
+# ------------------------------------------------------------------------------
+# Mapa atual das layers (espelha Project Settings → Layer Names → 3D Physics):
+#
+# Layer 1  (valor 1)   → GROUND       — chão e geometria estática do mundo
+# Layer 2  (valor 2)   → PLAYER       — corpo físico do player
+# Layer 3  (valor 4)   → ENEMY        — corpo físico dos inimigos
+# Layer 4  (valor 8)   → INTERACTABLE — objetos interagíveis (madeira, lareira, cama)
+# Layer 5  (valor 16)  → SAFE_ZONE    — área da safe zone
+# Layer 6  (valor 32)  → ENEMY_VISION — visão dos inimigos (futuro sistema de detecção)
+# Layer 7  (valor 64)  → PICKUP       — itens coletáveis no chão
+# Layer 8  (valor 128) → LAMP         — cone/hitbox da lamparina
+#
+# Ao adicionar uma layer nova:
+# 1. Configure primeiro em Project Settings → Layer Names → 3D Physics
+# 2. Documente aqui com nome descritivo e valor correto
+# 3. Use a constante em todos os scripts e cenas — nunca o número direto
+# ==============================================================================
+
+## Chão e geometria estática do mundo
+const GROUND:       int = 1
+
+## Corpo físico do player
+const PLAYER:       int = 2
+
+## Corpo físico dos inimigos
+const ENEMY:        int = 4
+
+## Objetos interagíveis (madeira, lareira, cama)
+const INTERACTABLE: int = 8
+
+## Área da safe zone
+const SAFE_ZONE:    int = 16
+
+## Visão dos inimigos — reservado para futuro sistema de detecção/stealth
+const ENEMY_VISION: int = 32
+
+## Itens coletáveis no chão
+const PICKUP:       int = 64
+
+## Cone e hitbox da lamparina
+const LAMP:         int = 128
+
+#endregion
+
+
+# ==============================================================================
+#region MÁSCARAS COMPOSTAS
+# ------------------------------------------------------------------------------
+# Combinações pré-definidas de layers para uso frequente.
+# Evita repetir Layers.X | Layers.Y em vários lugares.
+# ==============================================================================
+
+## Máscara padrão do player — detecta chão, inimigos, interagíveis e pickups
+const PLAYER_MASK: int = GROUND | ENEMY | INTERACTABLE | PICKUP
+
+## Máscara dos inimigos — detecta chão, player e outros inimigos
+const ENEMY_MASK: int = GROUND | PLAYER | ENEMY
+
+## Máscara do raycast de spawn — detecta só o chão
+const SPAWN_RAYCAST_MASK: int = GROUND
+
+## Máscara da área de ataque do inimigo — detecta só o player
+const ENEMY_ATTACK_MASK: int = PLAYER
+
+## Máscara da safe zone — detecta só o player
+const SAFE_ZONE_MASK: int = PLAYER
+
+## Máscara do cone da lamparina — detecta só inimigos
+const LANTERN_CONE_MASK: int = ENEMY
+
+## Máscara da hurtbox dos inimigos — detecta a lamparina
+const HURTBOX_MASK: int = LAMP
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Autoloads\signal_bus.gd
+============================================================
+# ==============================================================================
+# SIGNAL BUS
+# ------------------------------------------------------------------------------
+# Barramento global de eventos entre sistemas desacoplados.
+#
+# REGRA DE USO:
+# - Sistema que dispara um evento  → SignalBus.nome_do_signal.emit()
+# - Sistema que reage ao evento    → SignalBus.nome_do_signal.connect(método)
+#                                    (sempre no _ready() do sistema)
+#
+# NUNCA adicione lógica aqui — apenas declarações de signal.
+# ==============================================================================
+
+extends Node
+
+
+# ==============================================================================
+#region PLAYER — ZONA SEGURA
+# ==============================================================================
+
+## Emitido pela SafeZone quando o player entra na área segura.
+## Ouvido por: EnemyDirector, EnemyBase
+@warning_ignore("unused_signal")
+signal player_entered_safe_zone
+
+## Emitido pela SafeZone quando o player sai da área segura.
+## Ouvido por: EnemyDirector
+@warning_ignore("unused_signal")
+signal player_exited_safe_zone
+
+#endregion
+
+
+# ==============================================================================
+#region PLAYER — ESTADO
+# ==============================================================================
+
+## Emitido pelo player quando morre.
+## Ouvido por: DeathScreen, sistemas futuros
+@warning_ignore("unused_signal")
+signal player_died
+
+#endregion
+
+
+# ==============================================================================
+#region RECURSOS — MADEIRA
+# ==============================================================================
+
+## Emitido pela Fireplace quando madeira é entregue com sucesso.
+## Ouvido por: HUD, sistemas futuros de progressão
+@warning_ignore("unused_signal")
+signal wood_delivered(amount: int)
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Enemies\enemy_base.gd
+============================================================
+# ==============================================================================
+# ENEMY BASE
+# ------------------------------------------------------------------------------
+# Inimigo base do Emberveil. Funciona com o sistema de Object Pool do Director.
+#
+# activate() → chamado pelo Director ao tirar do pool (inicializa o inimigo)
+# reset()    → chamado pelo Director ao devolver ao pool (limpa o estado)
+#
+# Estados:
+# - CHASE  → persegue o player via NavigationAgent
+# - ATTACK → para e ataca quando player está no raio de ataque
+# - DEAD   → morreu, aguarda ser devolvido ao pool
+# ==============================================================================
+
+class_name EnemyBase
+extends CharacterBody3D
+
+
+# ==============================================================================
+#region ESTADOS
+# ==============================================================================
+
+enum State {
+	CHASE,
+	ATTACK,
+	DEAD
+}
+
+var current_state: State = State.CHASE
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — MOVIMENTO
+# ==============================================================================
+
+@export var move_speed: float = 3.5
+@export var rotation_speed: float = 6.0
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — VIDA
+# ==============================================================================
+
+@export var max_health: float = 100.0
+
+var current_health: float = max_health
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — ATAQUE
+# ==============================================================================
+
+@export var attack_damage: float = 10.0
+@export var attack_cooldown: float = 1.0
+
+var attack_timer: float = 0.0
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO — DESPAWN
+# ------------------------------------------------------------------------------
+# IMPORTANTE: despawn_distance DEVE ser maior que max_spawn_distance do Director
+# (atualmente 50.0) para evitar que inimigos sejam despawnados logo após spawnar.
+# ==============================================================================
+
+@export var despawn_distance: float = 65.0
+
+#endregion
+
+
+# ==============================================================================
+#region EFEITOS
+# ------------------------------------------------------------------------------
+# slow_multiplier: alimentado pelo Lantern System.
+# 1.0 = velocidade normal | 0.4 = 40% da velocidade original
+# ==============================================================================
+
+var slow_multiplier: float = 1.0
+
+func set_slow(value: float) -> void:
+	slow_multiplier = value
+
+#endregion
+
+
+# ==============================================================================
+#region REFERÊNCIAS DE NÓS
+# ==============================================================================
+
+@onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
+@onready var hurtbox: Area3D = $Hurtbox
+@onready var attack_area: Area3D = $EnemyAttackArea
+
+#endregion
+
+
+# ==============================================================================
+#region RUNTIME
+# ==============================================================================
+
+var player: Node3D = null
+var player_inside_attack: bool = false
+
+#endregion
+
+
+# ==============================================================================
+#region POOL — FLAGS DE CONTROLE
+# ==============================================================================
+
+## Bloqueia o _physics_process até o activate() ser chamado
+var _is_active: bool = false
+
+## Aguarda 2 frames físicos após activate() para o Jolt registrar o corpo.
+## O erro "space is null" ocorre quando move_and_slide() é chamado antes
+## do Jolt ter registrado o CharacterBody3D no espaço físico.
+var _frames_since_activate: int = 0
+
+#endregion
+
+
+# ==============================================================================
+#region POOL — ACTIVATE E RESET
+# ==============================================================================
+
+func activate() -> void:
+	player = get_tree().get_first_node_in_group("player")
+	current_health = max_health
+	current_state = State.CHASE
+	slow_multiplier = 1.0
+	player_inside_attack = false
+	attack_timer = 0.0
+	_frames_since_activate = 0
+	_is_active = true
+
+
+func reset() -> void:
+	_is_active = false
+	_frames_since_activate = 0
+	player = null
+	current_state = State.DEAD
+	slow_multiplier = 1.0
+	player_inside_attack = false
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	# Conecta ao SignalBus — sem acoplamento direto ao EnemyDirector
+	SignalBus.player_entered_safe_zone.connect(_on_player_entered_safe_zone)
+
+#endregion
+
+
+# ==============================================================================
+#region PHYSICS PROCESS
+# ==============================================================================
+
+func _physics_process(delta: float) -> void:
+	if not _is_active:
+		return
+
+	_frames_since_activate += 1
+	if _frames_since_activate <= 2:
+		return
+
+	if current_state == State.DEAD:
+		return
+
+	if player == null:
+		return
+
+	_check_despawn_distance()
+
+	match current_state:
+		State.CHASE:
+			_handle_chase(delta)
+		State.ATTACK:
+			_handle_attack(delta)
+
+	move_and_slide()
+
+#endregion
+
+
+# ==============================================================================
+#region CHASE
+# ==============================================================================
+
+func _handle_chase(delta: float) -> void:
+	if player_inside_attack:
+		_change_state(State.ATTACK)
+		return
+
+	nav_agent.target_position = player.global_position
+
+	var next_position: Vector3 = nav_agent.get_next_path_position()
+	var direction: Vector3 = (next_position - global_position).normalized()
+
+	velocity.x = direction.x * move_speed * slow_multiplier
+	velocity.z = direction.z * move_speed * slow_multiplier
+
+	if direction.length() > 0.01:
+		var target_rotation: float = atan2(-direction.x, -direction.z)
+		rotation.y = lerp_angle(rotation.y, target_rotation, rotation_speed * delta)
+
+#endregion
+
+
+# ==============================================================================
+#region ATTACK
+# ==============================================================================
+
+func _handle_attack(delta: float) -> void:
+	velocity = Vector3.ZERO
+
+	if not player_inside_attack:
+		_change_state(State.CHASE)
+		return
+
+	look_at(player.global_position, Vector3.UP)
+
+	attack_timer -= delta
+	if attack_timer <= 0:
+		attack_timer = attack_cooldown
+		_attack_player()
+
+#endregion
+
+
+# ==============================================================================
+#region DANO AO PLAYER
+# ==============================================================================
+
+func _attack_player() -> void:
+	if player == null:
+		return
+	if player.has_method("take_damage"):
+		player.take_damage(attack_damage)
+
+#endregion
+
+
+# ==============================================================================
+#region RECEBER DANO
+# ==============================================================================
+
+func take_damage(damage: float) -> void:
+	if current_state == State.DEAD:
+		return
+
+	current_health -= damage
+
+	if current_health <= 0:
+		_die()
+
+#endregion
+
+
+# ==============================================================================
+#region MORTE
+# ==============================================================================
+
+func _die() -> void:
+	current_state = State.DEAD
+	EnemyDirector.instance.on_enemy_died(self)
+
+#endregion
+
+
+# ==============================================================================
+#region DESPAWN POR DISTÂNCIA
+# ==============================================================================
+
+func _check_despawn_distance() -> void:
+	if player == null:
+		return
+
+	var distance: float = global_position.distance_to(player.global_position)
+	if distance > despawn_distance:
+		EnemyDirector.instance.return_to_pool(self)
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADOS
+# ==============================================================================
+
+func _change_state(new_state: State) -> void:
+	current_state = new_state
+
+#endregion
+
+
+# ==============================================================================
+#region ÁREA DE ATAQUE — SIGNALS
+# ==============================================================================
+
+func _on_enemy_attack_area_body_entered(body: Node3D) -> void:
+	if body.is_in_group("player"):
+		player_inside_attack = true
+
+
+func _on_enemy_attack_area_body_exited(body: Node3D) -> void:
+	if body.is_in_group("player"):
+		player_inside_attack = false
+
+#endregion
+
+
+# ==============================================================================
+#region SIGNAL BUS — SAFE ZONE
+# ==============================================================================
+
+func _on_player_entered_safe_zone() -> void:
+	current_state = State.DEAD
+	velocity = Vector3.ZERO
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Enemies\enemy_nest.gd
+============================================================
+class_name EnemyNest
+extends Marker3D
+
+@export var enabled := true
+
+func can_spawn() -> bool:
+
+	return enabled
+
+
+============================================================
+ARQUIVO: Scripts\Interactables\bed.gd
+============================================================
+# ==============================================================================
+# BED
+# ------------------------------------------------------------------------------
+# Interagir com a cama passa para a próxima noite.
+# Só funciona se o objetivo de madeira da noite foi atingido.
+# ==============================================================================
+
+extends Interactable
+
+func interact():
+	# Verifica se a noite foi completada
+	if not GameManager.night_completed:
+		print("Ainda falta madeira!")
+		return
+
+	# Pega referência do player
+	var player = get_tree().get_first_node_in_group("player")
+
+	if player == null:
+		return
+
+	# Chama o GameManager para avançar a noite
+	# (função renomeada de start_next_night para advance_to_next_night)
+	GameManager.advance_to_next_night(player)
+
+	print("Próxima noite iniciada!")
+
+
+============================================================
+ARQUIVO: Scripts\Interactables\fireplace.gd
+============================================================
+# ==============================================================================
+# FIREPLACE
+# ------------------------------------------------------------------------------
+# Recebe madeira do player e entrega ao GameManager.
+# Atualiza o visual automaticamente ouvindo os signals do GameManager.
+# Não é mais chamada diretamente por nenhum sistema externo para se atualizar.
+# ==============================================================================
+
+extends Interactable
+
+@onready var wood_label: Label = $SubViewport/Label
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	# Conecta aos signals do GameManager para se manter atualizada
+	# O GameManager não precisa mais saber que a Fireplace existe
+	GameManager.night_changed.connect(_on_night_changed)
+	GameManager.night_objective_reached.connect(_on_night_objective_reached)
+	update_visual()
+
+#endregion
+
+
+# ==============================================================================
+#region INTERAÇÃO
+# ==============================================================================
+
+func interact() -> void:
+	var player: Node3D = get_tree().get_first_node_in_group("player")
+
+	if player == null:
+		return
+
+	if player.wood_count <= 0:
+		return
+
+	var missing_wood: int = GameManager.wood_goal - GameManager.delivered_wood
+	var wood_to_deliver: int = min(player.wood_count, missing_wood)
+
+	player.wood_count -= wood_to_deliver
+	GameManager.add_delivered_wood(wood_to_deliver)
+
+	# Emite evento global — HUD e outros sistemas podem reagir
+	SignalBus.wood_delivered.emit(wood_to_deliver)
+
+	update_visual()
+
+	DebugManager.log("Fireplace",
+		"Madeira entregue: " + str(GameManager.delivered_wood) +
+		"/" + str(GameManager.wood_goal)
+	)
+
+#endregion
+
+
+# ==============================================================================
+#region VISUAL
+# ==============================================================================
+
+func update_visual() -> void:
+	wood_label.text = (
+		str(GameManager.delivered_wood) +
+		"/" +
+		str(GameManager.wood_goal)
+	)
+
+#endregion
+
+
+# ==============================================================================
+#region LISTENERS DO GAME MANAGER
+# ==============================================================================
+
+func _on_night_changed(_new_night: int) -> void:
+	update_visual()
+
+
+func _on_night_objective_reached() -> void:
+	# Gancho para feedback visual futuro (animação, brilho, som)
+	update_visual()
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Interactables\interactable.gd
+============================================================
+class_name Interactable
+extends Node3D
+
+#NOME MOSTRADO NA INTERFACE
+@export var interaction_name := "Interagir"
+
+func interact():
+	#FUNÇÃO BASE DE INTERAÇÃO
+	pass
+
+
+============================================================
+ARQUIVO: Scripts\Interactables\wood_pickup.gd
+============================================================
+extends Interactable
+
+#QUANTIDADE DE MADEIRA QUE ESTE ITEM DÁ
+@export var wood_amount := 1
+
+func interact():
+
+	#PEGA REFERÊNCIA DO PLAYER
+	var player = get_tree().get_first_node_in_group("player")
+
+	#VERIFICA SE PLAYER EXISTE
+	if player:
+
+		#VERIFICA SE AINDA PODE COLETAR
+		if player.can_collect_wood(wood_amount):
+
+			#ADICIONA MADEIRA AO INVENTÁRIO
+			player.add_wood(wood_amount)
+
+			#REMOVE OBJETO DO MUNDO
+			queue_free()
+
+
+============================================================
+ARQUIVO: Scripts\Managers\enemy_director.gd
+============================================================
+# ==============================================================================
+# ENEMY DIRECTOR
+# ------------------------------------------------------------------------------
+# Sistema central que controla tudo relacionado a inimigos.
+#
+# NÃO guarda o número da noite — ouve o signal night_changed do GameManager.
+# NÃO é chamado diretamente pela SafeZone — ouve o SignalBus.
+#
+# Pilares:
+# - Object Pool     → inimigos criados uma vez, reciclados sempre
+# - Wave System     → ondas com budget, cooldown e escalada por noite
+# - Spawn por nest  → distância filtrada, sensação de floresta viva
+# - Safe Zone       → pausa e devolve inimigos ao pool via SignalBus
+# ==============================================================================
+
+class_name EnemyDirector
+extends Node
+
+static var instance: EnemyDirector
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO DO POOL
+# ==============================================================================
+
+@export var enemy_scene: PackedScene
+@export var pool_size: int = 20
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO BASE DE WAVES
+# ==============================================================================
+
+@export var base_max_alive: int        = 3
+@export var base_wave_size: int        = 4
+@export var wave_cooldown: float       = 8.0
+@export var spawn_interval: float      = 1.5
+@export var min_spawn_distance: float  = 5.0
+@export var max_spawn_distance: float  = 50.0
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO CALCULADO DA NOITE ATUAL
+# ==============================================================================
+
+var max_enemies_alive: int = 3
+var wave_size: int         = 4
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO INTERNO DAS WAVES
+# ==============================================================================
+
+var current_wave: int               = 0
+var enemies_remaining_in_wave: int  = 0
+var spawn_timer: float              = 0.0
+var cooldown_timer: float           = 0.0
+
+enum DirectorState { IDLE, SPAWNING, COOLDOWN }
+var state: DirectorState = DirectorState.IDLE
+
+#endregion
+
+
+# ==============================================================================
+#region RUNTIME
+# ==============================================================================
+
+var pool: Array           = []
+var active_enemies: Array = []
+var nests: Array          = []
+var player: Node3D        = null
+var player_inside_safe_zone: bool = false
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	instance = self
+
+	nests  = get_tree().get_nodes_in_group("enemy_nest")
+	player = get_tree().get_first_node_in_group("player")
+
+	GameManager.night_changed.connect(_on_night_changed)
+	GameManager.night_started.connect(_on_night_started)
+
+	SignalBus.player_entered_safe_zone.connect(_on_player_entered_safe_zone)
+	SignalBus.player_exited_safe_zone.connect(_on_player_exited_safe_zone)
+
+	create_pool()
+	apply_night_settings(GameManager.current_night)
+
+#endregion
+
+
+# ==============================================================================
+#region LISTENERS DO GAME MANAGER
+# ==============================================================================
+
+func _on_night_changed(new_night: int) -> void:
+	_reset_for_new_night()
+	apply_night_settings(new_night)
+	DebugManager.log("EnemyDirector", "Atualizado para noite " + str(new_night))
+
+
+func _on_night_started() -> void:
+	start_night()
+
+#endregion
+
+
+# ==============================================================================
+#region LISTENERS DO SIGNAL BUS — SAFE ZONE
+# ==============================================================================
+
+func _on_player_entered_safe_zone() -> void:
+	player_inside_safe_zone = true
+	for enemy in active_enemies.duplicate():
+		return_to_pool(enemy)
+	state = DirectorState.IDLE
+	DebugManager.log("EnemyDirector", "Safe zone. Inimigos devolvidos ao pool.")
+
+
+func _on_player_exited_safe_zone() -> void:
+	player_inside_safe_zone = false
+	state = DirectorState.COOLDOWN
+	cooldown_timer = 3.0
+	DebugManager.log("EnemyDirector", "Saiu da safe zone. Nova wave em 3s.")
+
+#endregion
+
+
+# ==============================================================================
+#region ESCALADA DE DIFICULDADE
+# ==============================================================================
+
+func apply_night_settings(night: int) -> void:
+	max_enemies_alive = base_max_alive + (night - 1)
+	wave_size         = base_wave_size + (night - 1) * 2
+	DebugManager.log("EnemyDirector",
+		"Noite " + str(night) +
+		" | Max vivos: " + str(max_enemies_alive) +
+		" | Wave size: " + str(wave_size)
+	)
+
+#endregion
+
+
+# ==============================================================================
+#region OBJECT POOL
+# ==============================================================================
+
+func create_pool() -> void:
+	if enemy_scene == null:
+		push_error("EnemyDirector: enemy_scene não atribuída no Inspector!")
+		return
+
+	for i in pool_size:
+		var enemy := enemy_scene.instantiate()
+		add_child(enemy)
+		enemy.visible      = false
+		enemy.process_mode = Node.PROCESS_MODE_DISABLED
+		pool.append(enemy)
+
+	DebugManager.log("EnemyDirector", "Pool criado com " + str(pool_size) + " inimigos.")
+
+
+func get_from_pool() -> Node3D:
+	for enemy in pool:
+		if not enemy.visible:
+			return enemy
+	return null
+
+
+func return_to_pool(enemy: Node3D) -> void:
+	active_enemies.erase(enemy)
+	enemy.global_position = Vector3(0, -100, 0)
+	enemy.visible         = false
+	enemy.process_mode    = Node.PROCESS_MODE_DISABLED
+	if enemy.has_method("reset"):
+		enemy.reset()
+
+#endregion
+
+
+# ==============================================================================
+#region CONTROLE DE NOITE
+# ==============================================================================
+
+func start_night() -> void:
+	current_wave   = 0
+	state          = DirectorState.COOLDOWN
+	cooldown_timer = 3.0
+	DebugManager.log("EnemyDirector", "Primeira wave em 3 segundos.")
+
+
+func _reset_for_new_night() -> void:
+	for enemy in active_enemies.duplicate():
+		return_to_pool(enemy)
+	current_wave              = 0
+	enemies_remaining_in_wave = 0
+	spawn_timer               = 0.0
+	cooldown_timer            = 0.0
+	state                     = DirectorState.IDLE
+
+#endregion
+
+
+# ==============================================================================
+#region PROCESS
+# ==============================================================================
+
+func _process(delta: float) -> void:
+	if player_inside_safe_zone:
+		return
+	match state:
+		DirectorState.COOLDOWN:  _handle_cooldown(delta)
+		DirectorState.SPAWNING:  _handle_spawning(delta)
+		DirectorState.IDLE:      pass
+
+#endregion
+
+
+# ==============================================================================
+#region WAVE SYSTEM
+# ==============================================================================
+
+func _handle_cooldown(delta: float) -> void:
+	cooldown_timer -= delta
+	if cooldown_timer <= 0:
+		_start_next_wave()
+
+
+func _start_next_wave() -> void:
+	current_wave              += 1
+	enemies_remaining_in_wave  = wave_size
+	spawn_timer                = 0.0
+	state                      = DirectorState.SPAWNING
+	DebugManager.log("EnemyDirector",
+		"Wave " + str(current_wave) + " iniciada! (" + str(wave_size) + " inimigos)"
+	)
+
+
+func _handle_spawning(delta: float) -> void:
+	if enemies_remaining_in_wave > 0:
+		spawn_timer -= delta
+		if spawn_timer <= 0:
+			spawn_timer = spawn_interval
+			if active_enemies.size() < max_enemies_alive:
+				_try_spawn_enemy()
+	elif active_enemies.is_empty():
+		_wave_completed()
+
+
+func _wave_completed() -> void:
+	DebugManager.log("EnemyDirector",
+		"Wave " + str(current_wave) + " completa! Próxima em " + str(wave_cooldown) + "s."
+	)
+	state          = DirectorState.COOLDOWN
+	cooldown_timer = wave_cooldown
+
+#endregion
+
+
+# ==============================================================================
+#region SPAWN
+# ==============================================================================
+
+func _try_spawn_enemy() -> void:
+	if player == null:
+		return
+
+	var valid_nests: Array = []
+	for nest in nests:
+		if not nest.can_spawn():
+			continue
+		var distance: float = nest.global_position.distance_to(player.global_position)
+		if distance < min_spawn_distance or distance > max_spawn_distance:
+			continue
+		valid_nests.append(nest)
+
+	if valid_nests.is_empty():
+		return
+
+	var chosen_nest: Node3D = valid_nests.pick_random()
+	var enemy: Node3D       = get_from_pool()
+
+	if enemy == null:
+		return
+
+	# Raycast de cima para baixo para encontrar o chão real
+	var ray_origin: Vector3 = chosen_nest.global_position + Vector3(0, 3.0, 0)
+	var ray_end: Vector3    = ray_origin + Vector3(0, -6.0, 0)
+
+	var ray_query := PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
+	ray_query.collision_mask = 1
+	ray_query.exclude        = [enemy.get_rid()]
+
+	# Tipo explícito necessário — GDScript não infere PhysicsDirectSpaceState3D
+	var space_state: PhysicsDirectSpaceState3D = \
+		get_tree().current_scene.get_world_3d().direct_space_state
+	var result: Dictionary = space_state.intersect_ray(ray_query)
+
+	var spawn_position: Vector3
+	if result:
+		spawn_position = result.position + Vector3(0, 0.75, 0)
+	else:
+		spawn_position = chosen_nest.global_position + Vector3(0, 0.75, 0)
+
+	enemy.global_position = spawn_position
+	enemy.visible         = true
+	enemy.process_mode    = Node.PROCESS_MODE_INHERIT
+
+	if enemy.has_method("activate"):
+		enemy.activate()
+
+	active_enemies.append(enemy)
+	enemies_remaining_in_wave -= 1
+
+#endregion
+
+
+# ==============================================================================
+#region GERENCIAMENTO DE INIMIGOS
+# ==============================================================================
+
+func on_enemy_died(enemy: Node3D) -> void:
+	return_to_pool(enemy)
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Managers\game_manager.gd
+============================================================
+# ==============================================================================
+# GAME MANAGER
+# ------------------------------------------------------------------------------
+# Controlador central do jogo. É a ÚNICA fonte da verdade para:
+# - Número da noite atual
+# - Progresso de madeira
+# - Estado geral do loop (noite ativa, completada, etc)
+#
+# Quando a noite avança, emite signals para que TODOS os sistemas se atualizem.
+# O GameManager não conhece nenhum objeto de cena específico — apenas emite.
+# ==============================================================================
+
+extends Node
+
+
+# ==============================================================================
+#region SIGNALS
+# ==============================================================================
+
+## Emitido quando a noite avança — todos os sistemas que dependem da noite ouvem
+signal night_changed(new_night: int)
+
+## Emitido quando o player sai da cabana e a noite começa de fato
+signal night_started
+
+## Emitido quando o objetivo de madeira da noite é atingido
+signal night_objective_reached
+
+#endregion
+
+
+# ==============================================================================
+#region NOITE
+# ==============================================================================
+
+## Noite atual — ÚNICA fonte da verdade de todo o jogo.
+## Nunca modifique diretamente de fora — use as funções abaixo.
+var current_night: int = 1
+
+#endregion
+
+
+# ==============================================================================
+#region MADEIRA
+# ==============================================================================
+
+## Quantidade de madeira necessária para completar a noite atual
+var wood_goal: int = 0
+
+## Madeira já entregue na lareira nesta noite
+var delivered_wood: int = 0
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO DA NOITE
+# ==============================================================================
+
+## True quando o player entregou madeira suficiente para dormir
+var night_completed: bool = false
+
+## True enquanto a noite está em andamento
+var night_active: bool = false
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	_apply_night_settings()
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO DE NOITE
+# ------------------------------------------------------------------------------
+# Centraliza todos os valores que mudam a cada noite.
+# TODO (Refatoração 4): mover fórmulas para NightConfig.tres (Resource).
+# ==============================================================================
+
+func _apply_night_settings() -> void:
+	# Noite 1: 5 | Noite 2: 7 | Noite 3: 9...
+	wood_goal = 3 + (current_night * 2)
+
+	delivered_wood = 0
+	night_completed = false
+
+	DebugManager.log("GameManager",
+		"Noite " + str(current_night) +
+		" | Objetivo de madeira: " + str(wood_goal)
+	)
+
+
+## Retorna um valor escalado pela noite.
+## Exemplo: get_scaled_value(10.0, 0.2) na noite 3 = 14.0
+func get_scaled_value(base_value: float, scale_per_night: float) -> float:
+	return base_value + ((current_night - 1) * scale_per_night * base_value)
+
+#endregion
+
+
+# ==============================================================================
+#region CONTROLE DE NOITE
+# ==============================================================================
+
+## Chamado quando o player sai da cabana e a noite começa de fato
+func start_night() -> void:
+	night_active = true
+	night_started.emit()
+	DebugManager.log("GameManager", "Noite " + str(current_night) + " iniciada!")
+
+
+## Chamado pela cama quando o player vai dormir.
+## Recebe referência do player para resetar inventário.
+## TODO (Refatoração 3): substituir player.wood_count = 0 por player.inventory.reset()
+func advance_to_next_night(player: Node) -> void:
+	if not night_completed:
+		DebugManager.log("GameManager", "Ainda falta madeira!")
+		return
+
+	current_night += 1
+
+	# TODO (Refatoração 3): player.inventory.reset()
+	player.wood_count = 0
+
+	night_active = false
+	_apply_night_settings()
+
+	# Avisa todos os sistemas que a noite mudou.
+	# Fireplace, EnemyDirector, HUD — todos ouvem este signal.
+	# O GameManager não chama ninguém diretamente.
+	night_changed.emit(current_night)
+
+	DebugManager.log("GameManager", "Avançou para noite " + str(current_night))
+
+#endregion
+
+
+# ==============================================================================
+#region SISTEMA DE MADEIRA
+# ==============================================================================
+
+func add_delivered_wood(amount: int) -> void:
+	delivered_wood += amount
+	delivered_wood = clamp(delivered_wood, 0, wood_goal)
+	_check_night_completion()
+
+
+func _check_night_completion() -> void:
+	if delivered_wood >= wood_goal:
+		night_completed = true
+		night_objective_reached.emit()
+		DebugManager.log("GameManager", "NOITE COMPLETADA!")
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Player\lantern.gd
+============================================================
+# ==============================================================================
+# LANTERN SYSTEM
+# ------------------------------------------------------------------------------
+# Dois modos de operação:
+# - NORMAL:  OmniLight ativo — ilumina ao redor, sem dano, sem consumo
+# - COMBATE: OmniLight apaga, SpotLight acende — dano contínuo, consome energia
+#
+# Energia só é consumida no modo combate.
+# Quando energia acaba, volta ao modo normal sem possibilidade de combate.
+# ==============================================================================
+
+class_name Lantern
+extends Node3D
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO DE ENERGIA
+# ==============================================================================
+
+# DEBUG
+@onready var debug_label_energia = $"Debug2/Energia"
+
+# Energia máxima da lamparina
+@export var max_energy := 100.0
+
+# Energia consumida por segundo no modo combate
+@export var energy_drain := 10.0
+
+# Energia atual — lida pela UI
+var current_energy := 100.0
+
+# True quando está no modo combate (spotlight ativo)
+var is_active := false
+
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO DE DANO
+# ==============================================================================
+
+# Dano por segundo nos inimigos dentro do cone
+@export var damage_per_second := 20.0
+
+# Fator de slow aplicado aos inimigos iluminados
+# 0.4 = inimigo fica a 40% da velocidade original
+@export var slow_factor := 0.4
+
+#endregion
+
+
+# ==============================================================================
+#region REFERÊNCIAS DE NÓS
+# ==============================================================================
+
+# Luz direcional — modo combate
+@onready var spot_light: SpotLight3D = $"../LanternPivot/SpotLight3D"
+
+# Luz ambiente — modo normal (ilumina ao redor)
+@onready var omni_light: OmniLight3D = $"../LanternPivot/OmniLight3D"
+
+# Hitbox do cone de dano
+@onready var lantern_cone: Area3D = $LanternRay
+
+# Partículas do feixe — modo combate
+@onready var beam_particles: GPUParticles3D = $"../LanternPivot/BeamParticles"
+
+# OmniLight de combate — halo de energia ao redor da lamparina
+@onready var combat_omni: OmniLight3D = $"../LanternPivot/CombatOmniLight"
+
+#endregion
+
+
+# ==============================================================================
+#region RUNTIME
+# ==============================================================================
+
+# Inimigos atualmente dentro do cone de luz
+var enemies_in_cone: Array = []
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready():
+	current_energy = max_energy
+
+	# Estado inicial — modo normal ligado, modo combate desligado
+	is_active = false
+	spot_light.visible = false
+	omni_light.visible = true
+	lantern_cone.monitoring = false
+	beam_particles.emitting = false
+	combat_omni.visible = false
+
+	# Conecta signals do cone
+	lantern_cone.body_entered.connect(_on_cone_body_entered)
+	lantern_cone.body_exited.connect(_on_cone_body_exited)
+
+#endregion
+
+
+# ==============================================================================
+#region PROCESS
+# ==============================================================================
+
+func _process(delta):
+	handle_input()
+	handle_energy(delta)
+	handle_damage(delta)
+	handle_flicker(delta)
+	handle_spot_flicker(delta)
+	debug_label_energia.text = "Energia: " + str(int(current_energy))
+
+#endregion
+
+
+# ==============================================================================
+#region INPUT
+# ------------------------------------------------------------------------------
+# Segurar o botão ativa modo combate.
+# Soltar volta ao modo normal.
+# Sem energia = não pode ativar modo combate.
+# ==============================================================================
+
+func handle_input():
+	if Input.is_action_pressed("lantern") and current_energy > 0:
+		set_combat_mode(true)
+	else:
+		set_combat_mode(false)
+
+#endregion
+
+
+# ==============================================================================
+#region ENERGIA
+# ------------------------------------------------------------------------------
+# Energia só é consumida no modo combate.
+# Ao acabar, desativa o modo combate automaticamente.
+# ==============================================================================
+
+func handle_energy(delta):
+	if not is_active:
+		return
+
+	current_energy -= energy_drain * delta
+	current_energy = max(current_energy, 0.0)
+
+	if current_energy <= 0:
+		set_combat_mode(false)
+
+
+# Chamado pela seiva (Fase 2) para reabastecer energia
+func add_energy(amount: float):
+	current_energy = min(current_energy + amount, max_energy)
+	print("Lantern: Energia reabastecida. Atual: ", current_energy)
+
+
+# Retorna porcentagem de energia (0.0 a 1.0) — usado pela UI
+func get_energy_percent() -> float:
+	return current_energy / max_energy
+
+#endregion
+
+
+# ==============================================================================
+#region MODO COMBATE
+# ------------------------------------------------------------------------------
+# Alterna entre modo normal (omni) e modo combate (spot + hitbox).
+# ==============================================================================
+
+func set_combat_mode(active: bool):
+	# Evita processar se o estado não mudou
+	if is_active == active:
+		return
+
+	is_active = active
+
+	if active:
+		# MODO COMBATE — fecha o feixe
+		omni_light.visible = false
+		spot_light.visible = true
+		lantern_cone.monitoring = true
+		beam_particles.emitting = true
+		combat_omni.visible = true
+	else:
+		# MODO NORMAL — abre a luz ambiente
+		spot_light.visible = false
+		omni_light.visible = true
+		lantern_cone.monitoring = false
+		beam_particles.emitting = false
+		combat_omni.visible = false
+
+		# Remove slow de todos os inimigos iluminados
+		restore_all_slow()
+
+#endregion
+
+
+# ==============================================================================
+#region DANO CONTÍNUO
+# ==============================================================================
+
+func handle_damage(delta):
+	if not is_active:
+		return
+
+	for enemy in enemies_in_cone.duplicate():
+		if not is_instance_valid(enemy):
+			enemies_in_cone.erase(enemy)
+			continue
+
+		if enemy.has_method("take_damage"):
+			enemy.take_damage(damage_per_second * delta)
+
+#endregion
+
+
+# ==============================================================================
+#region SLOW NOS INIMIGOS
+# ==============================================================================
+
+func apply_slow(enemy: Node3D):
+	if enemy.has_method("set_slow"):
+		enemy.set_slow(slow_factor)
+	elif "slow_multiplier" in enemy:
+		enemy.slow_multiplier = slow_factor
+
+
+func remove_slow(enemy: Node3D):
+	if not is_instance_valid(enemy):
+		return
+	if enemy.has_method("set_slow"):
+		enemy.set_slow(1.0)
+	elif "slow_multiplier" in enemy:
+		enemy.slow_multiplier = 1.0
+
+
+func restore_all_slow():
+	for enemy in enemies_in_cone.duplicate():
+		remove_slow(enemy)
+	enemies_in_cone.clear()
+
+#endregion
+
+
+# ==============================================================================
+#region SIGNALS DO CONE
+# ==============================================================================
+
+func _on_cone_body_entered(body):
+	if body.is_in_group("enemy"):
+		enemies_in_cone.append(body)
+		apply_slow(body)
+
+
+func _on_cone_body_exited(body):
+	if body.is_in_group("enemy"):
+		enemies_in_cone.erase(body)
+		remove_slow(body)
+
+#endregion
+
+# ==============================================================================
+#region FLICKER DA OMNILIGHT
+# ------------------------------------------------------------------------------
+# Simula a chama do lampião variando a intensidade da OmniLight.
+# Usa sin() com variação aleatória pra parecer orgânico, não mecânico.
+# ==============================================================================
+
+# Intensidade base da OmniLight (valor central do flicker)
+@export var omni_base_energy := 2.0
+
+# Quanto a intensidade pode variar pra cima e pra baixo
+@export var omni_flicker_amount := 0.4
+
+# Acumula o tempo para o sin()
+var flicker_time := 0.0
+
+func handle_flicker(delta):
+	# Só flicka no modo normal (omni ativa)
+	if is_active:
+		return
+
+	flicker_time += delta
+
+	# Atualiza a cada intervalo curtíssimo — simula tremida do fogo
+	if flicker_time >= randf_range(0.02, 0.05):
+		flicker_time = 0.0
+
+		# Valor aleatório puro — sem sin(), sem suavidade
+		var flicker = randf_range(-omni_flicker_amount, omni_flicker_amount)
+
+		# Chance de 20% de dar um pulo maior de intensidade
+		# simula aquele momento que o fogo "estoura"
+		if randf() < 0.2:
+			flicker *= 2.5
+
+		# Aplica diretamente sem interpolação — travado mesmo
+		omni_light.light_energy = omni_base_energy + flicker
+
+#endregion
+
+# ==============================================================================
+#region FLICKER DO SPOTLIGHT
+# ------------------------------------------------------------------------------
+# Simula instabilidade do feixe no modo combate.
+# Energia violenta e irregular — diferente do flicker suave da OmniLight.
+# ==============================================================================
+
+# Energia base do SpotLight
+@export var spot_base_energy := 15.0
+
+# Variação máxima de energia
+@export var spot_flicker_amount := 4.0
+
+var spot_flicker_time := 0.0
+
+func handle_spot_flicker(delta):
+	if not is_active:
+		return
+
+	spot_flicker_time += delta
+
+	if spot_flicker_time >= randf_range(0.03, 0.08):
+		spot_flicker_time = 0.0
+
+		var flicker = randf_range(-spot_flicker_amount, spot_flicker_amount)
+
+		# 25% de chance de pulo violento de energia
+		if randf() < 0.25:
+			flicker *= 2.0
+
+		spot_light.light_energy = clamp(
+			spot_base_energy + flicker,
+			spot_base_energy * 0.4,
+			spot_base_energy * 1.8
+		)
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Player\player_controller.gd
+============================================================
+# ==============================================================================
+# PLAYER CONTROLLER
+# ------------------------------------------------------------------------------
+# Responsabilidade: movimento, câmera, gravidade, interação. em breve sera
+#fragmentado pra não se tornar um god_entity (muito código em um lugar)
+#
+# TODO (Refatoração 3): extrair Health, Stamina e Inventory para componentes.
+#
+# Separação de ciclos:
+# - _process       → câmera (roda no framerate real, sem jitter)
+# - _physics_process → movimento, física, interação (roda no ciclo de física)
+# ==============================================================================
+
+extends CharacterBody3D
+
+
+# ==============================================================================
+#region DEBUG
+# ==============================================================================
+
+@onready var debug_label_stamina: Label = $"./Debug/VBoxContainer/Stamina"
+@onready var debug_label_madeira: Label = $"./Debug/VBoxContainer/Madeira"
+@onready var debug_label_health: Label  = $"./Debug/VBoxContainer/Health"
+
+#endregion
+
+
+# ==============================================================================
+#region MOVIMENTO
+# ==============================================================================
+
+@export var walk_speed: float = 4.0
+@export var sprint_speed: float = 10.0
+@export var gravity: float = 20.0
+@export var mouse_sensitivity: float = 0.002
+@export var acceleration: float = 30.0
+@export var deceleration: float   = 45.0
+
+var current_speed: float      = walk_speed
+var input_direction: Vector2  = Vector2.ZERO
+
+#endregion
+
+
+# ==============================================================================
+#region CÂMERA
+# ==============================================================================
+
+# Limites de pitch da câmera em radianos — constantes evitam cálculo todo frame
+const MAX_PITCH: float = 1.3963  # deg_to_rad(80)
+const MIN_PITCH: float = -1.3963 # deg_to_rad(-80)
+
+var mouse_delta: Vector2 = Vector2.ZERO
+
+#endregion
+
+
+# ==============================================================================
+#region STAMINA
+# ------------------------------------------------------------------------------
+# TODO (Refatoração 3): mover para StaminaComponent
+# ==============================================================================
+
+@export var max_stamina: float             = 100.0
+@export var stamina_drain: float           = 25.0
+@export var stamina_recovery: float        = 20.0
+@export var stamina_recovery_delay: float  = 1.5
+
+var current_stamina: float       = max_stamina
+var stamina_recovery_timer: float = 0.0
+
+#endregion
+
+
+# ==============================================================================
+#region INVENTÁRIO
+# ------------------------------------------------------------------------------
+# TODO (Refatoração 3): mover para InventoryComponent
+# ==============================================================================
+
+var wood_count: int = 0
+
+#endregion
+
+
+# ==============================================================================
+#region REFERÊNCIAS DE NÓS
+# ==============================================================================
+
+@onready var head: Node3D             = $Head
+@onready var interaction_ray: RayCast3D = $Head/Camera/InteractionRay
+@onready var interaction_ring: TextureRect = $UI/CenterContainer/InteractionRing
+@onready var health: HealthComponent = $Components/HealthComponent
+
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	interaction_ray.add_exception(self)
+	current_stamina = max_stamina
+
+#endregion
+
+
+# ==============================================================================
+#region INPUT — MOUSE
+# ==============================================================================
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		mouse_delta += event.relative
+
+#endregion
+
+
+# ==============================================================================
+#region PROCESS — CÂMERA E DEBUG
+# ------------------------------------------------------------------------------
+# Câmera roda no framerate real para evitar jitter durante strafe.
+# Debug labels atualizam aqui — nunca no _physics_process.
+# ==============================================================================
+
+func _process(_delta: float) -> void:
+	if health.is_dead():
+		return
+
+	_handle_camera()
+	DebugManager.label(debug_label_stamina, "Stamina: " + str(int(current_stamina)))
+	DebugManager.label(debug_label_madeira, "Madeira: " + str(wood_count) + "/" + str(GameManager.wood_goal))
+	DebugManager.label(
+	debug_label_health,
+	"Vida: " + str(int(health.get_percent() * health.max_health))
+	)
+
+#endregion
+
+
+# ==============================================================================
+#region PHYSICS PROCESS — MOVIMENTO E FÍSICA
+# ------------------------------------------------------------------------------
+# Movimento, gravidade e interação rodam no ciclo de física.
+# Câmera NÃO está aqui — está em _process.
+# ==============================================================================
+
+func _physics_process(delta: float) -> void:
+	
+	if health.is_dead():
+		return
+
+	_handle_gravity(delta)
+	_handle_input()
+	_handle_stamina(delta)
+	_handle_movement(delta)
+	move_and_slide()
+	_handle_interaction()
+	_update_crosshair()
+
+#endregion
+
+
+# ==============================================================================
+#region CÂMERA
+# ==============================================================================
+
+func _handle_camera() -> void:
+	if mouse_delta == Vector2.ZERO:
+		return
+
+	rotate_y(-mouse_delta.x * mouse_sensitivity)
+
+	head.rotate_x(-mouse_delta.y * mouse_sensitivity)
+	head.rotation.x = clamp(head.rotation.x, MIN_PITCH, MAX_PITCH)
+
+	mouse_delta = Vector2.ZERO
+
+#endregion
+
+
+# ==============================================================================
+#region MOVIMENTO
+# ==============================================================================
+
+func _handle_input() -> void:
+	input_direction = Input.get_vector(
+		"move_left", "move_right", "move_forward", "move_backward"
+	)
+
+
+func _handle_gravity(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+
+
+func _handle_movement(delta: float) -> void:
+	var direction: Vector3 = (
+		transform.basis * Vector3(input_direction.x, 0, input_direction.y)
+	).normalized()
+
+	if direction:
+		velocity.x = move_toward(velocity.x, direction.x * current_speed, acceleration * delta)
+		velocity.z = move_toward(velocity.z, direction.z * current_speed, acceleration * delta)
+	else:
+		velocity.x = move_toward(velocity.x, 0, deceleration * delta)
+		velocity.z = move_toward(velocity.z, 0, deceleration * delta)
+
+#endregion
+
+
+# ==============================================================================
+#region STAMINA
+# ==============================================================================
+
+func _handle_stamina(delta: float) -> void:
+	var is_sprinting: bool = Input.is_action_pressed("sprint")
+	var is_moving: bool    = input_direction != Vector2.ZERO
+
+	if is_sprinting and is_moving and current_stamina > 0:
+		current_speed = sprint_speed
+		current_stamina -= stamina_drain * delta
+		stamina_recovery_timer = stamina_recovery_delay
+	else:
+		current_speed = walk_speed
+		stamina_recovery_timer -= delta
+		if stamina_recovery_timer <= 0:
+			current_stamina += stamina_recovery * delta
+
+	current_stamina = clamp(current_stamina, 0.0, max_stamina)
+
+#endregion
+
+
+# ==============================================================================
+#region INTERAÇÃO
+# ==============================================================================
+
+func _handle_interaction() -> void:
+	if not Input.is_action_just_pressed("interact"):
+		return
+	if not interaction_ray.is_colliding():
+		return
+
+	# Sobe na hierarquia procurando um nó do grupo "interactable"
+	# Funciona independente de quantos níveis de hierarquia existam
+	var node: Node = interaction_ray.get_collider()
+	while node != null:
+		if node.is_in_group("interactable") and node.has_method("interact"):
+			node.interact()
+			return
+		node = node.get_parent()
+
+
+func add_wood(amount: int) -> void:
+	wood_count += amount
+	DebugManager.log("Player", "Madeira coletada. Total: " + str(wood_count))
+
+
+func can_collect_wood(amount: int) -> bool:
+	var total_wood: int = wood_count + GameManager.delivered_wood
+	return total_wood + amount <= GameManager.wood_goal
+
+#endregion
+
+
+# ==============================================================================
+#region CROSSHAIR
+# ==============================================================================
+
+func _update_crosshair() -> void:
+	if not interaction_ray.is_colliding():
+		interaction_ring.visible = false
+		return
+
+	var collider: Node = interaction_ray.get_collider()
+	if collider == null:
+		interaction_ring.visible = false
+		return
+
+	# Sobe na hierarquia — mesma lógica robusta da interação
+	var node: Node = collider
+	while node != null:
+		if node.is_in_group("interactable") and node.has_method("interact"):
+			interaction_ring.visible = true
+			return
+		node = node.get_parent()
+
+	interaction_ring.visible = false
+
+#endregion
+
+
+# ==============================================================================
+#region SAÚDE
+# ==============================================================================
+
+func heal(amount: float) -> void:
+	if is_dead:
+		return
+	current_health = min(current_health + amount, max_health)
+	DebugManager.log("Player", "Curado! Vida atual: " + str(current_health))
+
+
+func _die() -> void:
+	is_dead = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	# Emite evento global — DeathScreen e outros sistemas reagem via SignalBus
+	SignalBus.player_died.emit()
+
+	DebugManager.log("Player", "MORREU!")
+
+	var death_screen: Node = get_tree().get_first_node_in_group("death_screen")
+	if death_screen:
+		death_screen.show_death_screen()
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Player\Components\health_component.gd
+============================================================
+# ==============================================================================
+# HEALTH COMPONENT
+# ------------------------------------------------------------------------------
+# Responsabilidade única: gerenciar o estado de vida do player.
+#
+# - Vida atual e máxima
+# - I-frames após tomar dano
+# - Morte
+# - Cura
+#
+# O PlayerController não armazena vida — toda verdade está aqui.
+# Sistemas externos (HUD, DeathScreen) ouvem os signals.
+# ==============================================================================
+
+class_name HealthComponent
+extends Node
+
+
+# ==============================================================================
+#region SIGNALS
+# ------------------------------------------------------------------------------
+# HUD ouve health_changed para atualizar a barra.
+# DeathScreen ouve player_died para exibir a tela.
+# Sistemas de feedback ouvem player_damaged para efeitos visuais/sonoros.
+# ==============================================================================
+
+## Emitido sempre que a vida muda (dano ou cura).
+## Ouvido por: HUD
+signal health_changed(new_value: float, max_value: float)
+
+## Emitido quando o player recebe dano (não quando cura).
+## Ouvido por: sistemas de feedback visual/sonoro futuros
+signal player_damaged(amount: float)
+
+## Emitido quando a vida chega a zero.
+## Ouvido por: DeathScreen, SignalBus
+signal player_died
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO
+# ==============================================================================
+
+## Vida máxima do player.
+## TODO (Refatoração 4): mover para PlayerData.tres
+@export var max_health: float = 100.0
+
+## Duração da invencibilidade após tomar dano (em segundos).
+@export var invincibility_duration: float = 1.0
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO INTERNO
+# ------------------------------------------------------------------------------
+# Toda a verdade de vida está aqui. Nenhum outro script armazena esses valores.
+# ==============================================================================
+
+var _current_health: float = 0.0
+var _is_dead: bool = false
+var _is_invincible: bool = false
+var _invincibility_timer: float = 0.0
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	_current_health = max_health
+
+#endregion
+
+
+# ==============================================================================
+#region PROCESS
+# ==============================================================================
+
+func _process(delta: float) -> void:
+	_tick_invincibility(delta)
+
+#endregion
+
+
+# ==============================================================================
+#region API PÚBLICA
+# ==============================================================================
+
+## Aplica dano ao player.
+## Ignorado se morto ou invencível.
+func take_damage(amount: float) -> void:
+	if _is_dead or _is_invincible:
+		return
+
+	_current_health -= amount
+	_current_health = maxf(_current_health, 0.0)
+
+	# Ativa i-frames
+	_is_invincible = true
+	_invincibility_timer = invincibility_duration
+
+	# Notifica sistemas externos
+	player_damaged.emit(amount)
+	health_changed.emit(_current_health, max_health)
+
+	DebugManager.log("HealthComponent",
+		"Dano recebido: " + str(amount) +
+		" | Vida restante: " + str(_current_health)
+	)
+
+	if _current_health <= 0.0:
+		_die()
+
+
+## Cura o player pelo valor informado.
+## Ignorado se morto. Limitado ao máximo.
+func heal(amount: float) -> void:
+	if _is_dead:
+		return
+
+	_current_health = minf(_current_health + amount, max_health)
+
+	health_changed.emit(_current_health, max_health)
+
+	DebugManager.log("HealthComponent",
+		"Curado: " + str(amount) +
+		" | Vida atual: " + str(_current_health)
+	)
+
+
+## Mata o player imediatamente, ignorando i-frames e vida atual.
+## Útil para o DevConsole (kill_player) e armadilhas instakill futuras.
+func kill() -> void:
+	if _is_dead:
+		return
+	_current_health = 0.0
+	_die()
+
+
+## Retorna true se o player está morto.
+func is_dead() -> bool:
+	return _is_dead
+
+
+## Retorna a vida atual como porcentagem (0.0 a 1.0).
+## Usado pela HUD para atualizar a barra proporcionalmente.
+func get_percent() -> float:
+	if max_health <= 0.0:
+		return 0.0
+	return _current_health / max_health
+
+#endregion
+
+
+# ==============================================================================
+#region INTERNO — MORTE
+# ==============================================================================
+
+func _die() -> void:
+	_is_dead = true
+	_is_invincible = false
+
+	# Emite no SignalBus para sistemas desacoplados (DeathScreen, etc)
+	SignalBus.player_died.emit()
+
+	# Emite localmente para qualquer listener direto do componente
+	player_died.emit()
+
+	DebugManager.log("HealthComponent", "Player morreu.")
+
+#endregion
+
+
+# ==============================================================================
+#region INTERNO — I-FRAMES
+# ==============================================================================
+
+func _tick_invincibility(delta: float) -> void:
+	if not _is_invincible:
+		return
+
+	_invincibility_timer -= delta
+
+	if _invincibility_timer <= 0.0:
+		_is_invincible = false
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Systems\safe_zone.gd
+============================================================
+# ==============================================================================
+# SAFE ZONE
+# ------------------------------------------------------------------------------
+# Detecta quando o player entra ou sai da zona segura.
+#
+# RESPONSABILIDADE ÚNICA: detectar o player e emitir o evento.
+# Não conhece EnemyDirector, não conhece nenhum outro sistema.
+# Qualquer sistema que precise reagir à safe zone conecta ao SignalBus.
+# ==============================================================================
+
+class_name SafeZone
+extends Area3D
+
+
+func _on_body_entered(body: Node3D) -> void:
+	if body.is_in_group("player"):
+		SignalBus.player_entered_safe_zone.emit()
+
+
+func _on_body_exited(body: Node3D) -> void:
+	if body.is_in_group("player"):
+		SignalBus.player_exited_safe_zone.emit()
+
+
+============================================================
+ARQUIVO: Scripts\UI\death_screen.gd
+============================================================
+# ==============================================================================
+# DEATH SCREEN
+# ------------------------------------------------------------------------------
+# Tela de morte do Emberveil.
+# Fluxo: fade in escuro → texto → botão de retry
+#
+# Futuramente: estatísticas da run (noite atingida, inimigos mortos, etc)
+# ==============================================================================
+
+class_name DeathScreen
+extends CanvasLayer
+
+
+# ==============================================================================
+#region REFERÊNCIAS
+# ==============================================================================
+
+# Fundo preto que faz o fade
+@onready var fade_rect: ColorRect = $FadeRect
+
+# Container do conteúdo — aparece após o fade
+@onready var content: VBoxContainer = $Content
+
+# Label da mensagem de morte
+@onready var death_label: Label = $Content/DeathLabel
+
+# Botão de retry
+@onready var retry_button: Button = $Content/RetryButton
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO
+# ==============================================================================
+
+# Duração do fade in (segundos)
+@export var fade_duration := 1.5
+
+# Mensagens de morte — escolhe aleatória a cada vez
+# Futuramente pode variar por causa da morte
+var death_messages := [
+	"A floresta venceu...",
+	"A escuridão te consumiu...",
+	"A lamparina se apagou...",
+	"As criaturas venceram esta noite...",
+]
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready():
+	# Começa invisível
+	visible = false
+	fade_rect.modulate.a = 0.0
+	content.visible = false
+
+	# Sempre processa mesmo com jogo pausado
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
+#endregion
+
+
+# ==============================================================================
+#region MOSTRAR TELA DE MORTE
+# ------------------------------------------------------------------------------
+# Chamado pelo player ao morrer.
+# ==============================================================================
+
+func show_death_screen():
+	visible = true
+
+	# Escolhe mensagem aleatória
+	death_label.text = death_messages.pick_random()
+
+	# Inicia o fade
+	await fade_in()
+
+	# Mostra o conteúdo após o fade
+	content.visible = true
+
+
+func fade_in():
+	# Anima o alpha do fundo preto de 0 a 1
+	var tween = create_tween()
+	tween.tween_property(
+		fade_rect,
+		"modulate:a",
+		1.0,
+		fade_duration
+	)
+	await tween.finished
+
+#endregion
+
+
+# ==============================================================================
+#region BOTÕES
+# ==============================================================================
+
+func _on_retry_button_pressed():
+	# Despausa caso esteja pausado
+	get_tree().paused = false
+
+	# Recarrega a cena — reset roguelike completo
+	get_tree().reload_current_scene()
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\UI\pause_menu.gd
+============================================================
+# ==============================================================================
+# PAUSE MENU
+# ------------------------------------------------------------------------------
+# Menu de pausa básico para desenvolvimento.
+# ESC → pausa o jogo e libera o mouse
+# ESC novamente → retoma e trava o mouse
+#
+# Futuramente receberá: botão de configurações, voltar ao menu, etc.
+# ==============================================================================
+
+class_name PauseMenu
+extends CanvasLayer
+
+
+# ==============================================================================
+#region REFERÊNCIAS
+# ==============================================================================
+
+# Painel de fundo do pause — esconde/mostra o menu
+@onready var panel = $Panel
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO
+# ==============================================================================
+
+# True quando o jogo está pausado
+var is_paused := false
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready():
+	# Começa escondido e sem pausar
+	panel.visible = false
+
+	# CanvasLayer sempre visível mesmo com o jogo pausado
+	# Isso é necessário para o menu aparecer durante a pausa
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
+#endregion
+
+
+# ==============================================================================
+#region INPUT
+# ==============================================================================
+
+func _unhandled_input(event):
+	if event is InputEventKey and event.pressed:
+		if Input.is_action_just_pressed("ui_cancel"):
+			toggle_pause()
+
+#endregion
+
+
+# ==============================================================================
+#region PAUSE
+# ==============================================================================
+
+func toggle_pause():
+	is_paused = !is_paused
+
+	# Pausa ou retoma o jogo inteiro
+	get_tree().paused = is_paused
+
+	# Mostra ou esconde o painel
+	panel.visible = is_paused
+
+	# Libera ou trava o mouse
+	if is_paused:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+#endregion
+
+
+# ==============================================================================
+#region BOTÕES
+# ==============================================================================
+
+# Botão "Retomar" — fecha o pause
+func _on_resume_button_pressed():
+	toggle_pause()
+
+
+# Botão "Sair" — fecha o jogo
+# Útil durante desenvolvimento para sair sem Alt+F4
+func _on_quit_button_pressed():
+	get_tree().quit()
+
+#endregion
+
+
+============================================================
+TOTAL DE ARQUIVOS EXPORTADOS: 28
+============================================================
