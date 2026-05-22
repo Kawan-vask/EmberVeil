@@ -69,7 +69,7 @@ points = PackedVector3Array(-0.5, -1.5, -2.5, -0.5, 1.5, -2.5, 0.5, -1.5, -2.5, 
 
 [node name="World" type="Node3D" parent="." unique_id=63189926]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=1777614209]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=1777614209 groups=["world_environment"]]
 environment = SubResource("Environment_8gbba")
 
 [node name="EnemyDirector" parent="World" unique_id=1800559500 instance=ExtResource("3_ynf5e")]
@@ -85,7 +85,6 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 3.5, 0, -0.5)
 transform = Transform3D(0.032771397, 0, -0.9994629, 0, 1, 0, 0.9994629, 0, 0.032771397, 0, 0, 0)
 
 [node name="Ilumination" type="Node3D" parent="World" unique_id=1955161380]
-visible = false
 
 [node name="Nests" type="Node3D" parent="World" unique_id=1209334911]
 
@@ -117,7 +116,7 @@ transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, -100.72804)
 collision_mask = 0
 
 [node name="Plane" type="MeshInstance3D" parent="World/NavigationRegion3D/Ground2" unique_id=1550676930]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.010000001, 0.065000534)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0002510071, 0.010000001, 0.115000725)
 mesh = SubResource("PlaneMesh_kry3j")
 
 [node name="groundCollision" type="CollisionShape3D" parent="World/NavigationRegion3D/Ground2" unique_id=1376035690]

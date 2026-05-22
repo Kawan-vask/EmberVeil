@@ -280,6 +280,7 @@ func _register_all_commands() -> void:
 	_register("timescale",   _cmd_timescale,   "timescale [n] — altera Engine.time_scale", "mundo")
 	_register("fps",         _cmd_fps,         "exibe FPS atual",                           "mundo")
 	_register("pool_status", _cmd_pool_status, "inimigos ativos vs disponíveis no pool",    "mundo")
+	_register("devlight", _cmd_devlight, "toggle de iluminação de desenvolvimento", "mundo")
 
 	# PLACEHOLDERS — descomentar quando os sistemas existirem
 	# _register("add_coins",      _cmd_add_coins,      "add_coins [n]",      "economia")
@@ -566,5 +567,47 @@ func _cmd_pool_status(_args: Array) -> void:
 func _cmd_quit(_args: Array) -> void:
 	_print_output("[color=red]Fechando o jogo...[/color]")
 	get_tree().quit()
+
+
+
+func _cmd_devlight(_args: Array) -> void:
+	var env_node: WorldEnvironment = get_tree().get_first_node_in_group("world_environment")
+	if env_node == null:
+		_print_output("[color=red]WorldEnvironment não encontrado.[/color]"); return
+
+	var e: Environment = env_node.environment
+
+	# Pega também a DirectionalLight se existir
+	var lights: Array = get_tree().get_nodes_in_group("dev_light")
+
+	var enabling: bool = e.fog_enabled
+
+	if enabling:
+		# MODO DEV — máxima visibilidade
+		e.fog_enabled                        = false
+		e.ambient_light_source               = Environment.AMBIENT_SOURCE_COLOR
+		e.ambient_light_color                = Color(1.0, 0.846, 0.551, 1.0)
+		e.ambient_light_energy               = 1.0
+		e.background_mode                    = Environment.BG_COLOR
+		e.background_color                   = Color(0.5, 0.5, 0.5)
+		e.background_energy_multiplier       = 1.0
+		e.glow_enabled                       = true
+		e.tonemap_mode                       = Environment.TONE_MAPPER_LINEAR
+		# Liga luzes de dev se existirem
+		for l in lights: l.visible = true
+		_print_output("[color=green]Dev light: ON[/color]")
+	else:
+		# MODO NOITE — restaura
+		e.fog_enabled                        = true
+		e.ambient_light_source               = Environment.AMBIENT_SOURCE_COLOR
+		e.ambient_light_color                = Color(0.05, 0.05, 0.08)
+		e.ambient_light_energy               = 0.1
+		e.background_mode                    = Environment.BG_COLOR
+		e.background_color                   = Color(0.019, 0.019, 0.039)
+		e.background_energy_multiplier       = 0.2
+		e.glow_enabled                       = true
+		e.tonemap_mode                       = Environment.TONE_MAPPER_FILMIC
+		for l in lights: l.visible = false
+		_print_output("[color=green]Dev light: OFF[/color]")
  
 #endregion
