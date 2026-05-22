@@ -47,6 +47,20 @@ var is_active := false
 # 0.4 = inimigo fica a 40% da velocidade original
 @export var slow_factor := 0.4
 
+## Custo em % da energia máxima (0.5 = 50%)
+@export var ultimate_cost: float = 0.5
+
+## Raio de efeito do ultimate
+@export var ultimate_radius: float = 8.0
+
+## Dano instantâneo do ultimate nos inimigos no raio
+@export var ultimate_damage: float = 50.0
+
+## Cooldown do ultimate em segundos
+@export var ultimate_cooldown: float = 5.0
+
+var _ultimate_timer: float = 0.0
+
 #endregion
 
 
@@ -69,6 +83,7 @@ var is_active := false
 # OmniLight de combate — halo de energia ao redor da lamparina
 @onready var combat_omni: OmniLight3D = $"../LanternPivot/CombatOmniLight"
 
+
 #endregion
 
 
@@ -78,6 +93,9 @@ var is_active := false
 
 ## Emitido quando a energia muda — ouvido pela HUD diegética
 signal energy_changed(current: float, max_value: float)
+
+## Emitido ao usar o ultimate — ouvido pela HUD para feedback visual
+signal ultimate_used
 
 #endregion
 
@@ -124,6 +142,9 @@ func _process(delta):
 	handle_damage(delta)
 	handle_flicker(delta)
 	handle_spot_flicker(delta)
+	# Cooldown do ultimate
+	if _ultimate_timer > 0.0:
+		_ultimate_timer -= delta
 
 #endregion
 
@@ -260,6 +281,56 @@ func restore_all_slow() -> void:
 	enemies_in_cone.clear()
 
 #endregion
+
+
+# ==============================================================================
+#region ULTIMATE
+# ==============================================================================
+
+func use_ultimate() -> void:
+		
+	# Verifica cooldown
+	if _ultimate_timer > 0.0:
+		DebugManager.log("Lantern", "Ultimate em cooldown: " + str(snappedf(_ultimate_timer, 0.1)) + "s")
+		return
+
+	# Verifica energia mínima (50%)
+	var cost: float = max_energy * ultimate_cost
+	if current_energy < cost:
+		DebugManager.log("Lantern", "Energia insuficiente para o ultimate.")
+		return
+
+	# Consome energia
+	current_energy -= cost
+	energy_changed.emit(current_energy, max_energy)
+
+	# Aplica dano e empurrão em todos os inimigos no raio
+	var space_state: PhysicsDirectSpaceState3D = get_tree().current_scene.get_world_3d().direct_space_state
+	var query := PhysicsShapeQueryParameters3D.new()
+	var shape := SphereShape3D.new()
+	shape.radius = ultimate_radius
+	query.shape = shape
+	query.transform = Transform3D(Basis(), global_position)
+	query.collision_mask = Layers.ENEMY
+
+	var results: Array[Dictionary] = space_state.intersect_shape(query)
+	for hit: Dictionary in results:
+		var body: Node3D = hit.collider
+		if body.has_method("take_damage"):
+			body.take_damage(ultimate_damage)
+			
+		# Empurrão — afasta o inimigo do centro
+		if body is CharacterBody3D:
+			var direction: Vector3 = (body.global_position - global_position).normalized()
+			body.velocity += direction * 8.0
+
+	# Inicia cooldown e emite signal
+	_ultimate_timer = ultimate_cooldown
+	ultimate_used.emit()
+	DebugManager.log("Lantern", "Ultimate usado! Inimigos atingidos: " + str(results.size()))
+
+#endregion
+
 
 
 # ==============================================================================

@@ -273,6 +273,7 @@ func _register_all_commands() -> void:
 	_register("infinite_energy", _cmd_infinite_energy, "toggle de energia infinita",     "lamparina")
 	_register("set_damage", _cmd_set_damage, "set_damage [n] — altera dano por segundo", "lamparina")
 	_register("set_slow",   _cmd_set_slow,   "set_slow [n] — altera fator de slow (0.0 a 1.0)", "lamparina")
+	_register("ultimate", _cmd_ultimate, "ativa o ultimate da lamparina", "lamparina")
 	
 	
 	# MUNDO
@@ -527,6 +528,13 @@ func _cmd_set_slow(args: Array) -> void:
 	if lantern == null: return
 	lantern.slow_factor = clampf(float(args[0]), 0.0, 1.0)
 	_print_output("[color=green]Slow factor: " + args[0] + "[/color]")
+
+
+func _cmd_ultimate(_args: Array) -> void:
+	var lantern := _get_lantern()
+	if lantern == null: return
+	lantern.use_ultimate()
+	_print_output("[color=green]Ultimate ativado.[/color]")
 
 
 

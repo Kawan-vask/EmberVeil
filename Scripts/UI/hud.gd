@@ -63,6 +63,10 @@ func _connect_signals() -> void:
 		_lantern.energy_changed.connect(_on_energy_changed)
 	else:
 		DebugManager.log("HUD", "Lanterna não encontrada! Adicione ao grupo 'lantern'.")
+	
+	if _lantern != null:
+		_lantern.energy_changed.connect(_on_energy_changed)
+		_lantern.ultimate_used.connect(_on_ultimate_used)  # ← adiciona
 
 	DebugManager.log("HUD", "Signals conectados.")
 
@@ -109,6 +113,10 @@ func _on_stamina_changed(current: float, max_value: float) -> void:
 func _on_energy_changed(current: float, max_value: float) -> void:
 	DebugManager.log("HUD", "Energia: " + str(current) + "/" + str(max_value))
 	# TODO: atualizar medidor diegético na lanterna
+
+func _on_ultimate_used() -> void:
+	DebugManager.log("HUD", "Ultimate usado — feedback visual aqui")
+	# TODO: flash de luz, som, shockwave visual
 
 #endregion
 

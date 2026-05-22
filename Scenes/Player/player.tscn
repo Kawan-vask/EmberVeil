@@ -136,9 +136,18 @@ omni_attenuation = 3.0
 
 [node name="LanternHitbox" type="Node3D" parent="Head/Camera" unique_id=54492552 groups=["lantern"]]
 script = ExtResource("2_mtuoh")
+max_energy = null
+energy_drain = null
 damage_per_second = 40.0
+slow_factor = null
+ultimate_cost = null
+ultimate_radius = null
+ultimate_damage = null
+ultimate_cooldown = null
 omni_base_energy = 4.0
 omni_flicker_amount = 0.2
+spot_base_energy = null
+spot_flicker_amount = null
 
 [node name="LanternRay" type="Area3D" parent="Head/Camera/LanternHitbox" unique_id=1957607858]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.005, 0, -6.2)

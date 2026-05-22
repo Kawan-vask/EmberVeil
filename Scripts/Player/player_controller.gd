@@ -67,6 +67,8 @@ var mouse_delta: Vector2 = Vector2.ZERO
 @onready var stamina: StaminaComponent = $Components/StaminaComponent
 @onready var inventory: InventoryComponent = $Components/InventoryComponent
 
+@onready var lantern: Lantern = $Head/Camera/LanternHitbox
+
 
 #endregion
 
@@ -137,6 +139,10 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	_handle_interaction()
 	_update_crosshair()
+	
+	# Ultimate da lamparina
+	if Input.is_action_just_pressed("lantern_ultimate"):
+		lantern.use_ultimate()
 
 #endregion
 
