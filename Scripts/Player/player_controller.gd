@@ -56,6 +56,43 @@ var mouse_delta: Vector2 = Vector2.ZERO
 
 
 # ==============================================================================
+#region CAMERA BOB
+# ==============================================================================
+
+## Frequência da oscilação
+@export var bob_frequency: float  = 2.0
+
+## Amplitude da oscilação andando
+@export var bob_amplitude: float  = 0.03
+
+## Multiplicador ao correr
+@export var sprint_multiplier: float = 2.0
+
+var _bob_time: float = 0.0
+
+var _camera_base_y: float = 0.0
+
+
+func _handle_camera_bob(delta: float) -> void:
+	var is_moving: bool    = input_direction != Vector2.ZERO
+	var is_sprinting: bool = Input.is_action_pressed("sprint") and stamina.can_sprint()
+
+	if not is_moving or not is_on_floor():
+		camera.position.y = lerp(camera.position.y, _camera_base_y, delta * 8.0)
+		_bob_time = 0.0
+		return
+
+	var freq: float = bob_frequency * (sprint_multiplier if is_sprinting else 1.0)
+	var amp: float  = bob_amplitude * (sprint_multiplier if is_sprinting else 1.0)
+
+	_bob_time += delta * freq
+	camera.position.y = _camera_base_y + sin(_bob_time * TAU) * amp
+	camera.position.x = sin(_bob_time * PI) * amp * 0.5  # ← oscilação lateral mais sutil
+	
+	
+#endregion
+
+# ==============================================================================
 #region NODE REFERENCES
 # ==============================================================================
 
@@ -69,6 +106,8 @@ var mouse_delta: Vector2 = Vector2.ZERO
 
 @onready var lantern: Lantern = $Head/Camera/LanternHitbox
 
+@onready var camera: Camera3D = $Head/Camera
+
 
 #endregion
 
@@ -80,6 +119,7 @@ var mouse_delta: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	interaction_ray.add_exception(self)
+	_camera_base_y = camera.position.y  # ← guarda a altura original da cabeça
 
 #endregion
 
@@ -139,6 +179,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	_handle_interaction()
 	_update_crosshair()
+	_handle_camera_bob(delta)
 	
 	# Ultimate da lamparina
 	if Input.is_action_just_pressed("lantern_ultimate"):
