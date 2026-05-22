@@ -53,3 +53,20 @@ signal player_died
 signal wood_delivered(amount: int)
 
 #endregion
+
+
+# ==============================================================================
+#region NOITE
+# ==============================================================================
+
+## Emitido quando a transição de noite começa (fade out)
+## Ouvido por: NightTransition, sistemas de reset
+@warning_ignore("unused_signal")
+signal night_transition_started
+
+## Emitido quando a transição termina (fade in completo)
+## Ouvido por: NightTransition, player
+@warning_ignore("unused_signal")
+signal night_transition_finished
+
+#endregion

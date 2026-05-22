@@ -21,3 +21,6 @@ shape = SubResource("BoxShape3D_p2xx2")
 
 [node name="BedModel" parent="StaticBody3D/Visual" unique_id=1386611539 instance=ExtResource("1_iwor0")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="SpawnPoint" type="Marker3D" parent="." unique_id=1855818833]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7074143, 0, 0.7002895)

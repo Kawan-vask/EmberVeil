@@ -4,7 +4,7 @@
 
 
 ############################################################
-#  SCRIPTS (.gd) (23 arquivos)
+#  SCRIPTS (.gd) (27 arquivos)
 ############################################################
 
 ============================================================
@@ -304,6 +304,23 @@ signal player_died
 ## Ouvido por: HUD, sistemas futuros de progressão
 @warning_ignore("unused_signal")
 signal wood_delivered(amount: int)
+
+#endregion
+
+
+# ==============================================================================
+#region NOITE
+# ==============================================================================
+
+## Emitido quando a transição de noite começa (fade out)
+## Ouvido por: NightTransition, sistemas de reset
+@warning_ignore("unused_signal")
+signal night_transition_started
+
+## Emitido quando a transição termina (fade in completo)
+## Ouvido por: NightTransition, player
+@warning_ignore("unused_signal")
+signal night_transition_finished
 
 #endregion
 
@@ -750,6 +767,36 @@ extends Resource
 
 
 ============================================================
+ARQUIVO: Scripts\Interactables\apple_pickup.gd
+============================================================
+# ==============================================================================
+# APPLE PICKUP — MAÇÃ
+# ------------------------------------------------------------------------------
+# Recupera vida do player ao ser coletada.
+# Pertence ao grupo "resource_pickup" para reset entre noites (Fase 2).
+# ==============================================================================
+
+extends Interactable
+
+## Quantidade de vida restaurada
+@export var heal_amount: float = 25.0
+
+func interact() -> void:
+	var player: Node = get_tree().get_first_node_in_group("player")
+	if player == null:
+		return
+
+	player.heal(heal_amount)
+	DebugManager.log("ApplePickup", "Maçã coletada. Vida: " + str(player.health.get_percent() * player.health.max_health))
+
+	# Esconde — será resetado ao avançar de noite
+	visible = false
+	var body := get_node_or_null("StaticBody3D")
+	if body:
+		body.process_mode = Node.PROCESS_MODE_DISABLED
+
+
+============================================================
 ARQUIVO: Scripts\Interactables\bed.gd
 ============================================================
 # ==============================================================================
@@ -761,23 +808,17 @@ ARQUIVO: Scripts\Interactables\bed.gd
 
 extends Interactable
 
-func interact():
-	# Verifica se a noite foi completada
+func interact() -> void:
 	if not GameManager.night_completed:
-		print("Ainda falta madeira!")
+		DebugManager.log("Bed", "Ainda falta madeira!")
 		return
 
-	# Pega referência do player
-	var player = get_tree().get_first_node_in_group("player")
-
+	var player: Node = get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
 
-	# Chama o GameManager para avançar a noite
-	# (função renomeada de start_next_night para advance_to_next_night)
 	GameManager.advance_to_next_night(player)
-
-	print("Próxima noite iniciada!")
+	DebugManager.log("Bed", "Próxima noite iniciada!")
 
 
 ============================================================
@@ -881,6 +922,41 @@ extends Node3D
 func interact():
 	#FUNÇÃO BASE DE INTERAÇÃO
 	pass
+
+
+============================================================
+ARQUIVO: Scripts\Interactables\sap_pickup.gd
+============================================================
+# ==============================================================================
+# SAP PICKUP — SEIVA
+# ------------------------------------------------------------------------------
+# Reabastece energia da lamparina ao ser coletada.
+# Pertence ao grupo "resource_pickup" para reset entre noites (Fase 2).
+# ==============================================================================
+
+extends Interactable
+
+## Quantidade de energia restaurada
+@export var energy_amount: float = 30.0
+
+func interact() -> void:
+	var player: Node = get_tree().get_first_node_in_group("player")
+	if player == null:
+		return
+
+	var lantern: Lantern = get_tree().get_first_node_in_group("lantern")
+	if lantern == null:
+		return
+
+	lantern.add_energy(energy_amount)
+	DebugManager.log("SapPickup", "Seiva coletada. Energia: " + str(lantern.current_energy))
+
+	# Esconde — será resetado ao avançar de noite
+	visible = false
+	# Desativa colisão
+	var body := get_node_or_null("StaticBody3D")
+	if body:
+		body.process_mode = Node.PROCESS_MODE_DISABLED
 
 
 ============================================================
@@ -1390,17 +1466,13 @@ func advance_to_next_night(player: Node) -> void:
 		return
 
 	current_night += 1
-
-	# TODO (Refatoração 3): player.inventory.reset()
 	player.inventory.reset()
-
-	night_active = false
+	night_active  = false
 	_apply_night_settings()
 
-	# Avisa todos os sistemas que a noite mudou.
-	# Fireplace, EnemyDirector, HUD — todos ouvem este signal.
-	# O GameManager não chama ninguém diretamente.
-	night_changed.emit(current_night)
+	# NightTransition cuida do resto — ouve night_transition_started
+	# e emite night_transition_finished quando termina
+	SignalBus.night_transition_started.emit()
 
 	DebugManager.log("GameManager", "Avançou para noite " + str(current_night))
 
@@ -1478,6 +1550,20 @@ var is_active := false
 # 0.4 = inimigo fica a 40% da velocidade original
 @export var slow_factor := 0.4
 
+## Custo em % da energia máxima (0.5 = 50%)
+@export var ultimate_cost: float = 0.5
+
+## Raio de efeito do ultimate
+@export var ultimate_radius: float = 8.0
+
+## Dano instantâneo do ultimate nos inimigos no raio
+@export var ultimate_damage: float = 50.0
+
+## Cooldown do ultimate em segundos
+@export var ultimate_cooldown: float = 5.0
+
+var _ultimate_timer: float = 0.0
+
 #endregion
 
 
@@ -1499,6 +1585,20 @@ var is_active := false
 
 # OmniLight de combate — halo de energia ao redor da lamparina
 @onready var combat_omni: OmniLight3D = $"../LanternPivot/CombatOmniLight"
+
+
+#endregion
+
+
+# ==============================================================================
+#region SIGNALS
+# ==============================================================================
+
+## Emitido quando a energia muda — ouvido pela HUD diegética
+signal energy_changed(current: float, max_value: float)
+
+## Emitido ao usar o ultimate — ouvido pela HUD para feedback visual
+signal ultimate_used
 
 #endregion
 
@@ -1545,6 +1645,9 @@ func _process(delta):
 	handle_damage(delta)
 	handle_flicker(delta)
 	handle_spot_flicker(delta)
+	# Cooldown do ultimate
+	if _ultimate_timer > 0.0:
+		_ultimate_timer -= delta
 
 #endregion
 
@@ -1577,15 +1680,17 @@ func handle_energy(delta: float) -> void:
 	if not is_active:
 		return
 	current_energy -= energy_drain * delta
+	energy_changed.emit(current_energy, max_energy)
 	current_energy = max(current_energy, 0.0)
 	if current_energy <= 0:
 		set_combat_mode(false)
 		DebugManager.log("Lantern", "Energia esgotada.")
 
 
-# Chamado pela seiva (Fase 2) para reabastecer energia
-func add_energy(amount: float):
-	current_energy = min(current_energy + amount, max_energy)
+# Chamado pela seiva para reabastecer energia
+func add_energy(amount: float) -> void:
+	current_energy = minf(current_energy + amount, max_energy)
+	energy_changed.emit(current_energy, max_energy)
 	DebugManager.log("Lantern", "Energia reabastecida. Atual: " + str(current_energy))
 
 
@@ -1679,6 +1784,56 @@ func restore_all_slow() -> void:
 	enemies_in_cone.clear()
 
 #endregion
+
+
+# ==============================================================================
+#region ULTIMATE
+# ==============================================================================
+
+func use_ultimate() -> void:
+		
+	# Verifica cooldown
+	if _ultimate_timer > 0.0:
+		DebugManager.log("Lantern", "Ultimate em cooldown: " + str(snappedf(_ultimate_timer, 0.1)) + "s")
+		return
+
+	# Verifica energia mínima (50%)
+	var cost: float = max_energy * ultimate_cost
+	if current_energy < cost:
+		DebugManager.log("Lantern", "Energia insuficiente para o ultimate.")
+		return
+
+	# Consome energia
+	current_energy -= cost
+	energy_changed.emit(current_energy, max_energy)
+
+	# Aplica dano e empurrão em todos os inimigos no raio
+	var space_state: PhysicsDirectSpaceState3D = get_tree().current_scene.get_world_3d().direct_space_state
+	var query := PhysicsShapeQueryParameters3D.new()
+	var shape := SphereShape3D.new()
+	shape.radius = ultimate_radius
+	query.shape = shape
+	query.transform = Transform3D(Basis(), global_position)
+	query.collision_mask = Layers.ENEMY
+
+	var results: Array[Dictionary] = space_state.intersect_shape(query)
+	for hit: Dictionary in results:
+		var body: Node3D = hit.collider
+		if body.has_method("take_damage"):
+			body.take_damage(ultimate_damage)
+			
+		# Empurrão — afasta o inimigo do centro
+		if body is CharacterBody3D:
+			var direction: Vector3 = (body.global_position - global_position).normalized()
+			body.velocity += direction * 8.0
+
+	# Inicia cooldown e emite signal
+	_ultimate_timer = ultimate_cooldown
+	ultimate_used.emit()
+	DebugManager.log("Lantern", "Ultimate usado! Inimigos atingidos: " + str(results.size()))
+
+#endregion
+
 
 
 # ==============================================================================
@@ -1849,6 +2004,8 @@ var mouse_delta: Vector2 = Vector2.ZERO
 @onready var stamina: StaminaComponent = $Components/StaminaComponent
 @onready var inventory: InventoryComponent = $Components/InventoryComponent
 
+@onready var lantern: Lantern = $Head/Camera/LanternHitbox
+
 
 #endregion
 
@@ -1919,6 +2076,10 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	_handle_interaction()
 	_update_crosshair()
+	
+	# Ultimate da lamparina
+	if Input.is_action_just_pressed("lantern_ultimate"):
+		lantern.use_ultimate()
 
 #endregion
 
@@ -2825,8 +2986,8 @@ func _print_output(text: String) -> void:
 #region REGISTRO DE COMANDOS
 # ==============================================================================
  
-func _register(name: String, callable: Callable, description: String, group: String = "geral") -> void:
-	_commands[name] = {
+func _register(cmd_name: String, callable: Callable, description: String, group: String = "geral") -> void:
+	_commands[cmd_name] = {
 		"callable":    callable,
 		"description": description,
 		"group":       group
@@ -2835,6 +2996,7 @@ func _register(name: String, callable: Callable, description: String, group: Str
 
 func _register_all_commands() -> void:
 	_register("help", _cmd_help, "lista todos os comandos", "geral")
+	_register("quit", _cmd_quit, "fecha o jogo", "geral")
 
 	# NOITE
 	_register("set_night",      _cmd_set_night,      "set_night [n] — força a noite para n",          "noite")
@@ -2850,6 +3012,7 @@ func _register_all_commands() -> void:
 	_register("set_energy",  _cmd_set_energy,  "set_energy [n] — define energia",      "player")
 	_register("add_wood",    _cmd_add_wood,    "add_wood [n] — adiciona madeira",       "player")
 	_register("kill_player", _cmd_kill_player, "mata o player imediatamente",           "player")
+	_register("teleport", _cmd_teleport, "teleport [x] [y] [z] — teleporta o player", "player")
 
 	# INIMIGOS
 	_register("kill_all",        _cmd_kill_all,        "devolve todos ao pool",                        "inimigos")
@@ -2862,11 +3025,16 @@ func _register_all_commands() -> void:
 	_register("fill_energy",     _cmd_fill_energy,     "reabastece energia para 100%",  "lamparina")
 	_register("drain_energy",    _cmd_drain_energy,    "zera energia da lamparina",      "lamparina")
 	_register("infinite_energy", _cmd_infinite_energy, "toggle de energia infinita",     "lamparina")
-
+	_register("set_damage", _cmd_set_damage, "set_damage [n] — altera dano por segundo", "lamparina")
+	_register("set_slow",   _cmd_set_slow,   "set_slow [n] — altera fator de slow (0.0 a 1.0)", "lamparina")
+	_register("ultimate", _cmd_ultimate, "ativa o ultimate da lamparina", "lamparina")
+	
+	
 	# MUNDO
 	_register("timescale",   _cmd_timescale,   "timescale [n] — altera Engine.time_scale", "mundo")
 	_register("fps",         _cmd_fps,         "exibe FPS atual",                           "mundo")
 	_register("pool_status", _cmd_pool_status, "inimigos ativos vs disponíveis no pool",    "mundo")
+	_register("devlight", _cmd_devlight, "toggle de iluminação de desenvolvimento", "mundo")
 
 	# PLACEHOLDERS — descomentar quando os sistemas existirem
 	# _register("add_coins",      _cmd_add_coins,      "add_coins [n]",      "economia")
@@ -2962,9 +3130,8 @@ func _cmd_god(_args: Array) -> void:
 		_print_output("[color=red]Player não encontrado.[/color]"); return
 	var active: bool = player.health.toggle_invincibility()
 	_print_output("[color=green]God mode: " + ("ON" if active else "OFF") + "[/color]")
-
-
  
+
 func _cmd_set_health(args: Array) -> void:
 	if args.is_empty():
 		_print_output("[color=red]Uso: set_health [n][/color]"); return
@@ -3011,7 +3178,16 @@ func _cmd_kill_player(_args: Array) -> void:
 	if player == null: return
 	player.health.kill()
 	_print_output("[color=red]Player morreu.[/color]")
- 
+
+
+func _cmd_teleport(args: Array) -> void:
+	if args.size() < 3:
+		_print_output("[color=red]Uso: teleport [x] [y] [z][/color]"); return
+	var player := _get_player()
+	if player == null: return
+	player.global_position = Vector3(float(args[0]), float(args[1]), float(args[2]))
+	_print_output("[color=green]Player teleportado para " +
+		str(player.global_position) + "[/color]") 
 #endregion
  
  
@@ -3090,6 +3266,33 @@ func _cmd_infinite_energy(_args: Array) -> void:
 	lantern.energy_drain = 0.0 if _infinite_energy else 10.0
 	_print_output("[color=green]Energia infinita: " + ("ON" if _infinite_energy else "OFF") + "[/color]")
  
+
+func _cmd_set_damage(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: set_damage [n][/color]"); return
+	var lantern := _get_lantern()
+	if lantern == null: return
+	lantern.damage_per_second = float(args[0])
+	_print_output("[color=green]Dano por segundo: " + args[0] + "[/color]")
+
+
+func _cmd_set_slow(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: set_slow [n][/color]"); return
+	var lantern := _get_lantern()
+	if lantern == null: return
+	lantern.slow_factor = clampf(float(args[0]), 0.0, 1.0)
+	_print_output("[color=green]Slow factor: " + args[0] + "[/color]")
+
+
+func _cmd_ultimate(_args: Array) -> void:
+	var lantern := _get_lantern()
+	if lantern == null: return
+	lantern.use_ultimate()
+	_print_output("[color=green]Ultimate ativado.[/color]")
+
+
+
 #endregion
  
  
@@ -3114,7 +3317,332 @@ func _cmd_pool_status(_args: Array) -> void:
 	_print_output("[color=green]Pool — Ativos: " + str(active) +
 		" | Livres: " + str(total - active) +
 		" | Total: " + str(total) + "[/color]")
+
+func _cmd_quit(_args: Array) -> void:
+	_print_output("[color=red]Fechando o jogo...[/color]")
+	get_tree().quit()
+
+
+
+func _cmd_devlight(_args: Array) -> void:
+	var env_node: WorldEnvironment = get_tree().get_first_node_in_group("world_environment")
+	if env_node == null:
+		_print_output("[color=red]WorldEnvironment não encontrado.[/color]"); return
+
+	var e: Environment = env_node.environment
+
+	# Pega também a DirectionalLight se existir
+	var lights: Array = get_tree().get_nodes_in_group("dev_light")
+
+	var enabling: bool = e.fog_enabled
+
+	if enabling:
+		# MODO DEV — máxima visibilidade
+		e.fog_enabled                        = false
+		e.ambient_light_source               = Environment.AMBIENT_SOURCE_COLOR
+		e.ambient_light_color                = Color(1.0, 0.846, 0.551, 1.0)
+		e.ambient_light_energy               = 1.0
+		e.background_mode                    = Environment.BG_COLOR
+		e.background_color                   = Color(0.5, 0.5, 0.5)
+		e.background_energy_multiplier       = 1.0
+		e.glow_enabled                       = true
+		e.tonemap_mode                       = Environment.TONE_MAPPER_LINEAR
+		# Liga luzes de dev se existirem
+		for l in lights: l.visible = true
+		_print_output("[color=green]Dev light: ON[/color]")
+	else:
+		# MODO NOITE — restaura
+		e.fog_enabled                        = true
+		e.ambient_light_source               = Environment.AMBIENT_SOURCE_COLOR
+		e.ambient_light_color                = Color(0.05, 0.05, 0.08)
+		e.ambient_light_energy               = 0.1
+		e.background_mode                    = Environment.BG_COLOR
+		e.background_color                   = Color(0.019, 0.019, 0.039)
+		e.background_energy_multiplier       = 0.2
+		e.glow_enabled                       = true
+		e.tonemap_mode                       = Environment.TONE_MAPPER_FILMIC
+		for l in lights: l.visible = false
+		_print_output("[color=green]Dev light: OFF[/color]")
  
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\UI\hud.gd
+============================================================
+# ==============================================================================
+# HUD — DIEGÉTICA
+# ------------------------------------------------------------------------------
+# Infraestrutura de signals para a HUD diegética do Emberveil.
+#
+# NÃO usa elementos 2D tradicionais.
+# Toda informação é exibida através do modelo 3D do player.
+#
+# Conecta signals dos componentes e os redistribui para
+# os elementos visuais diegéticos quando implementados.
+#
+# ADICIONAR NOVO ELEMENTO DIEGÉTICO:
+# 1. Conecta o signal do componente no _ready()
+# 2. Cria o método _on_X_changed() correspondente
+# 3. Implementa o feedback visual no modelo 3D
+# ==============================================================================
+
+extends CanvasLayer
+
+
+# ==============================================================================
+#region REFERÊNCIAS
+# ==============================================================================
+
+# Componentes do player — cacheados no _ready()
+var _health: HealthComponent     = null
+var _stamina: StaminaComponent   = null
+var _inventory: InventoryComponent = null
+var _lantern: Lantern            = null
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	# Aguarda um frame para garantir que o player está na árvore
+	await get_tree().process_frame
+	_connect_signals()
+
+
+func _connect_signals() -> void:
+	var player: Node = get_tree().get_first_node_in_group("player")
+	if player == null:
+		DebugManager.log("HUD", "Player não encontrado!")
+		return
+
+	_health    = player.health
+	_stamina   = player.stamina
+	_inventory = player.inventory
+	_lantern   = get_tree().get_first_node_in_group("lantern")
+
+	# Conecta signals — UI reage a eventos, nunca poleia
+	_health.health_changed.connect(_on_health_changed)
+	_health.player_damaged.connect(_on_player_damaged)
+	_stamina.stamina_changed.connect(_on_stamina_changed)
+	_inventory.wood_changed.connect(_on_wood_changed)
+	GameManager.night_objective_reached.connect(_on_night_objective_reached)
+
+	if _lantern != null:
+		_lantern.energy_changed.connect(_on_energy_changed)
+	else:
+		DebugManager.log("HUD", "Lanterna não encontrada! Adicione ao grupo 'lantern'.")
+	
+	if _lantern != null:
+		_lantern.energy_changed.connect(_on_energy_changed)
+		_lantern.ultimate_used.connect(_on_ultimate_used)  # ← adiciona
+
+	DebugManager.log("HUD", "Signals conectados.")
+
+#endregion
+
+
+# ==============================================================================
+#region CALLBACKS — VIDA
+# ------------------------------------------------------------------------------
+# Futuramente: acionar animação de runas/pulseira no braço do player
+# ==============================================================================
+
+func _on_health_changed(current: float, max_value: float) -> void:
+	DebugManager.log("HUD", "Vida: " + str(current) + "/" + str(max_value))
+	# TODO: atualizar elemento diegético de vida no braço
+
+
+func _on_player_damaged(_amount: float) -> void:
+	DebugManager.log("HUD", "Player tomou dano — feedback visual aqui")
+	# TODO: vinheta de dano, som, shake de câmera
+
+#endregion
+
+
+# ==============================================================================
+#region CALLBACKS — STAMINA
+# ------------------------------------------------------------------------------
+# Futuramente: acionar elemento diegético no braço
+# ==============================================================================
+
+func _on_stamina_changed(current: float, max_value: float) -> void:
+	DebugManager.log("HUD", "Stamina: " + str(current) + "/" + str(max_value))
+	# TODO: atualizar elemento diegético de stamina no braço
+
+#endregion
+
+
+# ==============================================================================
+#region CALLBACKS — ENERGIA DA LAMPARINA
+# ------------------------------------------------------------------------------
+# Futuramente: atualizar medidor integrado ao modelo 3D da lanterna
+# ==============================================================================
+
+func _on_energy_changed(current: float, max_value: float) -> void:
+	DebugManager.log("HUD", "Energia: " + str(current) + "/" + str(max_value))
+	# TODO: atualizar medidor diegético na lanterna
+
+func _on_ultimate_used() -> void:
+	DebugManager.log("HUD", "Ultimate usado — feedback visual aqui")
+	# TODO: flash de luz, som, shockwave visual
+
+#endregion
+
+
+# ==============================================================================
+#region CALLBACKS — INVENTÁRIO
+# ------------------------------------------------------------------------------
+# Madeira não tem contador permanente na tela.
+# Informação contextualizada apenas na lareira.
+# ==============================================================================
+
+func _on_wood_changed(current: int, goal: int) -> void:
+	DebugManager.log("HUD", "Madeira: " + str(current) + "/" + str(goal))
+	# Sem elemento visual permanente — lareira comunica o progresso
+
+#endregion
+
+
+# ==============================================================================
+#region CALLBACKS — OBJETIVO DA NOITE
+# ------------------------------------------------------------------------------
+# Futuramente: lareira comunica visualmente que o objetivo foi concluído
+# ==============================================================================
+
+func _on_night_objective_reached() -> void:
+	DebugManager.log("HUD", "Objetivo da noite concluído!")
+	# TODO: feedback visual na lareira (brilho, partículas, som)
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\UI\night_transition.gd
+============================================================
+# ==============================================================================
+# NIGHT TRANSITION
+# ------------------------------------------------------------------------------
+# Gerencia a transição visual entre noites.
+# Fluxo: fade out → texto "NOITE X" → fade in
+#
+# Futuramente: substituir fade por animação de deitar/levantar na cama.
+# Os signals night_transition_started/finished já estruturam esse gancho.
+# ==============================================================================
+
+extends CanvasLayer
+
+
+# ==============================================================================
+#region NÓS
+# ==============================================================================
+
+@onready var fade_rect: ColorRect = $FadeRect
+@onready var night_label: Label   = $NightLabel
+
+#endregion
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO
+# ==============================================================================
+
+## Duração do fade out e fade in em segundos
+@export var fade_duration: float  = 1.0
+
+## Tempo que o texto da noite fica visível
+@export var hold_duration: float  = 1.5
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	process_mode       = Node.PROCESS_MODE_ALWAYS
+	visible            = false
+	fade_rect.modulate.a = 0.0
+	night_label.visible  = false
+
+	SignalBus.night_transition_started.connect(_on_transition_started)
+
+#endregion
+
+
+# ==============================================================================
+#region TRANSIÇÃO
+# ==============================================================================
+
+func _on_transition_started() -> void:
+	visible = true
+	get_tree().paused = true
+
+	# FADE OUT
+	await _fade(0.0, 1.0)
+
+	# Mostra texto da noite
+	night_label.text    = "NOITE " + str(GameManager.current_night)
+	night_label.visible = true
+
+	await get_tree().create_timer(hold_duration).timeout
+
+	# Reseta sistemas enquanto tela está preta
+	_reset_systems()
+	
+	# Avisa sistemas que dependem da noite (EnemyDirector, Fireplace, etc)
+	GameManager.night_changed.emit(GameManager.current_night)
+
+	# Emite signal — sistemas que dependem do reset ouvem aqui
+	SignalBus.night_transition_finished.emit()
+
+	night_label.visible = false
+
+	# FADE IN
+	await _fade(1.0, 0.0)
+
+	get_tree().paused = false
+	visible           = false
+
+
+func _fade(from: float, to: float) -> void:
+	var tween := create_tween()
+	tween.tween_property(fade_rect, "modulate:a", to, fade_duration)
+	await tween.finished
+
+
+func _reset_systems() -> void:
+	# Teleporta player para o SpawnPoint da cama
+	var bed: Node = get_tree().get_first_node_in_group("bed")
+	var player: Node = get_tree().get_first_node_in_group("player")
+	if bed and player:
+		var spawn: Node = bed.get_node_or_null("SpawnPoint")
+		if spawn:
+			player.global_position = spawn.global_position
+		else:
+			DebugManager.log("NightTransition", "SpawnPoint não encontrado na cama!")
+
+	# Reseta recursos do mapa
+	var resources := get_tree().get_nodes_in_group("resource_pickup")
+	for r in resources:
+		r.visible = true
+		var body := r.get_node_or_null("StaticBody3D")
+		if body:
+			body.process_mode = Node.PROCESS_MODE_INHERIT
+
+	# Reseta energia da lamparina
+	var lantern := get_tree().get_first_node_in_group("lantern")
+	if lantern:
+		lantern.current_energy = lantern.max_energy
+		lantern.energy_changed.emit(lantern.current_energy, lantern.max_energy)
+
+	DebugManager.log("NightTransition", "Sistemas resetados para noite " + str(GameManager.current_night))
+
+
 #endregion
 
 
@@ -3222,7 +3750,7 @@ func _on_quit_button_pressed():
 
 
 ############################################################
-#  CENAS (.tscn — estrutura) (12 arquivos)
+#  CENAS (.tscn — estrutura) (15 arquivos)
 ############################################################
 
 ============================================================
@@ -3239,12 +3767,15 @@ ARQUIVO: Scenes\main.tscn
 [ext_resource type="PackedScene" uid="uid://b24mj6kwai2au" path="res://Scenes/World/fireplace.tscn" id="5_kry3j"]
 [ext_resource type="PackedScene" uid="uid://i6tfdq5qp1l1" path="res://Scenes/World/bed.tscn" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://cg7q5p701ptq7" path="res://Scenes/UI/pause_menu.tscn" id="10_hptm8"]
+[ext_resource type="PackedScene" uid="uid://d728y740m527" path="res://Scenes/InteractiveItems/apple_pickup.tscn" id="10_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://beyki1aqk1qfd" path="res://Scenes/UI/death_screen.tscn" id="11_d1ilt"]
+[ext_resource type="PackedScene" uid="uid://du0yx043iafwq" path="res://Scenes/InteractiveItems/sap_pickup.tscn" id="11_wsu2k"]
 [ext_resource type="Script" uid="uid://ce1uvxfngtvcx" path="res://Scenes/Systems/dev_tools_loader.gd" id="12_6iyac"]
+[ext_resource type="PackedScene" uid="uid://h0j1d8nfpe5m" path="res://Scenes/UI/night_transition.tscn" id="14_wsu2k"]
 data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
 [node name="Main" type="Node3D" unique_id=552916765]
 [node name="World" type="Node3D" parent="." unique_id=63189926]
-[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=1777614209]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=1777614209 groups=["world_environment"]]
 [node name="EnemyDirector" parent="World" unique_id=1800559500 instance=ExtResource("3_ynf5e")]
 [node name="Zones" type="Node3D" parent="World" unique_id=1691288822]
 [node name="SafeZone" parent="World/Zones" unique_id=808384328 instance=ExtResource("3_344ge")]
@@ -3329,9 +3860,20 @@ collision_mask = 0
 [node name="WoodPickup21" parent="Interactibles/Madeira" unique_id=52083835 instance=ExtResource("3_jjvhh")]
 [node name="Fireplace" parent="Interactibles" unique_id=1933277327 instance=ExtResource("5_kry3j")]
 [node name="Bed" parent="Interactibles" unique_id=828787208 instance=ExtResource("6_21xkr")]
+[node name="Apples" type="Node3D" parent="Interactibles" unique_id=1253476237]
+[node name="ApplePickup" parent="Interactibles/Apples" unique_id=86513077 instance=ExtResource("10_jkdf5")]
+[node name="ApplePickup2" parent="Interactibles/Apples" unique_id=1523732131 instance=ExtResource("10_jkdf5")]
+[node name="ApplePickup3" parent="Interactibles/Apples" unique_id=1506545714 instance=ExtResource("10_jkdf5")]
+[node name="ApplePickup4" parent="Interactibles/Apples" unique_id=1817749742 instance=ExtResource("10_jkdf5")]
+[node name="Saps" type="Node3D" parent="Interactibles" unique_id=461578500]
+[node name="SapPickup" parent="Interactibles/Saps" unique_id=2124506883 instance=ExtResource("11_wsu2k")]
+[node name="SapPickup2" parent="Interactibles/Saps" unique_id=467482444 instance=ExtResource("11_wsu2k")]
+[node name="SapPickup3" parent="Interactibles/Saps" unique_id=198914857 instance=ExtResource("11_wsu2k")]
+[node name="SapPickup4" parent="Interactibles/Saps" unique_id=1201367980 instance=ExtResource("11_wsu2k")]
 [node name="UI" type="Node3D" parent="." unique_id=1408421820]
 [node name="PauseMenu" parent="UI" unique_id=1259609672 instance=ExtResource("10_hptm8")]
 [node name="DeathScreen" parent="UI" unique_id=1132231461 instance=ExtResource("11_d1ilt")]
+[node name="NightTransition" parent="UI" unique_id=1762464355 instance=ExtResource("14_wsu2k")]
 [node name="DevTools" type="Node" parent="." unique_id=1665922896]
 script = ExtResource("12_6iyac")
 
@@ -3360,6 +3902,32 @@ collision_mask = 2
 [node name="Corpo (capsule shape)" type="MeshInstance3D" parent="Visual" unique_id=1629291334]
 [connection signal="body_entered" from="EnemyAttackArea" to="." method="_on_enemy_attack_area_body_entered"]
 [connection signal="body_exited" from="EnemyAttackArea" to="." method="_on_enemy_attack_area_body_exited"]
+
+============================================================
+ARQUIVO: Scenes\InteractiveItems\apple_pickup.tscn
+============================================================
+[gd_scene format=3 uid="uid://d728y740m527"]
+[ext_resource type="Script" uid="uid://brjidweyb1kyv" path="res://Scripts/Interactables/apple_pickup.gd" id="1_hdocs"]
+[node name="ApplePickup" type="Node3D" unique_id=86513077 groups=["interactable", "resource_pickup"]]
+script = ExtResource("1_hdocs")
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=2089472015]
+collision_layer = 9
+collision_mask = 2
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1751822201]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=724953511]
+
+============================================================
+ARQUIVO: Scenes\InteractiveItems\sap_pickup.tscn
+============================================================
+[gd_scene format=3 uid="uid://du0yx043iafwq"]
+[ext_resource type="Script" uid="uid://l7uxhnm88iuc" path="res://Scripts/Interactables/sap_pickup.gd" id="1_2lqx1"]
+[node name="SapPickup" type="Node3D" unique_id=2124506883 groups=["interactable"]]
+script = ExtResource("1_2lqx1")
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=102368678]
+collision_layer = 9
+collision_mask = 2
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1917910269]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1607528594]
 
 ============================================================
 ARQUIVO: Scenes\InteractiveItems\wood_pickup.tscn
@@ -3405,7 +3973,7 @@ script = ExtResource("4_0u5uq")
 [node name="OmniLight3D" type="OmniLight3D" parent="Head/Camera/LanternPivot" unique_id=1867184387]
 [node name="BeamParticles" type="GPUParticles3D" parent="Head/Camera/LanternPivot" unique_id=489297084]
 [node name="CombatOmniLight" type="OmniLight3D" parent="Head/Camera/LanternPivot" unique_id=645998108]
-[node name="LanternHitbox" type="Node3D" parent="Head/Camera" unique_id=54492552 groups=["Lantern"]]
+[node name="LanternHitbox" type="Node3D" parent="Head/Camera" unique_id=54492552 groups=["lantern"]]
 script = ExtResource("2_mtuoh")
 [node name="LanternRay" type="Area3D" parent="Head/Camera/LanternHitbox" unique_id=1957607858]
 collision_layer = 0
@@ -3464,6 +4032,16 @@ script = ExtResource("1_f7lxs")
 [node name="Input" type="LineEdit" parent="Panel/VBox" unique_id=1658115586]
 
 ============================================================
+ARQUIVO: Scenes\UI\night_transition.tscn
+============================================================
+[gd_scene format=3 uid="uid://h0j1d8nfpe5m"]
+[ext_resource type="Script" uid="uid://5x7yxcv0y0mj" path="res://Scripts/UI/night_transition.gd" id="1_soeoq"]
+[node name="NightTransition" type="CanvasLayer" unique_id=1762464355]
+script = ExtResource("1_soeoq")
+[node name="FadeRect" type="ColorRect" parent="." unique_id=1292082426]
+[node name="NightLabel" type="Label" parent="." unique_id=1690923415]
+
+============================================================
 ARQUIVO: Scenes\UI\pause_menu.tscn
 ============================================================
 [gd_scene format=3 uid="uid://cg7q5p701ptq7"]
@@ -3492,6 +4070,7 @@ collision_mask = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=360524657]
 [node name="Visual" type="Node3D" parent="StaticBody3D" unique_id=737631850]
 [node name="BedModel" parent="StaticBody3D/Visual" unique_id=1386611539 instance=ExtResource("1_iwor0")]
+[node name="SpawnPoint" type="Marker3D" parent="." unique_id=1855818833]
 
 ============================================================
 ARQUIVO: Scenes\World\fireplace.tscn
@@ -3563,5 +4142,5 @@ metadata/_custom_type_script = "uid://ccyj3irl40o6a"
 
 
 ============================================================
-TOTAL: 23 scripts | 12 cenas | 2 resources
+TOTAL: 27 scripts | 15 cenas | 2 resources
 ============================================================

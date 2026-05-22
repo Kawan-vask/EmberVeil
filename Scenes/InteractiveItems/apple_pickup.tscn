@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://d728y740m527"]
+
+[ext_resource type="Script" uid="uid://brjidweyb1kyv" path="res://Scripts/Interactables/apple_pickup.gd" id="1_hdocs"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hdocs"]
+radius = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t1jsk"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_2554o"]
+material = SubResource("StandardMaterial3D_t1jsk")
+radius = 0.2
+height = 0.4
+
+[node name="ApplePickup" type="Node3D" unique_id=86513077 groups=["interactable", "resource_pickup"]]
+script = ExtResource("1_hdocs")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=2089472015]
+collision_layer = 9
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1751822201]
+shape = SubResource("SphereShape3D_hdocs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=724953511]
+mesh = SubResource("SphereMesh_2554o")

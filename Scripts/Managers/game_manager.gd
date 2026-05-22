@@ -124,17 +124,13 @@ func advance_to_next_night(player: Node) -> void:
 		return
 
 	current_night += 1
-
-	# TODO (Refatoração 3): player.inventory.reset()
 	player.inventory.reset()
-
-	night_active = false
+	night_active  = false
 	_apply_night_settings()
 
-	# Avisa todos os sistemas que a noite mudou.
-	# Fireplace, EnemyDirector, HUD — todos ouvem este signal.
-	# O GameManager não chama ninguém diretamente.
-	night_changed.emit(current_night)
+	# NightTransition cuida do resto — ouve night_transition_started
+	# e emite night_transition_finished quando termina
+	SignalBus.night_transition_started.emit()
 
 	DebugManager.log("GameManager", "Avançou para noite " + str(current_night))
 

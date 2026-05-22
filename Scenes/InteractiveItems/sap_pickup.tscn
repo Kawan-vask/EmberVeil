@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://du0yx043iafwq"]
+
+[ext_resource type="Script" uid="uid://l7uxhnm88iuc" path="res://Scripts/Interactables/sap_pickup.gd" id="1_2lqx1"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_q33il"]
+radius = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q33il"]
+albedo_color = Color(0.8125, 0.609375, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_2lqx1"]
+material = SubResource("StandardMaterial3D_q33il")
+radius = 0.2
+height = 0.4
+
+[node name="SapPickup" type="Node3D" unique_id=2124506883 groups=["interactable", "resource_pickup"]]
+script = ExtResource("1_2lqx1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=102368678]
+collision_layer = 9
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1917910269]
+shape = SubResource("SphereShape3D_q33il")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1607528594]
+mesh = SubResource("SphereMesh_2lqx1")

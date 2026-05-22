@@ -10,8 +10,11 @@
 [ext_resource type="PackedScene" uid="uid://b24mj6kwai2au" path="res://Scenes/World/fireplace.tscn" id="5_kry3j"]
 [ext_resource type="PackedScene" uid="uid://i6tfdq5qp1l1" path="res://Scenes/World/bed.tscn" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://cg7q5p701ptq7" path="res://Scenes/UI/pause_menu.tscn" id="10_hptm8"]
+[ext_resource type="PackedScene" uid="uid://d728y740m527" path="res://Scenes/InteractiveItems/apple_pickup.tscn" id="10_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://beyki1aqk1qfd" path="res://Scenes/UI/death_screen.tscn" id="11_d1ilt"]
+[ext_resource type="PackedScene" uid="uid://du0yx043iafwq" path="res://Scenes/InteractiveItems/sap_pickup.tscn" id="11_wsu2k"]
 [ext_resource type="Script" uid="uid://ce1uvxfngtvcx" path="res://Scenes/Systems/dev_tools_loader.gd" id="12_6iyac"]
+[ext_resource type="PackedScene" uid="uid://h0j1d8nfpe5m" path="res://Scenes/UI/night_transition.tscn" id="14_wsu2k"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8gbba"]
 sky_top_color = Color(0.26138005, 0.3149584, 0.38998, 1)
@@ -297,11 +300,41 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.34
 [node name="Bed" parent="Interactibles" unique_id=828787208 instance=ExtResource("6_21xkr")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 8.00922, 0, -3.3993378)
 
+[node name="Apples" type="Node3D" parent="Interactibles" unique_id=1253476237]
+
+[node name="ApplePickup" parent="Interactibles/Apples" unique_id=86513077 instance=ExtResource("10_jkdf5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.2, -12)
+
+[node name="ApplePickup2" parent="Interactibles/Apples" unique_id=1523732131 instance=ExtResource("10_jkdf5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.2, -12)
+
+[node name="ApplePickup3" parent="Interactibles/Apples" unique_id=1506545714 instance=ExtResource("10_jkdf5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.2, -12)
+
+[node name="ApplePickup4" parent="Interactibles/Apples" unique_id=1817749742 instance=ExtResource("10_jkdf5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.2, -12)
+
+[node name="Saps" type="Node3D" parent="Interactibles" unique_id=461578500]
+
+[node name="SapPickup" parent="Interactibles/Saps" unique_id=2124506883 instance=ExtResource("11_wsu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.2, -12)
+
+[node name="SapPickup2" parent="Interactibles/Saps" unique_id=467482444 instance=ExtResource("11_wsu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.2, -12)
+
+[node name="SapPickup3" parent="Interactibles/Saps" unique_id=198914857 instance=ExtResource("11_wsu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.2, -12)
+
+[node name="SapPickup4" parent="Interactibles/Saps" unique_id=1201367980 instance=ExtResource("11_wsu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.2, -12)
+
 [node name="UI" type="Node3D" parent="." unique_id=1408421820]
 
 [node name="PauseMenu" parent="UI" unique_id=1259609672 instance=ExtResource("10_hptm8")]
 
 [node name="DeathScreen" parent="UI" unique_id=1132231461 instance=ExtResource("11_d1ilt")]
+
+[node name="NightTransition" parent="UI" unique_id=1762464355 instance=ExtResource("14_wsu2k")]
 
 [node name="DevTools" type="Node" parent="." unique_id=1665922896]
 script = ExtResource("12_6iyac")

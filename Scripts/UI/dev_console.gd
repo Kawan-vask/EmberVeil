@@ -232,8 +232,8 @@ func _print_output(text: String) -> void:
 #region REGISTRO DE COMANDOS
 # ==============================================================================
  
-func _register(name: String, callable: Callable, description: String, group: String = "geral") -> void:
-	_commands[name] = {
+func _register(cmd_name: String, callable: Callable, description: String, group: String = "geral") -> void:
+	_commands[cmd_name] = {
 		"callable":    callable,
 		"description": description,
 		"group":       group
@@ -335,8 +335,13 @@ func _cmd_set_night(args: Array) -> void:
  
  
 func _cmd_next_night(_args: Array) -> void:
-	GameManager.current_night += 1
-	GameManager.night_changed.emit(GameManager.current_night)
+	var player := _get_player()
+	if player == null: return
+
+	# Força noite como completa e chama o fluxo normal
+	# Garante que a transição, reset e signals funcionem corretamente
+	GameManager.night_completed = true
+	GameManager.advance_to_next_night(player)
 	_print_output("[color=green]Avançou para noite " + str(GameManager.current_night) + "[/color]")
  
  
