@@ -27,6 +27,7 @@ Layers="*uid://mngkneehkcvj"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
@@ -38,6 +39,7 @@ fireplace=""
 enemy_nest=""
 enemy=""
 death_screen=""
+lantern="grupo pra debug no devtools"
 
 [input]
 

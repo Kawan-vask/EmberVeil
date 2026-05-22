@@ -1,0 +1,47 @@
+Aqui estão todos os comandos disponíveis:
+---
+**NOITE E LOOP**
+```
+set_night [n]      → força a noite atual para o número n
+next_night         → avança para a próxima noite imediatamente
+set_wood_goal [n]  → altera o objetivo de madeira da noite atual
+complete_night     → marca a noite como completa sem coletar madeira
+reset_night        → reseta a madeira entregue para zero
+```
+
+**PLAYER**
+```
+god                → toggle de invencibilidade permanente
+set_health [n]     → define a vida atual do player
+set_stamina [n]    → define a stamina atual do player
+set_energy [n]     → define a energia atual da lamparina
+add_wood [n]       → adiciona n unidades de madeira ao inventário
+kill_player        → mata o player imediatamente (testa death screen)
+```
+
+**INIMIGOS**
+```
+kill_all                  → devolve todos os inimigos ativos ao pool
+disable_enemies           → pausa o EnemyDirector (nenhum inimigo spawna)
+enable_enemies            → retoma o EnemyDirector normalmente
+spawn_wave [n]            → spawna n inimigos imediatamente
+set_enemy_speed [mult]    → multiplica a velocidade de todos os inimigos ativos
+							ex: set_enemy_speed 0.1 → câmera lenta
+							ex: set_enemy_speed 2.0 → velocidade dobrada
+```
+**LAMPARINA**
+```
+fill_energy      → reabastece energia para 100%
+drain_energy     → zera energia da lamparina
+infinite_energy  → toggle de energia infinita (zera o consumo)
+```
+
+**MUNDO E DEBUG**
+```
+timescale [n]  → altera Engine.time_scale
+				 ex: timescale 0.5 → câmera lenta
+				 ex: timescale 2.0 → jogo acelerado
+fps            → exibe o FPS atual no console
+pool_status    → exibe inimigos ativos vs disponíveis no pool
+help           → lista todos os comandos disponíveis
+```

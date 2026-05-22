@@ -59,6 +59,7 @@ signal player_died
 # Toda a verdade de vida está aqui. Nenhum outro script armazena esses valores.
 # ==============================================================================
 
+var _god_mode: bool = false
 var _current_health: float = 0.0
 var _is_dead: bool = false
 var _is_invincible: bool = false
@@ -94,7 +95,7 @@ func _process(delta: float) -> void:
 ## Aplica dano ao player.
 ## Ignorado se morto ou invencível.
 func take_damage(amount: float) -> void:
-	if _is_dead or _is_invincible:
+	if _is_dead or _is_invincible or _god_mode:
 		return
 
 	_current_health -= amount
@@ -153,6 +154,13 @@ func get_percent() -> float:
 	if max_health <= 0.0:
 		return 0.0
 	return _current_health / max_health
+
+
+func toggle_invincibility() -> bool:
+	_god_mode = !_god_mode
+	return _god_mode
+
+
 
 #endregion
 

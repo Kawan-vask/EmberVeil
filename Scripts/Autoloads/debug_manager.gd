@@ -7,9 +7,7 @@
 # REGRA: nenhum script usa print() ou label.text = diretamente.
 # Tudo passa por aqui.
 # ==============================================================================
-
 extends Node
-
 
 # ==============================================================================
 #region CONFIGURAÇÃO

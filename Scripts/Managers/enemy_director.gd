@@ -310,7 +310,7 @@ func _try_spawn_enemy() -> void:
 	var ray_end: Vector3    = ray_origin + Vector3(0, -6.0, 0)
 
 	var ray_query := PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
-	ray_query.collision_mask = 1
+	ray_query.collision_mask = Layers.GROUND
 	ray_query.exclude        = [enemy.get_rid()]
 
 	# Tipo explícito necessário — GDScript não infere PhysicsDirectSpaceState3D

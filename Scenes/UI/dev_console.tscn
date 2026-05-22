@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cmj0wcwsxgsda"]
+
+[ext_resource type="Script" uid="uid://di6h55h2nmea2" path="res://Scripts/UI/dev_console.gd" id="1_f7lxs"]
+
+[node name="DevConsole" type="CanvasLayer" unique_id=784276778]
+script = ExtResource("1_f7lxs")
+
+[node name="Panel" type="Panel" parent="." unique_id=920525924]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=1735016939]
+layout_mode = 0
+offset_top = -38.0
+offset_right = 68.0
+offset_bottom = -3.0
+
+[node name="Output" type="RichTextLabel" parent="Panel/VBox" unique_id=1891712022]
+layout_mode = 2
+bbcode_enabled = true
+
+[node name="Input" type="LineEdit" parent="Panel/VBox" unique_id=1658115586]
+layout_mode = 2
+placeholder_text = "Digite um comando..."

@@ -134,7 +134,7 @@ light_volumetric_fog_energy = 4.0
 omni_range = 8.0
 omni_attenuation = 3.0
 
-[node name="LanternHitbox" type="Node3D" parent="Head/Camera" unique_id=54492552]
+[node name="LanternHitbox" type="Node3D" parent="Head/Camera" unique_id=54492552 groups=["lantern"]]
 script = ExtResource("2_mtuoh")
 damage_per_second = 40.0
 omni_base_energy = 4.0
@@ -148,13 +148,6 @@ collision_mask = 4
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Head/Camera/LanternHitbox/LanternRay" unique_id=103248291]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -1.7171326)
 shape = SubResource("CylinderShape3D_htcer")
-
-[node name="Debug2" type="CanvasLayer" parent="Head/Camera/LanternHitbox" unique_id=670312380]
-
-[node name="Energia" type="Label" parent="Head/Camera/LanternHitbox/Debug2" unique_id=1684891079]
-offset_top = 79.0
-offset_right = 40.0
-offset_bottom = 102.0
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=508324019]
 

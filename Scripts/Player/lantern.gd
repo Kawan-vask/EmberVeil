@@ -18,7 +18,7 @@ extends Node3D
 # ==============================================================================
 
 # DEBUG
-@onready var debug_label_energia = $"Debug2/Energia"
+
 
 # Energia máxima da lamparina
 @export var max_energy := 100.0
@@ -73,6 +73,16 @@ var is_active := false
 
 
 # ==============================================================================
+#region SIGNALS
+# ==============================================================================
+
+## Emitido quando a energia muda — ouvido pela HUD diegética
+signal energy_changed(current: float, max_value: float)
+
+#endregion
+
+
+# ==============================================================================
 #region RUNTIME
 # ==============================================================================
 
@@ -114,7 +124,6 @@ func _process(delta):
 	handle_damage(delta)
 	handle_flicker(delta)
 	handle_spot_flicker(delta)
-	debug_label_energia.text = "Energia: " + str(int(current_energy))
 
 #endregion
 
@@ -143,21 +152,22 @@ func handle_input():
 # Ao acabar, desativa o modo combate automaticamente.
 # ==============================================================================
 
-func handle_energy(delta):
+func handle_energy(delta: float) -> void:
 	if not is_active:
 		return
-
 	current_energy -= energy_drain * delta
+	energy_changed.emit(current_energy, max_energy)
 	current_energy = max(current_energy, 0.0)
-
 	if current_energy <= 0:
 		set_combat_mode(false)
+		DebugManager.log("Lantern", "Energia esgotada.")
 
 
-# Chamado pela seiva (Fase 2) para reabastecer energia
-func add_energy(amount: float):
-	current_energy = min(current_energy + amount, max_energy)
-	print("Lantern: Energia reabastecida. Atual: ", current_energy)
+# Chamado pela seiva para reabastecer energia
+func add_energy(amount: float) -> void:
+	current_energy = minf(current_energy + amount, max_energy)
+	energy_changed.emit(current_energy, max_energy)
+	DebugManager.log("Lantern", "Energia reabastecida. Atual: " + str(current_energy))
 
 
 # Retorna porcentagem de energia (0.0 a 1.0) — usado pela UI
