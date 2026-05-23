@@ -6,5 +6,6 @@
 script = ExtResource("1_tbi7y")
 id = "health_max"
 display_name = "Constituição"
+description = "(+25 Vida Máxima) Seu corpo suporta mais castigo antes de sucumbir à escuridão."
 value = 25.0
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

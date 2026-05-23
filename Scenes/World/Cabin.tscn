@@ -138,6 +138,7 @@ collision_mask = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Door/StaticBody3D" unique_id=615430106]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2628741, -4.9)
 shape = SubResource("BoxShape3D_48dbj")
+disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Door/StaticBody3D" unique_id=1542829953]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.262773, -4.9)

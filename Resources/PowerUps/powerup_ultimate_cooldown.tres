@@ -6,6 +6,7 @@
 script = ExtResource("1_eowkf")
 id = "ultimate_cooldown"
 display_name = "Chama Eterna"
+description = "(-1s Cooldown da Ultimate) A energia da lamparina se recompõe mais rapidamente após uma explosão."
 effect_type = "ultimate_cooldown"
 value = 1.0
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

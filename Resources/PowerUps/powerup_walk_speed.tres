@@ -6,6 +6,7 @@
 script = ExtResource("1_s80x8")
 id = "walk_speed"
 display_name = "Passo Ligeiro"
+description = "(+0.5 Velocidade de Caminhada) Movimentar-se pela floresta exige rapidez e precisão."
 effect_type = "walk_speed"
 value = 0.5
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

@@ -43,6 +43,8 @@ func _ready():
 	# CanvasLayer sempre visível mesmo com o jogo pausado
 	# Isso é necessário para o menu aparecer durante a pausa
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	SignalBus.ui_exclusive_opened.connect(_on_ui_exclusive_opened)
+	SignalBus.ui_exclusive_closed.connect(_on_ui_exclusive_closed)
 
 #endregion
 
@@ -95,4 +97,18 @@ func _on_resume_button_pressed():
 func _on_quit_button_pressed():
 	get_tree().quit()
 
+#endregion
+
+
+# ==============================================================================
+#region bloqueia outras UI enquanto estiver aberto
+# ==============================================================================
+func _on_ui_exclusive_opened() -> void:
+	# Só bloqueia se NÃO foi o próprio PauseMenu que abriu
+	if not is_paused:
+		set_process_unhandled_input(false)
+
+func _on_ui_exclusive_closed() -> void:
+	set_process_unhandled_input(true)
+	
 #endregion

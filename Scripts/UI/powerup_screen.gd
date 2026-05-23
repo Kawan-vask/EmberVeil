@@ -95,6 +95,8 @@ func _setup_layout() -> void:
 		name_label.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
 		name_label.add_theme_font_size_override("font_size", 22)
 		name_label.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+		
+		name_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))  # dourado
 
 		# Description label
 		var desc_label: Label = card.get_node("VBoxContainer/Description")
@@ -132,13 +134,19 @@ func _on_night_changed(_night: int) -> void:
 		card.get_node("VBoxContainer/Name").text        = _choices[i].display_name
 		card.get_node("VBoxContainer/Description").text = _choices[i].description
 
+		var vbox_container: VBoxContainer = card.get_node("VBoxContainer")
+		vbox_container.add_theme_constant_override("separation", 16)
+		vbox_container.alignment = BoxContainer.ALIGNMENT_CENTER
+
 		if card.pressed.is_connected(_on_card_selected.bind(i)):
 			card.pressed.disconnect(_on_card_selected.bind(i))
 		card.pressed.connect(_on_card_selected.bind(i))
 
+	# FORA do loop — executa só uma vez
 	visible           = true
 	get_tree().paused = true
 	Input.mouse_mode  = Input.MOUSE_MODE_VISIBLE
+	SignalBus.ui_exclusive_opened.emit()
 	DebugManager.log("PowerUpScreen", "Tela aberta.")
 
 #endregion
@@ -156,9 +164,10 @@ func _on_card_selected(index: int) -> void:
 
 
 func _close() -> void:
+	visible           = false
 	get_tree().paused = false
 	Input.mouse_mode  = Input.MOUSE_MODE_CAPTURED
-	visible           = false
+	SignalBus.ui_exclusive_closed.emit()
 	DebugManager.log("PowerUpScreen", "Power-up escolhido.")
 
 #endregion

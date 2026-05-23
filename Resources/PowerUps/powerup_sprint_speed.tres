@@ -6,6 +6,7 @@
 script = ExtResource("1_iitg5")
 id = "sprint_speed"
 display_name = "Fuga Rápida"
+description = "Fuga Rápida (+1.0 Velocidade de Corrida) Quando a noite avança, correr pode ser a diferença entre viver e morrer."
 effect_type = "sprint_speed"
 value = 1.0
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

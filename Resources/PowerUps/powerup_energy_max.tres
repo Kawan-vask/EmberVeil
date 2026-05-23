@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_5h60e")
 id = "energy_max"
-display_name = "Reservatório"
+display_name = "Reservatório Aumentado"
+description = "(+20 Energia Máxima) A lamparina comporta uma quantidade maior de energia."
 effect_type = "energy_max"
 value = 20.0
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

@@ -53,6 +53,9 @@ const MAX_CONSOLE_HEIGHT_RATIO: float = 0.33  # ← adiciona esta linha
  
 func _ready() -> void:
 	_setup_layout()
+	
+	SignalBus.ui_exclusive_opened.connect(_on_ui_exclusive_opened)
+	SignalBus.ui_exclusive_closed.connect(_on_ui_exclusive_closed)
  
 	panel.visible  = false
 	process_mode   = Node.PROCESS_MODE_ALWAYS
@@ -60,11 +63,25 @@ func _ready() -> void:
 	input.text_submitted.connect(_on_command_submitted)
 	input.gui_input.connect(_on_input_gui_input)
 	
+	
 	_register_all_commands()
 	_print_output("[color=yellow]DevConsole iniciado. Digite [b]help[/b] para ver os comandos.[/color]")
  
 #endregion
  
+# ==============================================================================
+#region Bloquear abrir outras coisas quando o console está aberto
+# ==============================================================================
+
+func _on_ui_exclusive_opened() -> void:
+	# Só bloqueia se NÃO foi o próprio console que abriu
+	if not panel.visible:
+		set_process_unhandled_input(false)
+
+func _on_ui_exclusive_closed() -> void:
+	set_process_unhandled_input(true)
+	
+#endregion
 
 # ==============================================================================
 #region CONFIGURANDO TAMANHO DO CONSOLE POR CÓDIGO

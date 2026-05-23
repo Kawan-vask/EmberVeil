@@ -6,6 +6,7 @@
 script = ExtResource("1_n6shy")
 id = "energy_drain_reduction"
 display_name = "Chama Eficiente"
+description = "(-2% Consumo de Energia) Cada gota de energia rende mais tempo de sobrevivência."
 effect_type = "energy_drain_reduction"
 value = 2.0
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

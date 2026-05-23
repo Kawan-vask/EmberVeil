@@ -124,6 +124,9 @@ func _ready():
 	lantern_cone.monitoring = false
 	beam_particles.emitting = false
 	combat_omni.visible = false
+	
+	SignalBus.ui_exclusive_opened.connect(func(): set_process(false))
+	SignalBus.ui_exclusive_closed.connect(func(): set_process(true))
 
 	# Conecta signals do cone
 	lantern_cone.body_entered.connect(_on_cone_body_entered)

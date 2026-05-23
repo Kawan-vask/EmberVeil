@@ -6,6 +6,7 @@
 script = ExtResource("1_j1tmu")
 id = "ultimate_radius"
 display_name = "Explosão Solar"
+description = "(+2 Alcance da Ultimate) Sua descarga luminosa alcança áreas maiores da escuridão."
 effect_type = "ultimate_radius"
 value = 2.0
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

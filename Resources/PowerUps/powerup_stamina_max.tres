@@ -6,6 +6,7 @@
 script = ExtResource("1_de51y")
 id = "stamina_max"
 display_name = "Resistência"
+description = "(+20 Stamina Máxima) Seus pulmão aguentam jornadas mais longas pela floresta."
 effect_type = "stamina_max"
 value = 20.0
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

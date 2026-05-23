@@ -98,4 +98,12 @@ signal shop_opened
 @warning_ignore("unused_signal")
 signal powerup_selected(data: PowerUpData)
 
+## Emitido quando uma tela de UI exclusiva abre/fecha
+## Sistemas que capturam input ouvem este signal para se desabilitar
+@warning_ignore("unused_signal")
+signal ui_exclusive_opened
+
+@warning_ignore("unused_signal")
+signal ui_exclusive_closed
+
 #endregion

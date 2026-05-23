@@ -6,6 +6,7 @@
 script = ExtResource("1_yp5ka")
 id = "lantern_slow"
 display_name = "Luz Paralisante"
+description = "(+10% Lentidão da Lamparina) As criaturas permanecem presas ao brilho por mais tempo."
 effect_type = "lantern_slow"
 value = 0.1
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"

@@ -6,6 +6,7 @@
 script = ExtResource("1_ycjvo")
 id = "lantern_damage"
 display_name = "Chama Feroz"
+description = "Chama Feroz (+5 Dano da Lamparina) A luz que afasta as trevas agora também as destrói com mais intensidade."
 effect_type = "lantern_damage"
 value = 5.0
 metadata/_custom_type_script = "uid://cvc3m8511bw0i"
