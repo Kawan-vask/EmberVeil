@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://bi51tfu8u30s5"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_5h60e"]
+
+[resource]
+script = ExtResource("1_5h60e")
+id = "energy_max"
+display_name = "Reservatório"
+effect_type = "energy_max"
+value = 20.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"

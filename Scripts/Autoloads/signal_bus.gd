@@ -70,3 +70,32 @@ signal night_transition_started
 signal night_transition_finished
 
 #endregion
+
+# ==============================================================================
+#region VENDEDOR
+# ==============================================================================
+
+## Emitido pelo GameManager quando o vendedor chega entre noites
+@warning_ignore("unused_signal")
+signal vendor_available
+
+## Emitido quando o player fecha a loja
+@warning_ignore("unused_signal")
+signal vendor_dismissed
+
+## Emitido pela porta ao interagir no estado VENDOR
+@warning_ignore("unused_signal")
+signal shop_opened
+
+#endregion
+
+
+# ==============================================================================
+#region POWER-UPS
+# ==============================================================================
+
+## Emitido pelo PowerUpManager quando um power-up é aplicado
+@warning_ignore("unused_signal")
+signal powerup_selected(data: PowerUpData)
+
+#endregion

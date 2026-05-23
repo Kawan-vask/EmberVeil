@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://cfacymadtcva3"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_de51y"]
+
+[resource]
+script = ExtResource("1_de51y")
+id = "stamina_max"
+display_name = "Resistência"
+effect_type = "stamina_max"
+value = 20.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"

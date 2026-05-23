@@ -99,4 +99,12 @@ func get_percent() -> float:
 		return 0.0
 	return _current_stamina / max_stamina
 
+
+## Aumenta stamina máxima — usado por power-ups
+func increase_max(amount: float) -> void:
+	max_stamina += amount
+	stamina_changed.emit(_current_stamina, max_stamina)
+	DebugManager.log("StaminaComponent", "Stamina máxima: " + str(max_stamina))
+
+
 #endregion

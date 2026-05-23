@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://c1x3nb7td546s"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_tbi7y"]
+
+[resource]
+script = ExtResource("1_tbi7y")
+id = "health_max"
+display_name = "Constituição"
+value = 25.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"

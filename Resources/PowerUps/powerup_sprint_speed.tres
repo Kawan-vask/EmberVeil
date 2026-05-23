@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://byoivq1oofnct"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_iitg5"]
+
+[resource]
+script = ExtResource("1_iitg5")
+id = "sprint_speed"
+display_name = "Fuga Rápida"
+effect_type = "sprint_speed"
+value = 1.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"

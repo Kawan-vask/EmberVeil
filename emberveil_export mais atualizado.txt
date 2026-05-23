@@ -4,7 +4,7 @@
 
 
 ############################################################
-#  SCRIPTS (.gd) (27 arquivos)
+#  SCRIPTS (.gd) (31 arquivos)
 ############################################################
 
 ============================================================
@@ -321,6 +321,35 @@ signal night_transition_started
 ## Ouvido por: NightTransition, player
 @warning_ignore("unused_signal")
 signal night_transition_finished
+
+#endregion
+
+# ==============================================================================
+#region VENDEDOR
+# ==============================================================================
+
+## Emitido pelo GameManager quando o vendedor chega entre noites
+@warning_ignore("unused_signal")
+signal vendor_available
+
+## Emitido quando o player fecha a loja
+@warning_ignore("unused_signal")
+signal vendor_dismissed
+
+## Emitido pela porta ao interagir no estado VENDOR
+@warning_ignore("unused_signal")
+signal shop_opened
+
+#endregion
+
+
+# ==============================================================================
+#region POWER-UPS
+# ==============================================================================
+
+## Emitido pelo PowerUpManager quando um power-up é aplicado
+@warning_ignore("unused_signal")
+signal powerup_selected(data: PowerUpData)
 
 #endregion
 
@@ -803,7 +832,8 @@ ARQUIVO: Scripts\Interactables\bed.gd
 # BED
 # ------------------------------------------------------------------------------
 # Interagir com a cama passa para a próxima noite.
-# Só funciona se o objetivo de madeira da noite foi atingido.
+# Só funciona se o objetivo de madeira foi atingido.
+# Madeira excedente é convertida em moedas ao dormir.
 # ==============================================================================
 
 extends Interactable
@@ -813,12 +843,22 @@ func interact() -> void:
 		DebugManager.log("Bed", "Ainda falta madeira!")
 		return
 
+	# Bloqueia se player ainda não escolheu o power-up
+	var screen: Node = get_tree().get_first_node_in_group("powerup_screen")
+	if screen and screen.visible:
+		DebugManager.log("Bed", "Escolha um poder antes de dormir.")
+		return
+
 	var player: Node = get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
 
+	var excess: int = player.inventory.get_wood_count()
+	if excess > 0:
+		GameManager.add_coins(excess)
+		DebugManager.log("Bed", "Madeira excedente: " + str(excess) + " moedas")
+
 	GameManager.advance_to_next_night(player)
-	DebugManager.log("Bed", "Próxima noite iniciada!")
 
 
 ============================================================
@@ -1497,6 +1537,141 @@ func _check_night_completion() -> void:
 
 #endregion
 
+# ==============================================================================
+#region MOEDAS
+# ==============================================================================
+
+## Saldo atual de moedas — persiste entre noites, reseta ao morrer
+var coins: int = 0
+
+## Emitido sempre que o saldo muda — ouvido pela HUD
+signal coins_changed(new_amount: int)
+
+
+func add_coins(amount: int) -> void:
+	coins += amount
+	coins_changed.emit(coins)
+	DebugManager.log("GameManager", "Moedas: " + str(coins))
+
+
+## Retorna false se saldo insuficiente — nunca vai negativo
+func spend_coins(amount: int) -> bool:
+	if coins < amount:
+		DebugManager.log("GameManager", "Moedas insuficientes.")
+		return false
+	coins -= amount
+	coins_changed.emit(coins)
+	return true
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Managers\powerup_manager.gd
+============================================================
+# ==============================================================================
+# POWERUP MANAGER
+# ------------------------------------------------------------------------------
+# Gerencia a aplicação de power-ups ao player.
+#
+# - Mantém lista de power-ups ativos da run atual
+# - Aplica efeitos via API pública dos componentes — nunca acessa internals
+# - Reseta ao morrer (roguelike)
+#
+# Instanciar como filho da main.tscn, grupo "powerup_manager"
+# ==============================================================================
+
+class_name PowerUpManager
+extends Node
+
+
+# ==============================================================================
+#region CONFIGURAÇÃO
+# ==============================================================================
+
+## Pool de power-ups disponíveis para sorteio
+## Arraste os .tres criados no Inspector
+@export var available_powerups: Array[PowerUpData] = []
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO
+# ==============================================================================
+
+## Power-ups aplicados na run atual
+var active_powerups: Array[PowerUpData] = []
+
+#endregion
+
+
+# ==============================================================================
+#region SIGNALS
+# ==============================================================================
+
+## Emitido quando um power-up é aplicado — ouvido pela HUD
+signal powerup_applied(data: PowerUpData)
+
+#endregion
+
+
+# ==============================================================================
+#region API PÚBLICA
+# ==============================================================================
+
+## Retorna N power-ups aleatórios do pool disponível
+## Garante que não repete power-ups já ativos (se pool permitir)
+func get_random_choices(count: int) -> Array[PowerUpData]:
+	if available_powerups.is_empty():
+		DebugManager.log("PowerUpManager", "Pool vazio!")
+		return []
+
+	var pool: Array[PowerUpData] = available_powerups.duplicate()
+	pool.shuffle()
+	return pool.slice(0, mini(count, pool.size()))
+
+
+## Aplica o efeito do power-up ao player via API pública
+func apply(data: PowerUpData, player: Node) -> void:
+	var h: HealthComponent  = player.health
+	var s: StaminaComponent = player.stamina
+	var l: Lantern          = get_tree().get_first_node_in_group("lantern")
+
+	match data.effect_type:
+		"health_max":
+			h.increase_max(data.value)
+		"stamina_max":
+			s.increase_max(data.value)
+		"energy_max":
+			if l: l.max_energy += data.value
+		"walk_speed":
+			player.walk_speed += data.value
+		"sprint_speed":
+			player.sprint_speed += data.value
+		"lantern_damage":
+			if l: l.damage_per_second += data.value
+		"lantern_slow":
+			if l: l.slow_factor = maxf(l.slow_factor - data.value, 0.05)
+		"ultimate_radius":
+			if l: l.ultimate_radius += data.value
+		"ultimate_cooldown":
+			if l: l.ultimate_cooldown = maxf(l.ultimate_cooldown - data.value, 1.0)
+		"energy_drain_reduction":
+			if l: l.energy_drain = maxf(l.energy_drain - data.value, 1.0)
+
+	active_powerups.append(data)
+	powerup_applied.emit(data)
+	DebugManager.log("PowerUpManager", "Aplicado: " + data.display_name)
+
+
+## Reseta todos os power-ups — chamado ao morrer (roguelike reset)
+func reset() -> void:
+	active_powerups.clear()
+	DebugManager.log("PowerUpManager", "Power-ups resetados.")
+
+#endregion
+
 
 ============================================================
 ARQUIVO: Scripts\Player\lantern.gd
@@ -1941,8 +2116,6 @@ ARQUIVO: Scripts\Player\player_controller.gd
 # Responsabilidade: movimento, câmera, gravidade, interação. em breve sera
 #fragmentado pra não se tornar um god_entity (muito código em um lugar)
 #
-# TODO (Refatoração 3): extrair Health, Stamina e Inventory para componentes.
-#
 # Separação de ciclos:
 # - _process       → câmera (roda no framerate real, sem jitter)
 # - _physics_process → movimento, física, interação (roda no ciclo de física)
@@ -1993,6 +2166,43 @@ var mouse_delta: Vector2 = Vector2.ZERO
 
 
 # ==============================================================================
+#region CAMERA BOB
+# ==============================================================================
+
+## Frequência da oscilação
+@export var bob_frequency: float  = 2.0
+
+## Amplitude da oscilação andando
+@export var bob_amplitude: float  = 0.03
+
+## Multiplicador ao correr
+@export var sprint_multiplier: float = 2.0
+
+var _bob_time: float = 0.0
+
+var _camera_base_y: float = 0.0
+
+
+func _handle_camera_bob(delta: float) -> void:
+	var is_moving: bool    = input_direction != Vector2.ZERO
+	var is_sprinting: bool = Input.is_action_pressed("sprint") and stamina.can_sprint()
+
+	if not is_moving or not is_on_floor():
+		camera.position.y = lerp(camera.position.y, _camera_base_y, delta * 8.0)
+		_bob_time = 0.0
+		return
+
+	var freq: float = bob_frequency * (sprint_multiplier if is_sprinting else 1.0)
+	var amp: float  = bob_amplitude * (sprint_multiplier if is_sprinting else 1.0)
+
+	_bob_time += delta * freq
+	camera.position.y = _camera_base_y + sin(_bob_time * TAU) * amp
+	camera.position.x = sin(_bob_time * PI) * amp * 0.5  # ← oscilação lateral mais sutil
+	
+	
+#endregion
+
+# ==============================================================================
 #region NODE REFERENCES
 # ==============================================================================
 
@@ -2006,6 +2216,8 @@ var mouse_delta: Vector2 = Vector2.ZERO
 
 @onready var lantern: Lantern = $Head/Camera/LanternHitbox
 
+@onready var camera: Camera3D = $Head/Camera
+
 
 #endregion
 
@@ -2017,6 +2229,7 @@ var mouse_delta: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	interaction_ray.add_exception(self)
+	_camera_base_y = camera.position.y  # ← guarda a altura original da cabeça
 
 #endregion
 
@@ -2044,8 +2257,8 @@ func _process(_delta: float) -> void:
 		return
 
 	_handle_camera()
+	_handle_camera_bob(_delta)
 	DebugManager.label(debug_label_stamina, "Stamina: " + str(int(stamina.get_percent() * stamina.max_stamina)))
-	
 	DebugManager.label(debug_label_madeira,
 	"Madeira: " + str(inventory.get_wood_count()) + "/" + str(GameManager.wood_goal))
 	
@@ -2390,6 +2603,13 @@ func toggle_invincibility() -> bool:
 	return _god_mode
 
 
+## Aumenta vida máxima e cura o mesmo valor — usado por power-ups
+func increase_max(amount: float) -> void:
+	max_health += amount
+	_current_health = minf(_current_health + amount, max_health)
+	health_changed.emit(_current_health, max_health)
+	DebugManager.log("HealthComponent", "Vida máxima: " + str(max_health))
+
 
 #endregion
 
@@ -2601,6 +2821,180 @@ func get_percent() -> float:
 	if max_stamina <= 0.0:
 		return 0.0
 	return _current_stamina / max_stamina
+
+
+## Aumenta stamina máxima — usado por power-ups
+func increase_max(amount: float) -> void:
+	max_stamina += amount
+	stamina_changed.emit(_current_stamina, max_stamina)
+	DebugManager.log("StaminaComponent", "Stamina máxima: " + str(max_stamina))
+
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Resources\powerup_data.gd
+============================================================
+# ==============================================================================
+# POWERUP DATA
+# ------------------------------------------------------------------------------
+# Resource que define um power-up disponível no jogo.
+# Crie um .tres para cada power-up no Inspector.
+# ==============================================================================
+
+class_name PowerUpData
+extends Resource
+
+
+# ==============================================================================
+#region IDENTIFICAÇÃO
+# ==============================================================================
+
+## ID único — usado pelo DevConsole (give_powerup [id])
+@export var id: String = ""
+
+## Nome exibido na PowerUpScreen
+@export var display_name: String = ""
+
+## Descrição exibida na PowerUpScreen
+@export var description: String = ""
+
+#endregion
+
+
+# ==============================================================================
+#region EFEITO
+# ==============================================================================
+
+## Tipo do efeito aplicado ao player
+@export_enum(
+	"health_max",
+	"stamina_max",
+	"energy_max",
+	"walk_speed",
+	"sprint_speed",
+	"lantern_damage",
+	"lantern_slow",
+	"ultimate_radius",
+	"ultimate_cooldown",
+	"energy_drain_reduction"
+) var effect_type: String = "health_max"
+
+## Valor do efeito aplicado
+@export var value: float = 10.0
+
+#endregion
+
+
+============================================================
+ARQUIVO: Scripts\Systems\cabin_door.gd
+============================================================
+# ==============================================================================
+# CABIN DOOR
+# ------------------------------------------------------------------------------
+# Porta da cabana com 3 estados:
+# - CLOSED: bloqueada, não deixa passar
+# - OPEN:   liberada, player pode sair/entrar
+# - VENDOR: vendedor presente, interagir abre a loja
+#
+# Transições automáticas:
+# - night_transition_finished → OPEN (começa a noite, porta abre)
+# - vendor_available          → VENDOR (vendedor chegou)
+# - vendor_dismissed          → CLOSED (vendedor foi embora)
+# ==============================================================================
+
+class_name CabinDoor
+extends Interactable
+
+
+# ==============================================================================
+#region ESTADOS
+# ==============================================================================
+
+enum DoorState { OPEN, CLOSED, VENDOR }
+
+var state: DoorState = DoorState.CLOSED
+
+#endregion
+
+
+# ==============================================================================
+#region NÓS
+# ==============================================================================
+
+@onready var collider: StaticBody3D = $StaticBody3D
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	SignalBus.night_transition_finished.connect(_on_night_started)
+	SignalBus.vendor_available.connect(_on_vendor_arrived)
+	SignalBus.vendor_dismissed.connect(_on_vendor_left)
+	set_state(DoorState.CLOSED)
+
+#endregion
+
+
+# ==============================================================================
+#region INTERAÇÃO
+# ==============================================================================
+
+func interact() -> void:
+	match state:
+		DoorState.OPEN:
+			set_state(DoorState.CLOSED)
+		DoorState.CLOSED:
+			set_state(DoorState.OPEN)
+		DoorState.VENDOR:
+			# Abre a loja — ShopScreen ouve este signal
+			SignalBus.shop_opened.emit()
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADOS
+# ==============================================================================
+
+func set_state(new_state: DoorState) -> void:
+	state = new_state
+
+	# Colisão ativa apenas quando fechada ou com vendedor
+	# Quando aberta, player passa livremente
+	collider.process_mode = (
+		Node.PROCESS_MODE_DISABLED
+		if state == DoorState.OPEN
+		else Node.PROCESS_MODE_INHERIT
+	)
+
+	DebugManager.log("CabinDoor", "Estado: " + DoorState.keys()[state])
+
+#endregion
+
+
+# ==============================================================================
+#region LISTENERS — SIGNALS
+# ==============================================================================
+
+func _on_night_started() -> void:
+	# Noite começa — porta abre para o player sair
+	set_state(DoorState.OPEN)
+
+
+func _on_vendor_arrived() -> void:
+	# Vendedor chegou — porta vira acesso à loja
+	set_state(DoorState.VENDOR)
+
+
+func _on_vendor_left() -> void:
+	# Vendedor foi embora — porta fecha
+	set_state(DoorState.CLOSED)
 
 #endregion
 
@@ -3035,11 +3429,19 @@ func _register_all_commands() -> void:
 	_register("fps",         _cmd_fps,         "exibe FPS atual",                           "mundo")
 	_register("pool_status", _cmd_pool_status, "inimigos ativos vs disponíveis no pool",    "mundo")
 	_register("devlight", _cmd_devlight, "toggle de iluminação de desenvolvimento", "mundo")
+	
+	
+	# POWER UPS
+	_register("give_powerup",        _cmd_give_powerup,        "give_powerup [id]",        "powerups")
+	_register("list_powerups",       _cmd_list_powerups,       "lista power-ups ativos",    "powerups")
+	_register("open_powerup_screen", _cmd_open_powerup_screen, "abre tela de escolha",      "powerups")
+	_register("reset_powerups",      _cmd_reset_powerups,      "remove todos os power-ups", "powerups")
+
 
 	# PLACEHOLDERS — descomentar quando os sistemas existirem
-	# _register("add_coins",      _cmd_add_coins,      "add_coins [n]",      "economia")
+	_register("add_coins",      _cmd_add_coins,      "add_coins [n]",      "economia")
+	_register("set_coins", _cmd_set_coins, "set_coins [n] — define saldo exato", "economia")
 	# _register("open_shop",      _cmd_open_shop,      "abre a loja",        "economia")
-	# _register("give_powerup",   _cmd_give_powerup,   "give_powerup [id]",  "powerups")
 	# _register("equip_lantern",  _cmd_equip_lantern,  "equip_lantern [tipo]","lanternas")
 	# _register("show_nests",     _cmd_show_nests,     "mostra nests ativos", "mundo")
 	# _register("show_nav",       _cmd_show_nav,       "toggle navegação",    "mundo")
@@ -3089,8 +3491,13 @@ func _cmd_set_night(args: Array) -> void:
  
  
 func _cmd_next_night(_args: Array) -> void:
-	GameManager.current_night += 1
-	GameManager.night_changed.emit(GameManager.current_night)
+	var player := _get_player()
+	if player == null: return
+
+	# Força noite como completa e chama o fluxo normal
+	# Garante que a transição, reset e signals funcionem corretamente
+	GameManager.night_completed = true
+	GameManager.advance_to_next_night(player)
 	_print_output("[color=green]Avançou para noite " + str(GameManager.current_night) + "[/color]")
  
  
@@ -3366,6 +3773,72 @@ func _cmd_devlight(_args: Array) -> void:
  
 #endregion
 
+# ==============================================================================
+#region COMANDOS — ECONOMIA
+# ==============================================================================
+
+func _cmd_add_coins(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: add_coins [n][/color]"); return
+	GameManager.add_coins(int(args[0]))
+	_print_output("[color=green]Moedas: " + str(GameManager.coins) + "[/color]")
+
+
+func _cmd_set_coins(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: set_coins [n][/color]"); return
+	GameManager.coins = int(args[0])
+	GameManager.coins_changed.emit(GameManager.coins)
+	_print_output("[color=green]Moedas: " + str(GameManager.coins) + "[/color]")
+
+#endregion
+
+# ==============================================================================
+#region COMANDOS — POWERUPS
+# ==============================================================================
+
+func _cmd_give_powerup(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: give_powerup [id][/color]"); return
+	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
+	if pm == null:
+		_print_output("[color=red]PowerUpManager não encontrado.[/color]"); return
+	var player := _get_player()
+	if player == null: return
+	for pu: PowerUpData in pm.available_powerups:
+		if pu.id == args[0]:
+			pm.apply(pu, player)
+			_print_output("[color=green]Aplicado: " + pu.display_name + "[/color]")
+			return
+	_print_output("[color=red]Power-up '" + args[0] + "' não encontrado.[/color]")
+
+
+func _cmd_list_powerups(_args: Array) -> void:
+	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
+	if pm == null:
+		_print_output("[color=red]PowerUpManager não encontrado.[/color]"); return
+	_print_output("[color=yellow]── ATIVOS ──[/color]")
+	if pm.active_powerups.is_empty():
+		_print_output("  Nenhum"); return
+	for pu: PowerUpData in pm.active_powerups:
+		_print_output("  [color=cyan]" + pu.id + "[/color] — " + pu.display_name)
+
+
+func _cmd_open_powerup_screen(_args: Array) -> void:
+	var screen: Node = get_tree().get_first_node_in_group("powerup_screen")
+	if screen == null:
+		_print_output("[color=red]PowerUpScreen não encontrada.[/color]"); return
+	screen._on_objective_reached()
+	_print_output("[color=green]PowerUpScreen aberta.[/color]")
+
+
+func _cmd_reset_powerups(_args: Array) -> void:
+	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
+	if pm: pm.reset()
+	_print_output("[color=green]Power-ups resetados.[/color]")
+
+#endregion
+
 
 ============================================================
 ARQUIVO: Scripts\UI\hud.gd
@@ -3429,6 +3902,7 @@ func _connect_signals() -> void:
 	_health.player_damaged.connect(_on_player_damaged)
 	_stamina.stamina_changed.connect(_on_stamina_changed)
 	_inventory.wood_changed.connect(_on_wood_changed)
+	GameManager.coins_changed.connect(_on_coins_changed)
 	GameManager.night_objective_reached.connect(_on_night_objective_reached)
 
 	if _lantern != null:
@@ -3504,6 +3978,10 @@ func _on_wood_changed(current: int, goal: int) -> void:
 	DebugManager.log("HUD", "Madeira: " + str(current) + "/" + str(goal))
 	# Sem elemento visual permanente — lareira comunica o progresso
 
+func _on_coins_changed(amount: int) -> void:
+	DebugManager.log("HUD", "Moedas: " + str(amount))
+	# TODO: atualizar elemento diegético (contador na cabana)
+
 #endregion
 
 
@@ -3525,124 +4003,87 @@ ARQUIVO: Scripts\UI\night_transition.gd
 ============================================================
 # ==============================================================================
 # NIGHT TRANSITION
-# ------------------------------------------------------------------------------
-# Gerencia a transição visual entre noites.
-# Fluxo: fade out → texto "NOITE X" → fade in
-#
-# Futuramente: substituir fade por animação de deitar/levantar na cama.
-# Os signals night_transition_started/finished já estruturam esse gancho.
 # ==============================================================================
 
 extends CanvasLayer
 
 
-# ==============================================================================
 #region NÓS
-# ==============================================================================
-
 @onready var fade_rect: ColorRect = $FadeRect
 @onready var night_label: Label   = $NightLabel
-
 #endregion
 
 
-# ==============================================================================
 #region CONFIGURAÇÃO
-# ==============================================================================
-
-## Duração do fade out e fade in em segundos
-@export var fade_duration: float  = 1.0
-
-## Tempo que o texto da noite fica visível
-@export var hold_duration: float  = 1.5
-
+@export var fade_duration: float = 1.0
+@export var hold_duration: float = 1.5
 #endregion
 
 
-# ==============================================================================
 #region READY
-# ==============================================================================
-
 func _ready() -> void:
-	process_mode       = Node.PROCESS_MODE_ALWAYS
-	visible            = false
+	process_mode         = Node.PROCESS_MODE_ALWAYS
+	visible              = false
 	fade_rect.modulate.a = 0.0
 	night_label.visible  = false
-
 	SignalBus.night_transition_started.connect(_on_transition_started)
-
 #endregion
 
 
-# ==============================================================================
 #region TRANSIÇÃO
-# ==============================================================================
-
 func _on_transition_started() -> void:
 	visible = true
 	get_tree().paused = true
 
-	# FADE OUT
 	await _fade(0.0, 1.0)
 
-	# Mostra texto da noite
 	night_label.text    = "NOITE " + str(GameManager.current_night)
 	night_label.visible = true
 
 	await get_tree().create_timer(hold_duration).timeout
 
-	# Reseta sistemas enquanto tela está preta
-	_reset_systems()
-	
-	# Avisa sistemas que dependem da noite (EnemyDirector, Fireplace, etc)
-	GameManager.night_changed.emit(GameManager.current_night)
+	_reset_player()
 
-	# Emite signal — sistemas que dependem do reset ouvem aqui
+	GameManager.night_changed.emit(GameManager.current_night)
 	SignalBus.night_transition_finished.emit()
 
 	night_label.visible = false
 
-	# FADE IN
 	await _fade(1.0, 0.0)
 
 	get_tree().paused = false
 	visible           = false
 
+	_reset_resources()
 
-func _fade(from: float, to: float) -> void:
+
+func _fade(_from: float, to: float) -> void:
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate:a", to, fade_duration)
 	await tween.finished
 
 
-func _reset_systems() -> void:
-	# Teleporta player para o SpawnPoint da cama
-	var bed: Node = get_tree().get_first_node_in_group("bed")
+func _reset_player() -> void:
+	var spawn: Node  = get_tree().get_first_node_in_group("spawn_point")
 	var player: Node = get_tree().get_first_node_in_group("player")
-	if bed and player:
-		var spawn: Node = bed.get_node_or_null("SpawnPoint")
-		if spawn:
-			player.global_position = spawn.global_position
-		else:
-			DebugManager.log("NightTransition", "SpawnPoint não encontrado na cama!")
+	if spawn and player:
+		player.global_position = spawn.global_position
+	else:
+		DebugManager.log("NightTransition", "SpawnPoint não encontrado!")
 
-	# Reseta recursos do mapa
+	var lantern := get_tree().get_first_node_in_group("lantern")
+	if lantern:
+		lantern.add_energy(lantern.max_energy)
+
+
+func _reset_resources() -> void:
 	var resources := get_tree().get_nodes_in_group("resource_pickup")
 	for r in resources:
 		r.visible = true
 		var body := r.get_node_or_null("StaticBody3D")
 		if body:
 			body.process_mode = Node.PROCESS_MODE_INHERIT
-
-	# Reseta energia da lamparina
-	var lantern := get_tree().get_first_node_in_group("lantern")
-	if lantern:
-		lantern.current_energy = lantern.max_energy
-		lantern.energy_changed.emit(lantern.current_energy, lantern.max_energy)
-
-	DebugManager.log("NightTransition", "Sistemas resetados para noite " + str(GameManager.current_night))
-
-
+	DebugManager.log("NightTransition", "Recursos resetados: " + str(resources.size()))
 #endregion
 
 
@@ -3749,8 +4190,110 @@ func _on_quit_button_pressed():
 #endregion
 
 
+============================================================
+ARQUIVO: Scripts\UI\powerup_screen.gd
+============================================================
+# ==============================================================================
+# POWERUP SCREEN
+# ------------------------------------------------------------------------------
+# Exibe 3 power-ups aleatórios para o player escolher ao completar a noite.
+# Abre automaticamente ao receber night_objective_reached.
+# Bloqueia a cama enquanto visível — player deve escolher antes de dormir.
+# ==============================================================================
+
+extends CanvasLayer
+
+
+# ==============================================================================
+#region NÓS
+# ==============================================================================
+
+#region NÓS
+@onready var cards: Array[Button] = [
+	$Background/CardsContainer/Card1,
+	$Background/CardsContainer/Card2,
+	$Background/CardsContainer/Card3,
+]
+
+#endregion
+
+
+# ==============================================================================
+#region ESTADO
+# ==============================================================================
+
+var _choices: Array[PowerUpData]  = []
+var _powerup_manager: PowerUpManager = null
+
+#endregion
+
+
+# ==============================================================================
+#region READY
+# ==============================================================================
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	visible      = false
+
+	GameManager.night_objective_reached.connect(_on_objective_reached)
+
+#endregion
+
+
+# ==============================================================================
+#region ABRIR TELA
+# ==============================================================================
+
+func _on_objective_reached() -> void:
+	_powerup_manager = get_tree().get_first_node_in_group("powerup_manager")
+	if _powerup_manager == null:
+		DebugManager.log("PowerUpScreen", "PowerUpManager não encontrado!"); return
+
+	_choices = _powerup_manager.get_random_choices(3)
+	if _choices.is_empty():
+		DebugManager.log("PowerUpScreen", "Nenhum power-up disponível!"); return
+
+	for i in _choices.size():
+		var card: Button = cards[i]
+		card.get_node("VBoxContainer/Name").text        = _choices[i].display_name
+		card.get_node("VBoxContainer/Description").text = _choices[i].description
+
+		if card.pressed.is_connected(_on_card_selected.bind(i)):
+			card.pressed.disconnect(_on_card_selected.bind(i))
+		card.pressed.connect(_on_card_selected.bind(i))
+
+	visible              = true
+	get_tree().paused    = true
+	Input.mouse_mode     = Input.MOUSE_MODE_VISIBLE
+	DebugManager.log("PowerUpScreen", "Tela aberta.")
+
+#endregion
+
+
+# ==============================================================================
+#region SELECIONAR POWER-UP
+# ==============================================================================
+
+func _on_card_selected(index: int) -> void:
+	var player: Node = get_tree().get_first_node_in_group("player")
+	if player and _powerup_manager:
+		_powerup_manager.apply(_choices[index], player)
+
+	_close()
+
+
+func _close() -> void:
+	get_tree().paused    = false
+	Input.mouse_mode     = Input.MOUSE_MODE_CAPTURED
+	visible              = false
+	DebugManager.log("PowerUpScreen", "Power-up escolhido. Tela fechada.")
+
+#endregion
+
+
 ############################################################
-#  CENAS (.tscn — estrutura) (15 arquivos)
+#  CENAS (.tscn — estrutura) (17 arquivos)
 ############################################################
 
 ============================================================
@@ -3759,26 +4302,35 @@ ARQUIVO: Scenes\main.tscn
 [gd_scene format=3 uid="uid://xweh4jd5jbfj"]
 [ext_resource type="Texture2D" uid="uid://6leytow5hr8a" path="res://Assets/Textures/DevTextures/PNG/Dark/texture_09.png" id="1_bo1nx"]
 [ext_resource type="PackedScene" uid="uid://crlmxwvc46sks" path="res://Scenes/Player/player.tscn" id="2_8gbba"]
-[ext_resource type="Texture2D" uid="uid://bguck1xsgobpr" path="res://Assets/Textures/DevTextures/PNG/Light/texture_08.png" id="2_jjvhh"]
-[ext_resource type="PackedScene" uid="uid://c280liru581cq" path="res://Scenes/World/zones/safe_zone.tscn" id="3_344ge"]
 [ext_resource type="PackedScene" uid="uid://dbybuogphvl03" path="res://Scenes/InteractiveItems/wood_pickup.tscn" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://ct0u67yagptc4" path="res://Scenes/Systems/enemy_director.tscn" id="3_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://ci51m5tj3fmy3" path="res://Scenes/World/Cabin.tscn" id="4_6iyac"]
 [ext_resource type="PackedScene" uid="uid://cey6e8akomi1x" path="res://Scenes/World/structures/EnemyNest.tscn" id="4_ynf5e"]
-[ext_resource type="PackedScene" uid="uid://b24mj6kwai2au" path="res://Scenes/World/fireplace.tscn" id="5_kry3j"]
-[ext_resource type="PackedScene" uid="uid://i6tfdq5qp1l1" path="res://Scenes/World/bed.tscn" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://cg7q5p701ptq7" path="res://Scenes/UI/pause_menu.tscn" id="10_hptm8"]
 [ext_resource type="PackedScene" uid="uid://d728y740m527" path="res://Scenes/InteractiveItems/apple_pickup.tscn" id="10_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://beyki1aqk1qfd" path="res://Scenes/UI/death_screen.tscn" id="11_d1ilt"]
 [ext_resource type="PackedScene" uid="uid://du0yx043iafwq" path="res://Scenes/InteractiveItems/sap_pickup.tscn" id="11_wsu2k"]
 [ext_resource type="Script" uid="uid://ce1uvxfngtvcx" path="res://Scenes/Systems/dev_tools_loader.gd" id="12_6iyac"]
+[ext_resource type="PackedScene" uid="uid://dvj6p8u5ipyfo" path="res://Scenes/UI/powerup_screen.tscn" id="12_u50mg"]
+[ext_resource type="Script" uid="uid://bushq70mf42iw" path="res://Scripts/Managers/powerup_manager.gd" id="14_cbgmd"]
 [ext_resource type="PackedScene" uid="uid://h0j1d8nfpe5m" path="res://Scenes/UI/night_transition.tscn" id="14_wsu2k"]
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="15_1w6v2"]
+[ext_resource type="Resource" uid="uid://cnb8215vxtps4" path="res://Resources/PowerUps/powerup_energy_drain.tres" id="16_ueoa1"]
+[ext_resource type="Resource" uid="uid://bi51tfu8u30s5" path="res://Resources/PowerUps/powerup_energy_max.tres" id="17_6vcvc"]
+[ext_resource type="Resource" uid="uid://c1x3nb7td546s" path="res://Resources/PowerUps/powerup_health_max.tres.tres" id="18_7k868"]
+[ext_resource type="Resource" uid="uid://ba70hcp1hsyi3" path="res://Resources/PowerUps/powerup_lantern_damage.tres" id="19_hpc6h"]
+[ext_resource type="Resource" uid="uid://bd4gnkhd5spwv" path="res://Resources/PowerUps/powerup_lantern_slow.tres" id="20_kltya"]
+[ext_resource type="Resource" uid="uid://byoivq1oofnct" path="res://Resources/PowerUps/powerup_sprint_speed.tres" id="21_e08e2"]
+[ext_resource type="Resource" uid="uid://cfacymadtcva3" path="res://Resources/PowerUps/powerup_stamina_max.tres" id="22_neg2b"]
+[ext_resource type="Resource" uid="uid://c7feuy8f5vhth" path="res://Resources/PowerUps/powerup_ultimate_cooldown.tres" id="23_r33sp"]
+[ext_resource type="Resource" uid="uid://lf4y10jhaps6" path="res://Resources/PowerUps/powerup_ultimate_radius.tres" id="24_hdf80"]
+[ext_resource type="Resource" uid="uid://nmunqvvhfeaa" path="res://Resources/PowerUps/powerup_walk_speed.tres" id="25_jwpg7"]
 data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
 [node name="Main" type="Node3D" unique_id=552916765]
 [node name="World" type="Node3D" parent="." unique_id=63189926]
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=1777614209 groups=["world_environment"]]
 [node name="EnemyDirector" parent="World" unique_id=1800559500 instance=ExtResource("3_ynf5e")]
 [node name="Zones" type="Node3D" parent="World" unique_id=1691288822]
-[node name="SafeZone" parent="World/Zones" unique_id=808384328 instance=ExtResource("3_344ge")]
 [node name="Player" type="Node3D" parent="World" unique_id=272005501]
 [node name="Player2" parent="World/Player" unique_id=492244781 instance=ExtResource("2_8gbba")]
 [node name="Ilumination" type="Node3D" parent="World" unique_id=1955161380]
@@ -3786,6 +4338,7 @@ data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0
 [node name="EnemyNest" parent="World/Nests" unique_id=1636461375 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
 [node name="EnemyNest2" parent="World/Nests" unique_id=251359277 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
 [node name="EnemyNest3" parent="World/Nests" unique_id=1248851436 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
+[node name="Cabin" parent="World" unique_id=1059921067 instance=ExtResource("4_6iyac")]
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="World" unique_id=671041340]
 [node name="Ground" type="StaticBody3D" parent="World/NavigationRegion3D" unique_id=1133362286]
 [node name="Plane" type="MeshInstance3D" parent="World/NavigationRegion3D/Ground" unique_id=648879852]
@@ -3794,52 +4347,6 @@ data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0
 collision_mask = 0
 [node name="Plane" type="MeshInstance3D" parent="World/NavigationRegion3D/Ground2" unique_id=1550676930]
 [node name="groundCollision" type="CollisionShape3D" parent="World/NavigationRegion3D/Ground2" unique_id=1376035690]
-[node name="Walls" type="Node3D" parent="World/NavigationRegion3D" unique_id=467387634]
-[node name="Wall1" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1624089405]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=241624151]
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=1428909197]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall1" unique_id=1989168866]
-[node name="Wall2" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=728695245]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall2" unique_id=302216210]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall2" unique_id=1514608701]
-[node name="Wall3" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1209541061]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall3" unique_id=1240506999]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall3" unique_id=781292431]
-[node name="Wall4" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1249270341]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall4" unique_id=939142053]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall4" unique_id=1238018483]
-[node name="Wall5" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=129315468]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall5" unique_id=15844259]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall5" unique_id=2092441084]
-[node name="Wall6" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=2101558722]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall6" unique_id=2031249515]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall6" unique_id=691833706]
-[node name="Wall7" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1071298203]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall7" unique_id=1592785911]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall7" unique_id=226601667]
-[node name="Wall8" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=1692439992]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall8" unique_id=1531958603]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall8" unique_id=1061633647]
-[node name="Wall9" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=712462467]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall9" unique_id=893419793]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall9" unique_id=28540766]
-[node name="Wall10" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=256374538]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall10" unique_id=73969524]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall10" unique_id=669458309]
-[node name="Wall11" type="StaticBody3D" parent="World/NavigationRegion3D/Walls" unique_id=229314090]
-collision_mask = 0
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/NavigationRegion3D/Walls/Wall11" unique_id=2130121736]
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/NavigationRegion3D/Walls/Wall11" unique_id=2091856659]
 [node name="Interactibles" type="Node3D" parent="." unique_id=1845153640]
 [node name="Madeira" type="Node3D" parent="Interactibles" unique_id=1083452393]
 [node name="WoodPickup6" parent="Interactibles/Madeira" unique_id=1366707345 instance=ExtResource("3_jjvhh")]
@@ -3858,8 +4365,6 @@ collision_mask = 0
 [node name="WoodPickup16" parent="Interactibles/Madeira" unique_id=628238924 instance=ExtResource("3_jjvhh")]
 [node name="WoodPickup17" parent="Interactibles/Madeira" unique_id=1879791915 instance=ExtResource("3_jjvhh")]
 [node name="WoodPickup21" parent="Interactibles/Madeira" unique_id=52083835 instance=ExtResource("3_jjvhh")]
-[node name="Fireplace" parent="Interactibles" unique_id=1933277327 instance=ExtResource("5_kry3j")]
-[node name="Bed" parent="Interactibles" unique_id=828787208 instance=ExtResource("6_21xkr")]
 [node name="Apples" type="Node3D" parent="Interactibles" unique_id=1253476237]
 [node name="ApplePickup" parent="Interactibles/Apples" unique_id=86513077 instance=ExtResource("10_jkdf5")]
 [node name="ApplePickup2" parent="Interactibles/Apples" unique_id=1523732131 instance=ExtResource("10_jkdf5")]
@@ -3874,8 +4379,11 @@ collision_mask = 0
 [node name="PauseMenu" parent="UI" unique_id=1259609672 instance=ExtResource("10_hptm8")]
 [node name="DeathScreen" parent="UI" unique_id=1132231461 instance=ExtResource("11_d1ilt")]
 [node name="NightTransition" parent="UI" unique_id=1762464355 instance=ExtResource("14_wsu2k")]
+[node name="PowerupScreen" parent="UI" unique_id=1631288617 instance=ExtResource("12_u50mg")]
 [node name="DevTools" type="Node" parent="." unique_id=1665922896]
 script = ExtResource("12_6iyac")
+[node name="PowerUpManager" type="Node" parent="." unique_id=1943538765 groups=["powerup_manager"]]
+script = ExtResource("14_cbgmd")
 
 ============================================================
 ARQUIVO: Scenes\Enemies\enemy_base.tscn
@@ -3921,7 +4429,7 @@ ARQUIVO: Scenes\InteractiveItems\sap_pickup.tscn
 ============================================================
 [gd_scene format=3 uid="uid://du0yx043iafwq"]
 [ext_resource type="Script" uid="uid://l7uxhnm88iuc" path="res://Scripts/Interactables/sap_pickup.gd" id="1_2lqx1"]
-[node name="SapPickup" type="Node3D" unique_id=2124506883 groups=["interactable"]]
+[node name="SapPickup" type="Node3D" unique_id=2124506883 groups=["interactable", "resource_pickup"]]
 script = ExtResource("1_2lqx1")
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=102368678]
 collision_layer = 9
@@ -4057,6 +4565,75 @@ script = ExtResource("1_rrvs5")
 [connection signal="pressed" from="Panel/VBoxContainer/Button2" to="." method="_on_quit_button_pressed"]
 
 ============================================================
+ARQUIVO: Scenes\UI\powerup_screen.tscn
+============================================================
+[gd_scene format=3 uid="uid://dvj6p8u5ipyfo"]
+[ext_resource type="Script" uid="uid://b2ls0ofl0l7nc" path="res://Scripts/UI/powerup_screen.gd" id="1_lhdxl"]
+[node name="PowerupScreen" type="CanvasLayer" unique_id=1631288617]
+script = ExtResource("1_lhdxl")
+[node name="Background" type="ColorRect" parent="." unique_id=1288063910]
+[node name="Title" type="Label" parent="Background" unique_id=711665284]
+[node name="CardsContainer" type="HBoxContainer" parent="Background" unique_id=1262225763]
+[node name="Card1" type="Button" parent="Background/CardsContainer" unique_id=1501410099]
+[node name="VBoxContainer" type="PanelContainer" parent="Background/CardsContainer/Card1" unique_id=177995421]
+[node name="Name" type="Label" parent="Background/CardsContainer/Card1/VBoxContainer" unique_id=588334417]
+[node name="Description" type="Label" parent="Background/CardsContainer/Card1/VBoxContainer" unique_id=551822296]
+[node name="Card2" type="Button" parent="Background/CardsContainer" unique_id=968432849]
+[node name="VBoxContainer" type="PanelContainer" parent="Background/CardsContainer/Card2" unique_id=367771081]
+[node name="Name" type="Label" parent="Background/CardsContainer/Card2/VBoxContainer" unique_id=140127066]
+[node name="Description" type="Label" parent="Background/CardsContainer/Card2/VBoxContainer" unique_id=917753792]
+[node name="Card3" type="Button" parent="Background/CardsContainer" unique_id=1880111055]
+[node name="VBoxContainer" type="PanelContainer" parent="Background/CardsContainer/Card3" unique_id=1364802966]
+[node name="Name" type="Label" parent="Background/CardsContainer/Card3/VBoxContainer" unique_id=626875952]
+[node name="Description" type="Label" parent="Background/CardsContainer/Card3/VBoxContainer" unique_id=844434564]
+
+============================================================
+ARQUIVO: Scenes\World\Cabin.tscn
+============================================================
+[gd_scene format=3 uid="uid://ci51m5tj3fmy3"]
+[ext_resource type="Texture2D" uid="uid://bslkokb1xo3nb" path="res://Assets/Textures/DevTextures/PNG/Light/texture_07.png" id="1_ih7a0"]
+[ext_resource type="PackedScene" uid="uid://c280liru581cq" path="res://Scenes/World/zones/safe_zone.tscn" id="1_n6ur4"]
+[ext_resource type="Script" uid="uid://bqpaowyc6sb76" path="res://Scripts/Systems/cabin_door.gd" id="2_cqicl"]
+[ext_resource type="PackedScene" uid="uid://i6tfdq5qp1l1" path="res://Scenes/World/bed.tscn" id="3_ih7a0"]
+[ext_resource type="PackedScene" uid="uid://b24mj6kwai2au" path="res://Scenes/World/fireplace.tscn" id="4_bs4gn"]
+[node name="Cabin" type="Node3D" unique_id=1059921067]
+[node name="Geometry" type="Node3D" parent="." unique_id=1595942460]
+[node name="Floor" type="StaticBody3D" parent="Geometry" unique_id=1649545194]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/Floor" unique_id=848440082]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/Floor" unique_id=85924915]
+[node name="walls" type="StaticBody3D" parent="Geometry" unique_id=851353739]
+[node name="Collision1" type="CollisionShape3D" parent="Geometry/walls" unique_id=1483179714]
+[node name="Wall1" type="MeshInstance3D" parent="Geometry/walls" unique_id=834872997]
+[node name="Collision2" type="CollisionShape3D" parent="Geometry/walls" unique_id=1128101353]
+[node name="Wall2" type="MeshInstance3D" parent="Geometry/walls" unique_id=1297909988]
+[node name="Collision3" type="CollisionShape3D" parent="Geometry/walls" unique_id=1857412701]
+[node name="Wall3" type="MeshInstance3D" parent="Geometry/walls" unique_id=1455550085]
+[node name="Collision4" type="CollisionShape3D" parent="Geometry/walls" unique_id=1400306214]
+[node name="Wall4" type="MeshInstance3D" parent="Geometry/walls" unique_id=858642263]
+[node name="Collision5" type="CollisionShape3D" parent="Geometry/walls" unique_id=1475681071]
+[node name="Wall5" type="MeshInstance3D" parent="Geometry/walls" unique_id=876680921]
+[node name="Ceeling" type="StaticBody3D" parent="Geometry" unique_id=539117694]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Geometry/Ceeling" unique_id=71419329]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Geometry/Ceeling" unique_id=1261025297]
+[node name="SafeZone" parent="." unique_id=808384328 instance=ExtResource("1_n6ur4")]
+[node name="Door" type="Node3D" parent="." unique_id=1327257027 groups=["interactable"]]
+script = ExtResource("2_cqicl")
+[node name="StaticBody3D" type="StaticBody3D" parent="Door" unique_id=2109871123]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door/StaticBody3D" unique_id=615430106]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Door/StaticBody3D" unique_id=1542829953]
+[node name="ExitTrigger" type="Area3D" parent="Door" unique_id=317905320]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door/ExitTrigger" unique_id=1087360450]
+[node name="VendorSpot" type="Marker3D" parent="Door" unique_id=1351533956]
+[node name="WorldExclusionRadius" type="Marker3D" parent="." unique_id=141599815]
+[node name="SpawnPoint" type="Marker3D" parent="." unique_id=1467297027 groups=["spawn_point"]]
+[node name="Interactables" type="Node3D" parent="." unique_id=1967866428]
+[node name="Bed" parent="Interactables" unique_id=828787208 instance=ExtResource("3_ih7a0")]
+[node name="Fireplace" parent="Interactables" unique_id=1933277327 instance=ExtResource("4_bs4gn")]
+[node name="LanternChest" type="Marker3D" parent="Interactables" unique_id=1746432073]
+[node name="PowerUpBoard" type="Marker3D" parent="Interactables" unique_id=1382494141]
+[node name="TutorialBook" type="Marker3D" parent="Interactables" unique_id=1048016876]
+
+============================================================
 ARQUIVO: Scenes\World\bed.tscn
 ============================================================
 [gd_scene format=3 uid="uid://i6tfdq5qp1l1"]
@@ -4114,7 +4691,7 @@ script = ExtResource("1_p4sc5")
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
 
 ############################################################
-#  RESOURCES (.tres) (2 arquivos)
+#  RESOURCES (.tres) (12 arquivos)
 ############################################################
 
 ============================================================
@@ -4130,6 +4707,165 @@ metadata/_custom_type_script = "uid://bdb3evu26j527"
 
 
 ============================================================
+ARQUIVO: Resources\PowerUps\powerup_energy_drain.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://cnb8215vxtps4"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_n6shy"]
+
+[resource]
+script = ExtResource("1_n6shy")
+id = "energy_drain_reduction"
+display_name = "Chama Eficiente"
+effect_type = "energy_drain_reduction"
+value = 2.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_energy_max.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://bi51tfu8u30s5"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_5h60e"]
+
+[resource]
+script = ExtResource("1_5h60e")
+id = "energy_max"
+display_name = "Reservatório"
+effect_type = "energy_max"
+value = 20.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_health_max.tres.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://c1x3nb7td546s"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_tbi7y"]
+
+[resource]
+script = ExtResource("1_tbi7y")
+id = "health_max"
+display_name = "Constituição"
+value = 25.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_lantern_damage.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://ba70hcp1hsyi3"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_ycjvo"]
+
+[resource]
+script = ExtResource("1_ycjvo")
+id = "lantern_damage"
+display_name = "Chama Feroz"
+effect_type = "lantern_damage"
+value = 5.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_lantern_slow.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://bd4gnkhd5spwv"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_yp5ka"]
+
+[resource]
+script = ExtResource("1_yp5ka")
+id = "lantern_slow"
+display_name = "Luz Paralisante"
+effect_type = "lantern_slow"
+value = 0.1
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_sprint_speed.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://byoivq1oofnct"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_iitg5"]
+
+[resource]
+script = ExtResource("1_iitg5")
+id = "sprint_speed"
+display_name = "Fuga Rápida"
+effect_type = "sprint_speed"
+value = 1.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_stamina_max.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://cfacymadtcva3"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_de51y"]
+
+[resource]
+script = ExtResource("1_de51y")
+id = "stamina_max"
+display_name = "Resistência"
+effect_type = "stamina_max"
+value = 20.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_ultimate_cooldown.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://c7feuy8f5vhth"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_eowkf"]
+
+[resource]
+script = ExtResource("1_eowkf")
+id = "ultimate_cooldown"
+display_name = "Chama Eterna"
+effect_type = "ultimate_cooldown"
+value = 1.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_ultimate_radius.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://lf4y10jhaps6"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_j1tmu"]
+
+[resource]
+script = ExtResource("1_j1tmu")
+id = "ultimate_radius"
+display_name = "Explosão Solar"
+effect_type = "ultimate_radius"
+value = 2.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
+ARQUIVO: Resources\PowerUps\powerup_walk_speed.tres
+============================================================
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://nmunqvvhfeaa"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_s80x8"]
+
+[resource]
+script = ExtResource("1_s80x8")
+id = "walk_speed"
+display_name = "Passo Ligeiro"
+effect_type = "walk_speed"
+value = 0.5
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
+
+
+============================================================
 ARQUIVO: Scripts\Enemies\Resources\enemy_base_data.tres
 ============================================================
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dmgyv0ju03whq"]
@@ -4142,5 +4878,5 @@ metadata/_custom_type_script = "uid://ccyj3irl40o6a"
 
 
 ============================================================
-TOTAL: 27 scripts | 15 cenas | 2 resources
+TOTAL: 31 scripts | 17 cenas | 12 resources
 ============================================================

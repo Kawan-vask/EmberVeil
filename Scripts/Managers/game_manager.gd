@@ -18,6 +18,7 @@ extends Node
 # ==============================================================================
 
 ## Emitido quando a noite avança — todos os sistemas que dependem da noite ouvem
+@warning_ignore("unused_signal")
 signal night_changed(new_night: int)
 
 ## Emitido quando o player sai da cabana e a noite começa de fato
@@ -152,5 +153,33 @@ func _check_night_completion() -> void:
 		night_completed = true
 		night_objective_reached.emit()
 		DebugManager.log("GameManager", "NOITE COMPLETADA!")
+
+#endregion
+
+# ==============================================================================
+#region MOEDAS
+# ==============================================================================
+
+## Saldo atual de moedas — persiste entre noites, reseta ao morrer
+var coins: int = 0
+
+## Emitido sempre que o saldo muda — ouvido pela HUD
+signal coins_changed(new_amount: int)
+
+
+func add_coins(amount: int) -> void:
+	coins += amount
+	coins_changed.emit(coins)
+	DebugManager.log("GameManager", "Moedas: " + str(coins))
+
+
+## Retorna false se saldo insuficiente — nunca vai negativo
+func spend_coins(amount: int) -> bool:
+	if coins < amount:
+		DebugManager.log("GameManager", "Moedas insuficientes.")
+		return false
+	coins -= amount
+	coins_changed.emit(coins)
+	return true
 
 #endregion

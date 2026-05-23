@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://ba70hcp1hsyi3"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_ycjvo"]
+
+[resource]
+script = ExtResource("1_ycjvo")
+id = "lantern_damage"
+display_name = "Chama Feroz"
+effect_type = "lantern_damage"
+value = 5.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"

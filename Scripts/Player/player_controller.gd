@@ -4,8 +4,6 @@
 # Responsabilidade: movimento, câmera, gravidade, interação. em breve sera
 #fragmentado pra não se tornar um god_entity (muito código em um lugar)
 #
-# TODO (Refatoração 3): extrair Health, Stamina e Inventory para componentes.
-#
 # Separação de ciclos:
 # - _process       → câmera (roda no framerate real, sem jitter)
 # - _physics_process → movimento, física, interação (roda no ciclo de física)
@@ -147,8 +145,8 @@ func _process(_delta: float) -> void:
 		return
 
 	_handle_camera()
+	_handle_camera_bob(_delta)
 	DebugManager.label(debug_label_stamina, "Stamina: " + str(int(stamina.get_percent() * stamina.max_stamina)))
-	
 	DebugManager.label(debug_label_madeira,
 	"Madeira: " + str(inventory.get_wood_count()) + "/" + str(GameManager.wood_goal))
 	
@@ -179,7 +177,6 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	_handle_interaction()
 	_update_crosshair()
-	_handle_camera_bob(delta)
 	
 	# Ultimate da lamparina
 	if Input.is_action_just_pressed("lantern_ultimate"):

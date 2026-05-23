@@ -281,11 +281,19 @@ func _register_all_commands() -> void:
 	_register("fps",         _cmd_fps,         "exibe FPS atual",                           "mundo")
 	_register("pool_status", _cmd_pool_status, "inimigos ativos vs disponíveis no pool",    "mundo")
 	_register("devlight", _cmd_devlight, "toggle de iluminação de desenvolvimento", "mundo")
+	
+	
+	# POWER UPS
+	_register("give_powerup",        _cmd_give_powerup,        "give_powerup [id]",        "powerups")
+	_register("list_powerups",       _cmd_list_powerups,       "lista power-ups ativos",    "powerups")
+	_register("open_powerup_screen", _cmd_open_powerup_screen, "abre tela de escolha",      "powerups")
+	_register("reset_powerups",      _cmd_reset_powerups,      "remove todos os power-ups", "powerups")
+
 
 	# PLACEHOLDERS — descomentar quando os sistemas existirem
-	# _register("add_coins",      _cmd_add_coins,      "add_coins [n]",      "economia")
+	_register("add_coins",      _cmd_add_coins,      "add_coins [n]",      "economia")
+	_register("set_coins", _cmd_set_coins, "set_coins [n] — define saldo exato", "economia")
 	# _register("open_shop",      _cmd_open_shop,      "abre a loja",        "economia")
-	# _register("give_powerup",   _cmd_give_powerup,   "give_powerup [id]",  "powerups")
 	# _register("equip_lantern",  _cmd_equip_lantern,  "equip_lantern [tipo]","lanternas")
 	# _register("show_nests",     _cmd_show_nests,     "mostra nests ativos", "mundo")
 	# _register("show_nav",       _cmd_show_nav,       "toggle navegação",    "mundo")
@@ -615,4 +623,70 @@ func _cmd_devlight(_args: Array) -> void:
 		for l in lights: l.visible = false
 		_print_output("[color=green]Dev light: OFF[/color]")
  
+#endregion
+
+# ==============================================================================
+#region COMANDOS — ECONOMIA
+# ==============================================================================
+
+func _cmd_add_coins(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: add_coins [n][/color]"); return
+	GameManager.add_coins(int(args[0]))
+	_print_output("[color=green]Moedas: " + str(GameManager.coins) + "[/color]")
+
+
+func _cmd_set_coins(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: set_coins [n][/color]"); return
+	GameManager.coins = int(args[0])
+	GameManager.coins_changed.emit(GameManager.coins)
+	_print_output("[color=green]Moedas: " + str(GameManager.coins) + "[/color]")
+
+#endregion
+
+# ==============================================================================
+#region COMANDOS — POWERUPS
+# ==============================================================================
+
+func _cmd_give_powerup(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: give_powerup [id][/color]"); return
+	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
+	if pm == null:
+		_print_output("[color=red]PowerUpManager não encontrado.[/color]"); return
+	var player := _get_player()
+	if player == null: return
+	for pu: PowerUpData in pm.available_powerups:
+		if pu.id == args[0]:
+			pm.apply(pu, player)
+			_print_output("[color=green]Aplicado: " + pu.display_name + "[/color]")
+			return
+	_print_output("[color=red]Power-up '" + args[0] + "' não encontrado.[/color]")
+
+
+func _cmd_list_powerups(_args: Array) -> void:
+	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
+	if pm == null:
+		_print_output("[color=red]PowerUpManager não encontrado.[/color]"); return
+	_print_output("[color=yellow]── ATIVOS ──[/color]")
+	if pm.active_powerups.is_empty():
+		_print_output("  Nenhum"); return
+	for pu: PowerUpData in pm.active_powerups:
+		_print_output("  [color=cyan]" + pu.id + "[/color] — " + pu.display_name)
+
+
+func _cmd_open_powerup_screen(_args: Array) -> void:
+	var screen: Node = get_tree().get_first_node_in_group("powerup_screen")
+	if screen == null:
+		_print_output("[color=red]PowerUpScreen não encontrada.[/color]"); return
+	screen._on_objective_reached()
+	_print_output("[color=green]PowerUpScreen aberta.[/color]")
+
+
+func _cmd_reset_powerups(_args: Array) -> void:
+	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
+	if pm: pm.reset()
+	_print_output("[color=green]Power-ups resetados.[/color]")
+
 #endregion

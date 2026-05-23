@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://5x7yxcv0y0mj" path="res://Scripts/UI/night_transition.gd" id="1_soeoq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_soeoq"]
-font_size = 42
+font_size = 60
 
 [node name="NightTransition" type="CanvasLayer" unique_id=1762464355]
 script = ExtResource("1_soeoq")

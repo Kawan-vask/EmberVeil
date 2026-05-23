@@ -1,0 +1,175 @@
+[gd_scene format=3 uid="uid://ci51m5tj3fmy3"]
+
+[ext_resource type="Texture2D" uid="uid://bslkokb1xo3nb" path="res://Assets/Textures/DevTextures/PNG/Light/texture_07.png" id="1_ih7a0"]
+[ext_resource type="PackedScene" uid="uid://c280liru581cq" path="res://Scenes/World/zones/safe_zone.tscn" id="1_n6ur4"]
+[ext_resource type="Script" uid="uid://bqpaowyc6sb76" path="res://Scripts/Systems/cabin_door.gd" id="2_cqicl"]
+[ext_resource type="PackedScene" uid="uid://i6tfdq5qp1l1" path="res://Scenes/World/bed.tscn" id="3_ih7a0"]
+[ext_resource type="PackedScene" uid="uid://b24mj6kwai2au" path="res://Scenes/World/fireplace.tscn" id="4_bs4gn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nlbri"]
+albedo_color = Color(0.15234375, 0.036746997, 0.020233154, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_62vnv"]
+material = SubResource("StandardMaterial3D_nlbri")
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fmbg2"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f5qqw"]
+size = Vector3(10, 4, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0pf46"]
+albedo_texture = ExtResource("1_ih7a0")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_tt3p5"]
+material = SubResource("StandardMaterial3D_0pf46")
+size = Vector3(10, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ih7a0"]
+size = Vector3(4, 4, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_plesj"]
+albedo_texture = ExtResource("1_ih7a0")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_cs2uc"]
+material = SubResource("StandardMaterial3D_plesj")
+size = Vector3(4, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bs4gn"]
+size = Vector3(4, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_48dbj"]
+size = Vector3(2, 4, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nrhhs"]
+albedo_color = Color(0.2421875, 0.12747216, 0.0652771, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2des6"]
+material = SubResource("StandardMaterial3D_nrhhs")
+size = Vector3(2, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cqicl"]
+size = Vector3(2, 0.5, 1)
+
+[node name="Cabin" type="Node3D" unique_id=1059921067]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+
+[node name="Geometry" type="Node3D" parent="." unique_id=1595942460]
+
+[node name="Floor" type="StaticBody3D" parent="Geometry" unique_id=1649545194]
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/Floor" unique_id=848440082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("BoxMesh_62vnv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/Floor" unique_id=85924915]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_fmbg2")
+
+[node name="walls" type="StaticBody3D" parent="Geometry" unique_id=851353739]
+collision_mask = 0
+
+[node name="Collision1" type="CollisionShape3D" parent="Geometry/walls" unique_id=1483179714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 4.9005256)
+shape = SubResource("BoxShape3D_f5qqw")
+
+[node name="Wall1" type="MeshInstance3D" parent="Geometry/walls" unique_id=834872997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 4.9005256)
+mesh = SubResource("BoxMesh_tt3p5")
+
+[node name="Collision2" type="CollisionShape3D" parent="Geometry/walls" unique_id=1128101353]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.9, 2.25, 0.013996601)
+shape = SubResource("BoxShape3D_f5qqw")
+
+[node name="Wall2" type="MeshInstance3D" parent="Geometry/walls" unique_id=1297909988]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.9, 2.25, 0.013996601)
+mesh = SubResource("BoxMesh_tt3p5")
+
+[node name="Collision3" type="CollisionShape3D" parent="Geometry/walls" unique_id=1857412701]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.9000006, 2.25, 0.013996601)
+shape = SubResource("BoxShape3D_f5qqw")
+
+[node name="Wall3" type="MeshInstance3D" parent="Geometry/walls" unique_id=1455550085]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.9000006, 2.25, 0.013996601)
+mesh = SubResource("BoxMesh_tt3p5")
+
+[node name="Collision4" type="CollisionShape3D" parent="Geometry/walls" unique_id=1400306214]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0037513, 2.25, -4.8860035)
+shape = SubResource("BoxShape3D_ih7a0")
+
+[node name="Wall4" type="MeshInstance3D" parent="Geometry/walls" unique_id=858642263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.25, -4.886)
+mesh = SubResource("BoxMesh_cs2uc")
+
+[node name="Collision5" type="CollisionShape3D" parent="Geometry/walls" unique_id=1475681071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.996249, 2.25, -4.8860035)
+shape = SubResource("BoxShape3D_bs4gn")
+
+[node name="Wall5" type="MeshInstance3D" parent="Geometry/walls" unique_id=876680921]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0000002, 2.25, -4.886)
+mesh = SubResource("BoxMesh_cs2uc")
+
+[node name="Ceeling" type="StaticBody3D" parent="Geometry" unique_id=539117694]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.19999999, 0)
+collision_mask = 0
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Geometry/Ceeling" unique_id=71419329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+mesh = SubResource("BoxMesh_62vnv")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Geometry/Ceeling" unique_id=1261025297]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+shape = SubResource("BoxShape3D_fmbg2")
+
+[node name="SafeZone" parent="." unique_id=808384328 instance=ExtResource("1_n6ur4")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 7.5, 0)
+
+[node name="Door" type="Node3D" parent="." unique_id=1327257027 groups=["interactable"]]
+script = ExtResource("2_cqicl")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Door" unique_id=2109871123]
+collision_layer = 9
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door/StaticBody3D" unique_id=615430106]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2628741, -4.9)
+shape = SubResource("BoxShape3D_48dbj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Door/StaticBody3D" unique_id=1542829953]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.262773, -4.9)
+mesh = SubResource("BoxMesh_2des6")
+
+[node name="ExitTrigger" type="Area3D" parent="Door" unique_id=317905320]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door/ExitTrigger" unique_id=1087360450]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -5.5)
+shape = SubResource("BoxShape3D_cqicl")
+
+[node name="VendorSpot" type="Marker3D" parent="Door" unique_id=1351533956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -6)
+
+[node name="WorldExclusionRadius" type="Marker3D" parent="." unique_id=141599815]
+
+[node name="SpawnPoint" type="Marker3D" parent="." unique_id=1467297027 groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+
+[node name="Interactables" type="Node3D" parent="." unique_id=1967866428]
+
+[node name="Bed" parent="Interactables" unique_id=828787208 instance=ExtResource("3_ih7a0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3, 0.19999999, 4)
+
+[node name="Fireplace" parent="Interactables" unique_id=1933277327 instance=ExtResource("4_bs4gn")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -4, 1.8999999, -1.5)
+
+[node name="LanternChest" type="Marker3D" parent="Interactables" unique_id=1746432073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.5, 4)
+
+[node name="PowerUpBoard" type="Marker3D" parent="Interactables" unique_id=1382494141]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2, 4.5)
+
+[node name="TutorialBook" type="Marker3D" parent="Interactables" unique_id=1048016876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 1.2, 2.5)

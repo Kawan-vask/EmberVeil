@@ -161,6 +161,13 @@ func toggle_invincibility() -> bool:
 	return _god_mode
 
 
+## Aumenta vida máxima e cura o mesmo valor — usado por power-ups
+func increase_max(amount: float) -> void:
+	max_health += amount
+	_current_health = minf(_current_health + amount, max_health)
+	health_changed.emit(_current_health, max_health)
+	DebugManager.log("HealthComponent", "Vida máxima: " + str(max_health))
+
 
 #endregion
 

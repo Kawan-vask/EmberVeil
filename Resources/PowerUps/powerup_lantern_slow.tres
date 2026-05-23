@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://bd4gnkhd5spwv"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_yp5ka"]
+
+[resource]
+script = ExtResource("1_yp5ka")
+id = "lantern_slow"
+display_name = "Luz Paralisante"
+effect_type = "lantern_slow"
+value = 0.1
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://lf4y10jhaps6"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_j1tmu"]
+
+[resource]
+script = ExtResource("1_j1tmu")
+id = "ultimate_radius"
+display_name = "Explosão Solar"
+effect_type = "ultimate_radius"
+value = 2.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"

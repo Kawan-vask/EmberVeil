@@ -57,6 +57,7 @@ func _connect_signals() -> void:
 	_health.player_damaged.connect(_on_player_damaged)
 	_stamina.stamina_changed.connect(_on_stamina_changed)
 	_inventory.wood_changed.connect(_on_wood_changed)
+	GameManager.coins_changed.connect(_on_coins_changed)
 	GameManager.night_objective_reached.connect(_on_night_objective_reached)
 
 	if _lantern != null:
@@ -131,6 +132,10 @@ func _on_ultimate_used() -> void:
 func _on_wood_changed(current: int, goal: int) -> void:
 	DebugManager.log("HUD", "Madeira: " + str(current) + "/" + str(goal))
 	# Sem elemento visual permanente — lareira comunica o progresso
+
+func _on_coins_changed(amount: int) -> void:
+	DebugManager.log("HUD", "Moedas: " + str(amount))
+	# TODO: atualizar elemento diegético (contador na cabana)
 
 #endregion
 

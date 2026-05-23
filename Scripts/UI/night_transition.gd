@@ -61,19 +61,16 @@ func _fade(_from: float, to: float) -> void:
 
 
 func _reset_player() -> void:
-	var bed: Node    = get_tree().get_first_node_in_group("bed")
+	var spawn: Node  = get_tree().get_first_node_in_group("spawn_point")
 	var player: Node = get_tree().get_first_node_in_group("player")
-	if bed and player:
-		var spawn: Node = bed.get_node_or_null("SpawnPoint")
-		if spawn:
-			player.global_position = spawn.global_position
-		else:
-			DebugManager.log("NightTransition", "SpawnPoint não encontrado!")
+	if spawn and player:
+		player.global_position = spawn.global_position
+	else:
+		DebugManager.log("NightTransition", "SpawnPoint não encontrado!")
 
 	var lantern := get_tree().get_first_node_in_group("lantern")
 	if lantern:
-		lantern.current_energy = lantern.max_energy
-		lantern.energy_changed.emit(lantern.current_energy, lantern.max_energy)
+		lantern.add_energy(lantern.max_energy)
 
 
 func _reset_resources() -> void:

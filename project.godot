@@ -42,6 +42,8 @@ death_screen=""
 lantern="grupo pra debug no devtools"
 world_environment=""
 resource_pickup=""
+spawn_point=""
+powerup_manager=""
 
 [input]
 

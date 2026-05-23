@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerUpData" format=3 uid="uid://cnb8215vxtps4"]
+
+[ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="1_n6shy"]
+
+[resource]
+script = ExtResource("1_n6shy")
+id = "energy_drain_reduction"
+display_name = "Chama Eficiente"
+effect_type = "energy_drain_reduction"
+value = 2.0
+metadata/_custom_type_script = "uid://cvc3m8511bw0i"
