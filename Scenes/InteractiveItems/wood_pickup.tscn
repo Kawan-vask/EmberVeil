@@ -15,7 +15,7 @@ height = 1.0
 height = 1.0
 radius = 0.2
 
-[node name="WoodPickup" type="Node3D" unique_id=1366707345 groups=["interactable"]]
+[node name="WoodPickup" type="Node3D" unique_id=1366707345 groups=["interactable", "resource_pickup"]]
 script = ExtResource("1_ffmj5")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1839515064]

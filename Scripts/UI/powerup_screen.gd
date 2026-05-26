@@ -42,7 +42,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible      = false
 	_setup_layout()
-	GameManager.night_changed.connect(_on_night_changed)
+	_setup_cards_once()
+	SignalBus.night_transition_finished.connect(_on_transition_finished)
 
 #endregion
 
@@ -120,7 +121,12 @@ func _setup_layout() -> void:
 #region ABRIR TELA
 # ==============================================================================
 
-func _on_night_changed(_night: int) -> void:
+func _setup_cards_once() -> void:
+	for i in cards.size():
+		cards[i].pressed.connect(_on_card_selected.bind(i))
+
+
+func _on_transition_finished() -> void:
 	_powerup_manager = get_tree().get_first_node_in_group("powerup_manager")
 	if _powerup_manager == null:
 		DebugManager.log("PowerUpScreen", "PowerUpManager não encontrado!"); return
@@ -130,19 +136,12 @@ func _on_night_changed(_night: int) -> void:
 		DebugManager.log("PowerUpScreen", "Nenhum power-up disponível!"); return
 
 	for i in _choices.size():
-		var card: Button = cards[i]
-		card.get_node("VBoxContainer/Name").text        = _choices[i].display_name
-		card.get_node("VBoxContainer/Description").text = _choices[i].description
+		cards[i].get_node("VBoxContainer/Name").text        = _choices[i].display_name
+		cards[i].get_node("VBoxContainer/Description").text = _choices[i].description
+		var vbox: VBoxContainer = cards[i].get_node("VBoxContainer")
+		vbox.add_theme_constant_override("separation", 16)
+		vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 
-		var vbox_container: VBoxContainer = card.get_node("VBoxContainer")
-		vbox_container.add_theme_constant_override("separation", 16)
-		vbox_container.alignment = BoxContainer.ALIGNMENT_CENTER
-
-		if card.pressed.is_connected(_on_card_selected.bind(i)):
-			card.pressed.disconnect(_on_card_selected.bind(i))
-		card.pressed.connect(_on_card_selected.bind(i))
-
-	# FORA do loop — executa só uma vez
 	visible           = true
 	get_tree().paused = true
 	Input.mouse_mode  = Input.MOUSE_MODE_VISIBLE

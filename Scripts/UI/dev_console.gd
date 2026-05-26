@@ -697,7 +697,7 @@ func _cmd_open_powerup_screen(_args: Array) -> void:
 	var screen: Node = get_tree().get_first_node_in_group("powerup_screen")
 	if screen == null:
 		_print_output("[color=red]PowerUpScreen não encontrada.[/color]"); return
-	screen._on_objective_reached()
+	screen._on_transition_finished()
 	_print_output("[color=green]PowerUpScreen aberta.[/color]")
 
 

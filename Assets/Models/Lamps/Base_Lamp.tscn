@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dckbunaieqqec"]
+
+[ext_resource type="PackedScene" uid="uid://d2pti4t4hvf0s" path="res://Assets/Models/Lamps/Base_Lamp.gltf" id="1_ognls"]
+
+[node name="blockbench_export" unique_id=1929152407 instance=ExtResource("1_ognls")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)

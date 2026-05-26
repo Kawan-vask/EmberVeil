@@ -41,17 +41,21 @@ func _on_transition_started() -> void:
 
 	_reset_player()
 
+	# EXCEÇÃO DE TIMING DOCUMENTADA — não refatorar antes da Fase 5.
 	GameManager.night_changed.emit(GameManager.current_night)
-	SignalBus.night_transition_finished.emit()
 
 	night_label.visible = false
 
 	await _fade(1.0, 0.0)
 
+	# Despausa e reseta ANTES de emitir finished
+	# Assim a PowerUpScreen recebe o jogo já despausado e pausa por conta própria
 	get_tree().paused = false
-	visible           = false
-
+	visible = false
 	_reset_resources()
+
+	# Emite por último — PowerUpScreen abre com estado limpo
+	SignalBus.night_transition_finished.emit()
 
 
 func _fade(_from: float, to: float) -> void:

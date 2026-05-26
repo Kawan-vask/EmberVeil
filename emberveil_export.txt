@@ -3214,8 +3214,8 @@ const MAX_CONSOLE_HEIGHT_RATIO: float = 0.33  # ← adiciona esta linha
 func _ready() -> void:
 	_setup_layout()
 	
-	SignalBus.ui_exclusive_opened.connect(func(): set_process_unhandled_input(false))
-	SignalBus.ui_exclusive_closed.connect(func(): set_process_unhandled_input(true))
+	SignalBus.ui_exclusive_opened.connect(_on_ui_exclusive_opened)
+	SignalBus.ui_exclusive_closed.connect(_on_ui_exclusive_closed)
  
 	panel.visible  = false
 	process_mode   = Node.PROCESS_MODE_ALWAYS
@@ -3229,6 +3229,19 @@ func _ready() -> void:
  
 #endregion
  
+# ==============================================================================
+#region Bloquear abrir outras coisas quando o console está aberto
+# ==============================================================================
+
+func _on_ui_exclusive_opened() -> void:
+	# Só bloqueia se NÃO foi o próprio console que abriu
+	if not panel.visible:
+		set_process_unhandled_input(false)
+
+func _on_ui_exclusive_closed() -> void:
+	set_process_unhandled_input(true)
+	
+#endregion
 
 # ==============================================================================
 #region CONFIGURANDO TAMANHO DO CONSOLE POR CÓDIGO
@@ -4151,8 +4164,8 @@ func _ready():
 	# CanvasLayer sempre visível mesmo com o jogo pausado
 	# Isso é necessário para o menu aparecer durante a pausa
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	SignalBus.ui_exclusive_opened.connect(func(): set_process_unhandled_input(false))
-	SignalBus.ui_exclusive_closed.connect(func(): set_process_unhandled_input(true))
+	SignalBus.ui_exclusive_opened.connect(_on_ui_exclusive_opened)
+	SignalBus.ui_exclusive_closed.connect(_on_ui_exclusive_closed)
 
 #endregion
 
@@ -4205,6 +4218,20 @@ func _on_resume_button_pressed():
 func _on_quit_button_pressed():
 	get_tree().quit()
 
+#endregion
+
+
+# ==============================================================================
+#region bloqueia outras UI enquanto estiver aberto
+# ==============================================================================
+func _on_ui_exclusive_opened() -> void:
+	# Só bloqueia se NÃO foi o próprio PauseMenu que abriu
+	if not is_paused:
+		set_process_unhandled_input(false)
+
+func _on_ui_exclusive_closed() -> void:
+	set_process_unhandled_input(true)
+	
 #endregion
 
 
@@ -4346,7 +4373,7 @@ func _on_night_changed(_night: int) -> void:
 		var card: Button = cards[i]
 		card.get_node("VBoxContainer/Name").text        = _choices[i].display_name
 		card.get_node("VBoxContainer/Description").text = _choices[i].description
-		
+
 		var vbox_container: VBoxContainer = card.get_node("VBoxContainer")
 		vbox_container.add_theme_constant_override("separation", 16)
 		vbox_container.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -4355,10 +4382,12 @@ func _on_night_changed(_night: int) -> void:
 			card.pressed.disconnect(_on_card_selected.bind(i))
 		card.pressed.connect(_on_card_selected.bind(i))
 
-		visible           = true
-		get_tree().paused = true
-		Input.mouse_mode  = Input.MOUSE_MODE_VISIBLE
-		SignalBus.ui_exclusive_opened.emit()
+	# FORA do loop — executa só uma vez
+	visible           = true
+	get_tree().paused = true
+	Input.mouse_mode  = Input.MOUSE_MODE_VISIBLE
+	SignalBus.ui_exclusive_opened.emit()
+	DebugManager.log("PowerUpScreen", "Tela aberta.")
 
 #endregion
 
@@ -4375,9 +4404,11 @@ func _on_card_selected(index: int) -> void:
 
 
 func _close() -> void:
+	visible           = false
 	get_tree().paused = false
 	Input.mouse_mode  = Input.MOUSE_MODE_CAPTURED
 	SignalBus.ui_exclusive_closed.emit()
+	DebugManager.log("PowerUpScreen", "Power-up escolhido.")
 
 #endregion
 
@@ -4551,6 +4582,7 @@ ARQUIVO: Scenes\Player\player.tscn
 [ext_resource type="Script" uid="uid://b4efv4gcpxm88" path="res://Scripts/Player/Components/stamina_component.gd" id="3_dd0ac"]
 [ext_resource type="Texture2D" uid="uid://mddhx3c1a2b6" path="res://Assets/UI/Crosshairs/crosshair123.png" id="3_mtuoh"]
 [ext_resource type="Script" uid="uid://mg8ohbpohli" path="res://Scripts/Player/Components/inventory_component.gd" id="4_0u5uq"]
+[ext_resource type="PackedScene" uid="uid://dckbunaieqqec" path="res://Assets/Models/Lamps/Base_Lamp.tscn" id="8_jlvik"]
 _data = [Vector2(0.06074766, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.20224726), 0.0, 0.0, 0, 0]
 [node name="Player" type="CharacterBody3D" unique_id=492244781 groups=["player"]]
 collision_layer = 2
@@ -4584,7 +4616,7 @@ collision_mask = 4
 [node name="Colisão Player" type="CollisionShape3D" parent="." unique_id=286306206]
 [node name="Visual" type="Node3D" parent="." unique_id=826975719]
 [node name="Body (placeholder)" type="MeshInstance3D" parent="Visual" unique_id=980242945]
-[node name="Lamp (placeholder)" type="MeshInstance3D" parent="Visual" unique_id=203697482]
+[node name="blockbench_export" parent="Visual" unique_id=1929152407 instance=ExtResource("8_jlvik")]
 [node name="Arm (placeholder)" type="MeshInstance3D" parent="Visual" unique_id=385533420]
 [node name="Debug" type="CanvasLayer" parent="." unique_id=97975937]
 [node name="VBoxContainer" type="VBoxContainer" parent="Debug" unique_id=1880270808]

@@ -117,8 +117,9 @@ func _handle_camera_bob(delta: float) -> void:
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	interaction_ray.add_exception(self)
-	_camera_base_y = camera.position.y  # ← guarda a altura original da cabeça
-
+	_camera_base_y = camera.position.y
+	process_mode = Node.PROCESS_MODE_PAUSABLE
+	
 #endregion
 
 

@@ -62,12 +62,9 @@ func _connect_signals() -> void:
 
 	if _lantern != null:
 		_lantern.energy_changed.connect(_on_energy_changed)
+		_lantern.ultimate_used.connect(_on_ultimate_used)
 	else:
 		DebugManager.log("HUD", "Lanterna não encontrada! Adicione ao grupo 'lantern'.")
-	
-	if _lantern != null:
-		_lantern.energy_changed.connect(_on_energy_changed)
-		_lantern.ultimate_used.connect(_on_ultimate_used)  # ← adiciona
 
 	DebugManager.log("HUD", "Signals conectados.")
 
@@ -129,9 +126,13 @@ func _on_ultimate_used() -> void:
 # Informação contextualizada apenas na lareira.
 # ==============================================================================
 
-func _on_wood_changed(current: int, goal: int) -> void:
-	DebugManager.log("HUD", "Madeira: " + str(current) + "/" + str(goal))
-	# Sem elemento visual permanente — lareira comunica o progresso
+func _on_wood_changed(current: int, max_cap: int, goal: int) -> void:
+	DebugManager.log("HUD",
+		"Bolsa: " + str(current) + "/" + str(max_cap) +
+		"  |  Entregue: " + str(GameManager.delivered_wood) + "/" + str(goal))
+	# TODO: dois elementos diegéticos:
+	# 1. Bolsa do player: current/max_cap
+	# 2. Lareira: GameManager.delivered_wood/goal
 
 func _on_coins_changed(amount: int) -> void:
 	DebugManager.log("HUD", "Moedas: " + str(amount))
