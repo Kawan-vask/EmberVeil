@@ -1,9 +1,12 @@
 # ==============================================================================
 # BED
 # ------------------------------------------------------------------------------
-# Interagir com a cama passa para a próxima noite.
-# Só funciona se o objetivo de madeira foi atingido.
-# Madeira excedente é convertida em moedas ao dormir.
+# Interagir avança para a próxima noite.
+# Condições:
+# 1. Objetivo de madeira atingido
+# 2. PowerUpScreen não está visível
+# Converte depósito em moedas antes de avançar.
+# Madeira não depositada permanece no inventário.
 # ==============================================================================
 
 extends Interactable
@@ -13,7 +16,6 @@ func interact() -> void:
 		DebugManager.log("Bed", "Ainda falta madeira!")
 		return
 
-	# Bloqueia se player ainda não escolheu o power-up
 	var screen: Node = get_tree().get_first_node_in_group("powerup_screen")
 	if screen and screen.visible:
 		DebugManager.log("Bed", "Escolha um poder antes de dormir.")
@@ -23,9 +25,9 @@ func interact() -> void:
 	if player == null:
 		return
 
-	var excess: int = player.inventory.get_wood_count()
-	if excess > 0:
-		GameManager.add_coins(excess)
-		DebugManager.log("Bed", "Madeira excedente: " + str(excess) + " moedas")
-
+	# Converte depósito em moedas antes de avançar
+	var depot: Node = get_tree().get_first_node_in_group("wood_depot")
+	if depot:
+		depot.convert_to_coins()
+	
 	GameManager.advance_to_next_night(player)

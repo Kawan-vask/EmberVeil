@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://d0kjsrhf1v55l"]
+
+[ext_resource type="Script" uid="uid://q355whfwms4y" path="res://Scripts/Interactables/wood_depot.gd" id="1_ree68"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p2x4n"]
+albedo_color = Color(0.3764706, 0.19215687, 0.09411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ree68"]
+material = SubResource("StandardMaterial3D_p2x4n")
+size = Vector3(1.975, 0.705, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6cc5a"]
+albedo_color = Color(0.375, 0.19357681, 0.095214844, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sq80w"]
+material = SubResource("StandardMaterial3D_6cc5a")
+size = Vector3(1.975, 0.09, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_annq4"]
+size = Vector3(2, 1.5500001, 1)
+
+[node name="WoodDepot" type="Node3D" unique_id=1665999198 groups=["interactable", "wood_depot"]]
+script = ExtResource("1_ree68")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1677180765]
+collision_layer = 9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1849473514]
+mesh = SubResource("BoxMesh_ree68")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="StaticBody3D" unique_id=733509062]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, -0.86602545, 0, 0.86602545, 0.49999997, 0, 0.75, 0.25)
+mesh = SubResource("BoxMesh_sq80w")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=447829246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.425, 0)
+shape = SubResource("BoxShape3D_annq4")

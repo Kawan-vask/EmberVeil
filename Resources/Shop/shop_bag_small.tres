@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ShopItemData" format=3 uid="uid://d2frohjeojqnl"]
+
+[ext_resource type="Script" uid="uid://bjslh1v5j2rqm" path="res://Scripts/Resources/shop_item_data.gd" id="1_wimkt"]
+
+[resource]
+script = ExtResource("1_wimkt")
+display_name = "Bolsa de Lona"
+price = 25
+item_type = "inventory_upgrade"
+capacity_bonus = 2
+metadata/_custom_type_script = "uid://bjslh1v5j2rqm"

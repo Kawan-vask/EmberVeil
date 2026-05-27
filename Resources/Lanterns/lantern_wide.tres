@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="LanternData" format=3 uid="uid://dwfmuqay8xp6x"]
+
+[ext_resource type="Script" uid="uid://dlb31a7v8wbct" path="res://Scripts/Resources/lantern_data.gd" id="1_00y1a"]
+
+[resource]
+script = ExtResource("1_00y1a")
+id = "wide"
+display_name = "Lamparina Ampla"
+max_energy = 150.0
+energy_drain = 6.0
+damage_per_second = 10.0
+slow_factor = 0.55
+ultimate_radius = 14.0
+ultimate_damage = 30.0
+metadata/_custom_type_script = "uid://dlb31a7v8wbct"

@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ct0u67yagptc4" path="res://Scenes/Systems/enemy_director.tscn" id="3_ynf5e"]
 [ext_resource type="PackedScene" uid="uid://ci51m5tj3fmy3" path="res://Scenes/World/Cabin.tscn" id="4_6iyac"]
 [ext_resource type="PackedScene" uid="uid://cey6e8akomi1x" path="res://Scenes/World/structures/EnemyNest.tscn" id="4_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://b3is2lld7d7r8" path="res://Scenes/InteractiveItems/inventory_upgrade.tscn" id="9_cbgmd"]
 [ext_resource type="PackedScene" uid="uid://cg7q5p701ptq7" path="res://Scenes/UI/pause_menu.tscn" id="10_hptm8"]
 [ext_resource type="PackedScene" uid="uid://d728y740m527" path="res://Scenes/InteractiveItems/apple_pickup.tscn" id="10_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://beyki1aqk1qfd" path="res://Scenes/UI/death_screen.tscn" id="11_d1ilt"]
@@ -202,6 +203,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 
 [node name="SapPickup4" parent="Interactibles/Saps" unique_id=1201367980 instance=ExtResource("11_wsu2k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.2, 0)
+
+[node name="Bolsas" type="Node3D" parent="Interactibles" unique_id=219230464]
+
+[node name="InventoryUpgrade" parent="Interactibles/Bolsas" unique_id=1086957033 instance=ExtResource("9_cbgmd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -12.5)
+
+[node name="InventoryUpgrade2" parent="Interactibles/Bolsas" unique_id=1554168412 instance=ExtResource("9_cbgmd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -14)
+
+[node name="InventoryUpgrade3" parent="Interactibles/Bolsas" unique_id=649932645 instance=ExtResource("9_cbgmd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -15.5)
 
 [node name="UI" type="Node3D" parent="." unique_id=1408421820]
 

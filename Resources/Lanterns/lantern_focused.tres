@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="LanternData" format=3 uid="uid://bqq11yig7v1s4"]
+
+[ext_resource type="Script" uid="uid://dlb31a7v8wbct" path="res://Scripts/Resources/lantern_data.gd" id="1_qp702"]
+
+[resource]
+script = ExtResource("1_qp702")
+id = "focused"
+display_name = "Lamparina de Foco"
+max_energy = 70.0
+energy_drain = 15.0
+damage_per_second = 40.0
+slow_factor = 0.15
+ultimate_radius = 6.0
+ultimate_damage = 80.0
+metadata/_custom_type_script = "uid://dlb31a7v8wbct"

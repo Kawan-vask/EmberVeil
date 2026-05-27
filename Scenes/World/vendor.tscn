@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bakj3iec8y8nf"]
+
+[ext_resource type="Script" uid="uid://dyb2djtgkke7" path="res://Scripts/Interactables/vendor.gd" id="1_ipkdi"]
+[ext_resource type="Resource" uid="uid://d1w74cdf7dr1f" path="res://Resources/vendor_default.tres" id="2_1tu6m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tu6m"]
+albedo_color = Color(0.16485596, 0, 0.2890625, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5gbbf"]
+material = SubResource("StandardMaterial3D_1tu6m")
+height = 3.5
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yig1v"]
+height = 3.5
+
+[node name="Vendor" type="Node3D" unique_id=666602362 groups=["interactable", "vendor"]]
+script = ExtResource("1_ipkdi")
+vendor_data = ExtResource("2_1tu6m")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1988254927]
+collision_layer = 9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=60546962]
+mesh = SubResource("CapsuleMesh_5gbbf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=271444691]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006250024, 0)
+shape = SubResource("CapsuleShape3D_yig1v")

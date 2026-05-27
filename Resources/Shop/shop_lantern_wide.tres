@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ShopItemData" format=3 uid="uid://b4opt4g2pmlh5"]
+
+[ext_resource type="Script" uid="uid://bjslh1v5j2rqm" path="res://Scripts/Resources/shop_item_data.gd" id="1_gdy7d"]
+
+[resource]
+script = ExtResource("1_gdy7d")
+display_name = "Lamparina Ampla"
+lantern_id = "wide"
+metadata/_custom_type_script = "uid://bjslh1v5j2rqm"

@@ -97,6 +97,13 @@ func _apply_night_settings() -> void:
 		"Noite " + str(current_night) +
 		" | Objetivo de madeira: " + str(wood_goal)
 	)
+	
+	# Vendedor aparece nas noites 4, 7, 10, 13...
+	if current_night > 1 and (current_night - 1) % 3 == 0:
+		SignalBus.vendor_available.emit()
+		DebugManager.log("GameManager", "Vendedor chegou na noite " + str(current_night))
+
+
 
 ## Retorna um valor escalado pela noite.
 ## Exemplo: get_scaled_value(10.0, 0.2) na noite 3 = 14.0
@@ -119,13 +126,12 @@ func start_night() -> void:
 
 ## Chamado pela cama quando o player vai dormir.
 ## Recebe referência do player para resetar inventário.
-func advance_to_next_night(player: Node) -> void:
+func advance_to_next_night(_player: Node) -> void:
 	if not night_completed:
 		DebugManager.log("GameManager", "Ainda falta madeira!")
 		return
 
 	current_night += 1
-	player.inventory.reset()
 	night_active  = false
 	_apply_night_settings()
 

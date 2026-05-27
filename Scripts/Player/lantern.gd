@@ -430,3 +430,21 @@ func handle_spot_flicker(delta):
 		)
 
 #endregion
+
+
+#region EQUIP
+## Troca a lanterna aplicando os stats do Resource.
+## Chamado pela ShopScreen ao comprar.
+func equip(data: LanternData) -> void:
+	max_energy        = data.max_energy
+	energy_drain      = data.energy_drain
+	damage_per_second = data.damage_per_second
+	slow_factor       = data.slow_factor
+	ultimate_cost     = data.ultimate_cost
+	ultimate_radius   = data.ultimate_radius
+	ultimate_damage   = data.ultimate_damage
+	ultimate_cooldown = data.ultimate_cooldown
+	current_energy    = minf(current_energy, max_energy)
+	energy_changed.emit(current_energy, max_energy)
+	DebugManager.log("Lantern", "Equipada: " + data.display_name)
+#endregion

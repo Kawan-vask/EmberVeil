@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="VendorData" format=3 uid="uid://d1w74cdf7dr1f"]
+
+[ext_resource type="Script" uid="uid://bjslh1v5j2rqm" path="res://Scripts/Resources/shop_item_data.gd" id="1_oin87"]
+[ext_resource type="Resource" uid="uid://b8fn66dfcytvl" path="res://Resources/Shop/shop_bag_large.tres" id="2_hsjx7"]
+[ext_resource type="Script" uid="uid://bm84bld0hqn4c" path="res://Scripts/Resources/vendor_data.gd" id="2_j3vg8"]
+[ext_resource type="Resource" uid="uid://d2frohjeojqnl" path="res://Resources/Shop/shop_bag_small.tres" id="3_ivl2o"]
+[ext_resource type="Resource" uid="uid://c2724qrmcmvel" path="res://Resources/Shop/shop_lantern_focused.tres" id="4_pdxya"]
+[ext_resource type="Resource" uid="uid://b4opt4g2pmlh5" path="res://Resources/Shop/shop_lantern_wide.tres" id="5_k6c2m"]
+
+[resource]
+script = ExtResource("2_j3vg8")
+items = Array[ExtResource("1_oin87")]([ExtResource("2_hsjx7"), ExtResource("3_ivl2o"), ExtResource("4_pdxya"), ExtResource("5_k6c2m")])
+metadata/_custom_type_script = "uid://bm84bld0hqn4c"

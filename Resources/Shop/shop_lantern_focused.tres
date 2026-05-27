@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ShopItemData" format=3 uid="uid://c2724qrmcmvel"]
+
+[ext_resource type="Script" uid="uid://bjslh1v5j2rqm" path="res://Scripts/Resources/shop_item_data.gd" id="1_phvkp"]
+
+[resource]
+script = ExtResource("1_phvkp")
+display_name = "Lamparina de Foco"
+lantern_id = "focused"
+metadata/_custom_type_script = "uid://bjslh1v5j2rqm"

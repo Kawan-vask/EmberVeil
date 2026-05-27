@@ -44,6 +44,8 @@ world_environment=""
 resource_pickup=""
 spawn_point=""
 powerup_manager=""
+wood_depot=""
+vendor=""
 
 [input]
 
