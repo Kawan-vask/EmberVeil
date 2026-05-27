@@ -152,11 +152,8 @@ mesh = SubResource("BoxMesh_2des6")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -5.5)
 shape = SubResource("BoxShape3D_cqicl")
 
-[node name="VendorSpot" type="Marker3D" parent="Door" unique_id=1351533956]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -7)
-
-[node name="Vendor" parent="Door/VendorSpot" unique_id=666602362 instance=ExtResource("4_nlbri")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0)
+[node name="Vendor" parent="Door" unique_id=666602362 instance=ExtResource("4_nlbri")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -7)
 
 [node name="WorldExclusionRadius" type="Marker3D" parent="." unique_id=141599815]
 
