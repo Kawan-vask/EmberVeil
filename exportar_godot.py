@@ -107,14 +107,17 @@ def aplicar_slim(conteudo: str) -> str:
     for linha in conteudo.splitlines():
         stripped = linha.strip()
 
-        # Remove linhas que são só comentário
-        if stripped.startswith("#") and not stripped.startswith("##"):
+        # Remove blocos de separação visual (linhas só de # ou =)
+        if stripped and all(c in "#= " for c in stripped) and len(stripped) > 5:
             continue
 
-        # Remove docstrings (##) que são muito longas (mais de 80 chars)
-        # Mantém as curtas pois ajudam a entender a API
-        if stripped.startswith("##") and len(stripped) > 80:
+        # Remove comentários de cabeçalho de bloco (# ===, # ---, # region header)
+        if stripped.startswith("# ===") or stripped.startswith("# ---"):
             continue
+
+        # MANTÉM comentários normais de linha (# algo)
+        # MANTÉM docstrings (## algo)
+        # Isso evita remover código comentado acidentalmente
 
         # Remove linhas em branco múltiplas (mantém no máximo uma seguida)
         if stripped == "" and linhas and linhas[-1].strip() == "":
@@ -122,7 +125,8 @@ def aplicar_slim(conteudo: str) -> str:
 
         linhas.append(linha)
 
-    return "\n".join(linhas)
+    resultado = "\n".join(linhas)
+    return resultado
 
 
 # ============================================================
@@ -314,6 +318,17 @@ def imprimir_relatorio(scripts: list, cenas: list, resources: list):
         nome = os.path.basename(caminho)
         linhas = conteudo.count("\n")
         print(f"     {nome:<35} {linhas:>4} linhas  [{modulo}]")
+
+    # Avisa sobre arquivos suspeitos (vazios ou muito pequenos)
+    print("\n  ⚠️  Scripts suspeitos (< 5 linhas — podem estar vazios):")
+    suspeitos = [s for s in scripts if s[1].count("\n") < 5]
+    if suspeitos:
+        for caminho, conteudo, modulo in suspeitos:
+            nome = os.path.basename(caminho)
+            linhas = conteudo.count("\n")
+            print(f"     {nome:<35} {linhas:>4} linhas  [{modulo}]  ← verificar")
+    else:
+        print("     Nenhum.")
 
 
 # ============================================================

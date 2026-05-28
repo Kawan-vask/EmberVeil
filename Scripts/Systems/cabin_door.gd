@@ -5,11 +5,6 @@
 # - CLOSED: bloqueada, não deixa passar
 # - OPEN:   liberada, player pode sair/entrar
 # - VENDOR: vendedor presente, interagir abre a loja
-#
-# Transições automáticas:
-# - night_transition_finished → OPEN (começa a noite, porta abre)
-# - vendor_available          → VENDOR (vendedor chegou)
-# - vendor_dismissed          → CLOSED (vendedor foi embora)
 # ==============================================================================
 
 class_name CabinDoor
