@@ -43,14 +43,14 @@ size = Vector3(4, 4, 0.2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_bs4gn"]
 size = Vector3(4, 4, 0.2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_48dbj"]
-size = Vector3(2, 4, 0.2)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nrhhs"]
 albedo_color = Color(0.2421875, 0.12747216, 0.0652771, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_2des6"]
 material = SubResource("StandardMaterial3D_nrhhs")
+size = Vector3(2, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_48dbj"]
 size = Vector3(2, 4, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cqicl"]
@@ -65,7 +65,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 collision_mask = 0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/Floor" unique_id=848440082]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2097766, 0)
 mesh = SubResource("BoxMesh_62vnv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/Floor" unique_id=85924915]
@@ -133,18 +133,23 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 7.5, 0)
 [node name="Door" type="Node3D" parent="." unique_id=1327257027 groups=["interactable"]]
 script = ExtResource("2_cqicl")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Door" unique_id=2109871123]
+[node name="DoorPivot" type="Node3D" parent="Door" unique_id=1357581755]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2, -4.8850503)
+
+[node name="Visual" type="Node3D" parent="Door/DoorPivot" unique_id=1520044164]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.26277304, -0.014949799)
+
+[node name="MeshPlaceholderDoor" type="MeshInstance3D" parent="Door/DoorPivot/Visual" unique_id=1542829953]
+mesh = SubResource("BoxMesh_2des6")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Door/DoorPivot" unique_id=2109871123]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -2, 4.8850503)
 collision_layer = 9
 collision_mask = 2
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Door/StaticBody3D" unique_id=615430106]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door/DoorPivot/StaticBody3D" unique_id=615430106]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2628741, -4.9)
 shape = SubResource("BoxShape3D_48dbj")
-disabled = true
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Door/StaticBody3D" unique_id=1542829953]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.262773, -4.9)
-mesh = SubResource("BoxMesh_2des6")
 
 [node name="ExitTrigger" type="Area3D" parent="Door" unique_id=317905320]
 
@@ -153,7 +158,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -5.5)
 shape = SubResource("BoxShape3D_cqicl")
 
 [node name="Vendor" parent="Door" unique_id=666602362 instance=ExtResource("4_nlbri")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -8)
 
 [node name="WorldExclusionRadius" type="Marker3D" parent="." unique_id=141599815]
 
@@ -179,3 +184,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2, 4.5)
 
 [node name="TutorialBook" type="Marker3D" parent="Interactables" unique_id=1048016876]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 1.2, 2.5)
+
+[node name="Lights" type="Node3D" parent="." unique_id=900405588]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Lights" unique_id=1990622937]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.063323, 0)
+light_energy = 1.914
+omni_range = 12.637353

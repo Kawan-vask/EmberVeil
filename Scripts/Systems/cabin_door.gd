@@ -1,10 +1,23 @@
 # ==============================================================================
 # CABIN DOOR
 # ------------------------------------------------------------------------------
-# Porta da cabana com 3 estados:
-# - CLOSED: bloqueada, não deixa passar
-# - OPEN:   liberada, player pode sair/entrar
-# - VENDOR: vendedor presente, interagir abre a loja
+# Porta física da cabana com abertura/fechamento animado.
+#
+# Hierarquia esperada na cena:
+#   CabinDoor (este script, grupo "interactable")
+#   └── DoorPivot (Node3D) ← pivot posicionado na dobradiça
+#       ├── MeshInstance3D  ← offset +0.5 X em relação ao pivot
+#       └── StaticBody3D    ← colisão; rotaciona junto com o pivot automaticamente
+#           └── CollisionShape3D
+#
+# A colisão NUNCA é desativada — ela acompanha a rotação do DoorPivot.
+# Quando aberta (85°), o vão fica livre naturalmente pela geometria.
+# Quando fechada (0°), bloqueia a passagem e é detectável pelo raycast.
+#
+# Estados:
+#   CLOSED  — porta fechada, bloqueia passagem
+#   OPEN    — porta aberta (85°), vão liberado
+#   VENDOR  — vendedor presente; player abre a porta e inicia o fluxo
 # ==============================================================================
 
 class_name CabinDoor
@@ -23,10 +36,32 @@ var state: DoorState = DoorState.CLOSED
 
 
 # ==============================================================================
+#region CONFIGURAÇÃO
+# ==============================================================================
+
+## Ângulo de abertura em graus
+@export var open_angle_deg: float = 85.0
+
+## Duração da animação de abrir/fechar em segundos
+@export var animation_duration: float = 0.4
+
+#endregion
+
+
+# ==============================================================================
 #region NÓS
 # ==============================================================================
 
-@onready var collider: StaticBody3D = $StaticBody3D
+@onready var door_pivot: Node3D = $DoorPivot
+
+#endregion
+
+
+# ==============================================================================
+#region RUNTIME
+# ==============================================================================
+
+var _tween: Tween = null
 
 #endregion
 
@@ -36,7 +71,7 @@ var state: DoorState = DoorState.CLOSED
 # ==============================================================================
 
 func _ready() -> void:
-	SignalBus.night_transition_finished.connect(_on_night_started)
+	SignalBus.night_transition_finished.connect(_on_night_transition_finished)
 	SignalBus.vendor_available.connect(_on_vendor_arrived)
 	SignalBus.vendor_dismissed.connect(_on_vendor_left)
 	set_state(DoorState.CLOSED)
@@ -50,12 +85,16 @@ func _ready() -> void:
 
 func interact() -> void:
 	match state:
-		DoorState.OPEN:
-			set_state(DoorState.CLOSED)
 		DoorState.CLOSED:
 			set_state(DoorState.OPEN)
+		DoorState.OPEN:
+			set_state(DoorState.CLOSED)
 		DoorState.VENDOR:
-			# Abre a loja — ShopScreen ouve este signal
+			# Abre a porta fisicamente antes de iniciar o fluxo do vendedor
+			# A porta permanece em estado VENDOR até vendor_dismissed ser emitido
+			_animate_door(open_angle_deg)
+			# Placeholder até Passo E (DialogSystem)
+			# Será: SignalBus.dialog_requested.emit(dialog_data, self)
 			SignalBus.shop_opened.emit()
 
 #endregion
@@ -68,15 +107,37 @@ func interact() -> void:
 func set_state(new_state: DoorState) -> void:
 	state = new_state
 
-	# Colisão ativa apenas quando fechada ou com vendedor
-	# Quando aberta, player passa livremente
-	collider.process_mode = (
-		Node.PROCESS_MODE_DISABLED
-		if state == DoorState.OPEN
-		else Node.PROCESS_MODE_INHERIT
-	)
+	match state:
+		DoorState.OPEN:
+			_animate_door(open_angle_deg)
+		DoorState.CLOSED:
+			_animate_door(0.0)
+		DoorState.VENDOR:
+			# Porta fechada enquanto vendedor espera
+			_animate_door(0.0)
 
 	DebugManager.log("CabinDoor", "Estado: " + DoorState.keys()[state])
+
+#endregion
+
+
+# ==============================================================================
+#region ANIMAÇÃO
+# ==============================================================================
+
+func _animate_door(target_angle_deg: float) -> void:
+	if _tween != null and _tween.is_valid():
+		_tween.kill()
+
+	_tween = create_tween()
+	_tween.set_ease(Tween.EASE_OUT)
+	_tween.set_trans(Tween.TRANS_CUBIC)
+	_tween.tween_property(
+		door_pivot,
+		"rotation:y",
+		deg_to_rad(target_angle_deg),
+		animation_duration
+	)
 
 #endregion
 
@@ -85,18 +146,17 @@ func set_state(new_state: DoorState) -> void:
 #region LISTENERS — SIGNALS
 # ==============================================================================
 
-func _on_night_started() -> void:
-	# Noite começa — porta abre para o player sair
-	set_state(DoorState.OPEN)
+func _on_night_transition_finished() -> void:
+	# start_night() já foi chamado pela NightTransition antes deste signal
+	set_state(DoorState.CLOSED)
 
 
 func _on_vendor_arrived() -> void:
-	# Vendedor chegou — porta vira acesso à loja
 	set_state(DoorState.VENDOR)
 
 
 func _on_vendor_left() -> void:
-	# Vendedor foi embora — porta fecha
+	# Fecha a porta e libera para uso normal
 	set_state(DoorState.CLOSED)
 
 #endregion

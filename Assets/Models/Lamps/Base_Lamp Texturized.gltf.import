@@ -3,17 +3,17 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://d2pti4t4hvf0s"
-path="res://.godot/imported/Base_Lamp.gltf-9ca344200f89e83c9581c1366a683b9a.scn"
+uid="uid://djou6jxt4oxna"
+path="res://.godot/imported/Base_Lamp Texturized.gltf-b185c6c47635866ef9778b3a30417f77.scn"
 
 [deps]
 
-source_file="res://Assets/Models/Lamps/Base_Lamp.gltf"
-dest_files=["res://.godot/imported/Base_Lamp.gltf-9ca344200f89e83c9581c1366a683b9a.scn"]
+source_file="res://Assets/Models/Lamps/Base_Lamp Texturized.gltf"
+dest_files=["res://.godot/imported/Base_Lamp Texturized.gltf-b185c6c47635866ef9778b3a30417f77.scn"]
 
 [params]
 
-nodes/root_type="MeshInstance3D"
+nodes/root_type="Node3D"
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true

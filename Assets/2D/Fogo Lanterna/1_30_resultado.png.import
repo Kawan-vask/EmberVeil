@@ -2,24 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxoxr2nmx28b4"
-path.s3tc="res://.godot/imported/Base_Lamp_0.png-e1117435f8505fc514fb8d6b1c98ed88.s3tc.ctex"
+uid="uid://vm7gw01nqe75"
+path="res://.godot/imported/1_30_resultado.png-4d633772996a5911b239cbb38911b19a.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
-}
-generator_parameters={
-"md5": "361b5bf28f560ee5d52612f96fec3e13"
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Models/Lamps/Base_Lamp_0.png"
-dest_files=["res://.godot/imported/Base_Lamp_0.png-e1117435f8505fc514fb8d6b1c98ed88.s3tc.ctex"]
+source_file="res://Assets/2D/Fogo Lanterna/1_30_resultado.png"
+dest_files=["res://.godot/imported/1_30_resultado.png-4d633772996a5911b239cbb38911b19a.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -27,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

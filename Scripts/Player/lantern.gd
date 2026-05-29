@@ -72,7 +72,7 @@ var _ultimate_timer: float = 0.0
 @onready var spot_light: SpotLight3D = $"../LanternPivot/SpotLight3D"
 
 # Luz ambiente — modo normal (ilumina ao redor)
-@onready var omni_light: OmniLight3D = $"../LanternPivot/OmniLight3D"
+@onready var omni_light: OmniLight3D = $"../../../Visual/ArmAndLantern/OmniLight3D"
 
 # Hitbox do cone de dano
 @onready var lantern_cone: Area3D = $LanternRay
@@ -82,6 +82,14 @@ var _ultimate_timer: float = 0.0
 
 # OmniLight de combate — halo de energia ao redor da lamparina
 @onready var combat_omni: OmniLight3D = $"../LanternPivot/CombatOmniLight"
+
+## Nó container do modelo 3D — filho de LanternPivot na player.tscn
+## Preenchido no _ready() com get_node_or_null (nó pode não existir ainda)
+var _lantern_model: Node3D = null
+
+## Controller do modelo atual — deve implementar update_energy(percent: float)
+## null se o modelo não tiver esse método
+var _model_controller: Node = null
 
 
 #endregion
@@ -124,7 +132,12 @@ func _ready():
 	lantern_cone.monitoring = false
 	beam_particles.emitting = false
 	combat_omni.visible = false
-	
+
+	# Tenta encontrar o LanternModel — pode não existir até ser adicionado no editor
+	_lantern_model = get_node_or_null("../../../Visual/ArmAndLantern/LanternModels")
+	if _lantern_model == null:
+		DebugManager.log("Lantern", "LanternModels não encontrado. Troca de modelo desabilitada.")
+
 	SignalBus.ui_exclusive_opened.connect(func(): set_process(false))
 	SignalBus.ui_exclusive_closed.connect(func(): set_process(true))
 
@@ -182,6 +195,9 @@ func handle_energy(delta: float) -> void:
 	current_energy -= energy_drain * delta
 	energy_changed.emit(current_energy, max_energy)
 	current_energy = max(current_energy, 0.0)
+	# Atualiza medidor diegético no modelo (se existir e implementar update_energy)
+	if _model_controller != null:
+		_model_controller.update_energy(get_energy_percent())
 	if current_energy <= 0:
 		set_combat_mode(false)
 		DebugManager.log("Lantern", "Energia esgotada.")
@@ -433,9 +449,10 @@ func handle_spot_flicker(delta):
 
 
 #region EQUIP
-## Troca a lanterna aplicando os stats do Resource.
-## Chamado pela ShopScreen ao comprar.
+## Troca a lanterna aplicando os stats do Resource e (se definido) o modelo 3D.
+## Chamado pela ShopScreen ao comprar e pelo Baú ao equipar.
 func equip(data: LanternData) -> void:
+	# Troca stats — comportamento existente
 	max_energy        = data.max_energy
 	energy_drain      = data.energy_drain
 	damage_per_second = data.damage_per_second
@@ -446,5 +463,18 @@ func equip(data: LanternData) -> void:
 	ultimate_cooldown = data.ultimate_cooldown
 	current_energy    = minf(current_energy, max_energy)
 	energy_changed.emit(current_energy, max_energy)
+
+	# Troca modelo 3D — só executa se LanternModel existe E model_scene está definida
+	if _lantern_model != null and data.model_scene != null:
+		for child in _lantern_model.get_children():
+			child.queue_free()
+		var new_model: Node3D = data.model_scene.instantiate()
+		_lantern_model.add_child(new_model)
+		# Guarda referência ao controller se o modelo implementar update_energy()
+		_model_controller = new_model if new_model.has_method("update_energy") else null
+		DebugManager.log("Lantern", "Modelo trocado: " + data.display_name)
+	else:
+		_model_controller = null
+
 	DebugManager.log("Lantern", "Equipada: " + data.display_name)
 #endregion

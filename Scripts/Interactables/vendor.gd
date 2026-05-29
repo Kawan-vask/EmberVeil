@@ -1,10 +1,3 @@
-# ==============================================================================
-# VENDOR — O HOMEM DAS LANTERNAS
-# ------------------------------------------------------------------------------
-# Aparece na porta da cabana nas noites 4, 7, 10...
-# Vende lanternas e upgrades de inventário.
-# ==============================================================================
-
 class_name Vendor
 extends Interactable
 
@@ -12,22 +5,36 @@ extends Interactable
 
 #region READY
 func _ready() -> void:
-	visible = false
+	_set_active(false)
 	SignalBus.vendor_available.connect(_on_vendor_arrived)
 	SignalBus.vendor_dismissed.connect(_on_vendor_left)
+	SignalBus.night_transition_started.connect(_on_vendor_left)
 #endregion
 
 #region INTERAÇÃO
 func interact() -> void:
+	# Placeholder até Passo E (DialogSystem)
 	SignalBus.shop_opened.emit()
 #endregion
 
 #region LISTENERS
 func _on_vendor_arrived() -> void:
-	visible = true
+	_set_active(true)
 	DebugManager.log("Vendor", "Chegou na noite " + str(GameManager.current_night))
 
 func _on_vendor_left() -> void:
-	visible = false
+	_set_active(false)
 	DebugManager.log("Vendor", "Foi embora.")
+#endregion
+
+#region INTERNO
+func _set_active(active: bool) -> void:
+	visible = active
+	var body := get_node_or_null("StaticBody3D")
+	if body:
+		body.process_mode = (
+			Node.PROCESS_MODE_INHERIT
+			if active
+			else Node.PROCESS_MODE_DISABLED
+		)
 #endregion

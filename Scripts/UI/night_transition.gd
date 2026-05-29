@@ -55,6 +55,7 @@ func _on_transition_started() -> void:
 	_reset_resources()
 
 	# Emite por último — PowerUpScreen abre com estado limpo
+	GameManager.start_night()
 	SignalBus.night_transition_finished.emit()
 
 

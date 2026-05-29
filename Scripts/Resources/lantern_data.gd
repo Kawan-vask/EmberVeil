@@ -29,3 +29,10 @@ extends Resource
 @export var ultimate_damage: float = 50.0
 @export var ultimate_cooldown: float = 5.0
 #endregion
+
+#region MODELO 3D
+## Cena do modelo 3D desta lanterna.
+## null = sem troca de modelo (variantes ainda sem modelo definitivo)
+## Quando definida: o equip() instancia esta cena dentro do nó LanternModel
+@export var model_scene: PackedScene = null
+#endregion

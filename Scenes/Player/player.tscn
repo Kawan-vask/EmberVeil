@@ -7,7 +7,68 @@
 [ext_resource type="Script" uid="uid://b4efv4gcpxm88" path="res://Scripts/Player/Components/stamina_component.gd" id="3_dd0ac"]
 [ext_resource type="Texture2D" uid="uid://mddhx3c1a2b6" path="res://Assets/UI/Crosshairs/crosshair123.png" id="3_mtuoh"]
 [ext_resource type="Script" uid="uid://mg8ohbpohli" path="res://Scripts/Player/Components/inventory_component.gd" id="4_0u5uq"]
-[ext_resource type="PackedScene" uid="uid://dckbunaieqqec" path="res://Assets/Models/Lamps/Base_Lamp.tscn" id="8_jlvik"]
+[ext_resource type="PackedScene" uid="uid://bcvvn2c52lqu2" path="res://Assets/Models/Lamps/base_lamp_model.tscn" id="8_hlqkp"]
+[ext_resource type="Texture2D" uid="uid://dt5ukkegn6hso" path="res://Assets/2D/Fogo Lanterna/1_0_resultado.png" id="9_hlqkp"]
+[ext_resource type="Texture2D" uid="uid://brcks5rq74llb" path="res://Assets/2D/Fogo Lanterna/1_1_resultado.png" id="10_rbwwl"]
+[ext_resource type="Texture2D" uid="uid://2nffojygm8jo" path="res://Assets/2D/Fogo Lanterna/1_2_resultado.png" id="11_dbngi"]
+[ext_resource type="Texture2D" uid="uid://cjgdhaortxii8" path="res://Assets/2D/Fogo Lanterna/1_3_resultado.png" id="12_geihd"]
+[ext_resource type="Texture2D" uid="uid://b5v0ak47622u3" path="res://Assets/2D/Fogo Lanterna/1_4_resultado.png" id="13_gs43p"]
+[ext_resource type="Texture2D" uid="uid://qsemqysi65ro" path="res://Assets/2D/Fogo Lanterna/1_5_resultado.png" id="14_oshob"]
+[ext_resource type="Texture2D" uid="uid://dp1x7fjahfp81" path="res://Assets/2D/Fogo Lanterna/1_6_resultado.png" id="15_4h47k"]
+[ext_resource type="Texture2D" uid="uid://ctxa2pbk313b" path="res://Assets/2D/Fogo Lanterna/1_7_resultado.png" id="16_mcfd4"]
+[ext_resource type="Texture2D" uid="uid://dv5nanhf4si34" path="res://Assets/2D/Fogo Lanterna/1_8_resultado.png" id="17_f4of5"]
+[ext_resource type="Texture2D" uid="uid://ceni6qt1ax4jm" path="res://Assets/2D/Fogo Lanterna/1_9_resultado.png" id="18_8l7e3"]
+[ext_resource type="Texture2D" uid="uid://d3oo77nyv5mdl" path="res://Assets/2D/Fogo Lanterna/1_10_resultado.png" id="19_hn678"]
+[ext_resource type="Texture2D" uid="uid://beqi51k3icfjm" path="res://Assets/2D/Fogo Lanterna/1_11_resultado.png" id="20_4hadm"]
+[ext_resource type="Texture2D" uid="uid://re4waeles7ng" path="res://Assets/2D/Fogo Lanterna/1_12_resultado.png" id="21_q0h8a"]
+[ext_resource type="Texture2D" uid="uid://baw3u4mpmtg33" path="res://Assets/2D/Fogo Lanterna/1_13_resultado.png" id="22_mvmwy"]
+[ext_resource type="Texture2D" uid="uid://c0sdcovbumbsq" path="res://Assets/2D/Fogo Lanterna/1_14_resultado.png" id="23_wb8kq"]
+[ext_resource type="Texture2D" uid="uid://dlseewkpmkkr8" path="res://Assets/2D/Fogo Lanterna/1_15_resultado.png" id="24_oh6x4"]
+[ext_resource type="Texture2D" uid="uid://bkki4ahoskv3r" path="res://Assets/2D/Fogo Lanterna/1_16_resultado.png" id="25_qc6x1"]
+[ext_resource type="Texture2D" uid="uid://da7yn0er4trhg" path="res://Assets/2D/Fogo Lanterna/1_17_resultado.png" id="26_bfk3i"]
+[ext_resource type="Texture2D" uid="uid://bfofsxl4ok01i" path="res://Assets/2D/Fogo Lanterna/1_18_resultado.png" id="27_hdl7r"]
+[ext_resource type="Texture2D" uid="uid://bjlqashdxbiig" path="res://Assets/2D/Fogo Lanterna/1_19_resultado.png" id="28_mw4px"]
+[ext_resource type="Texture2D" uid="uid://ccn7canlq1j72" path="res://Assets/2D/Fogo Lanterna/1_20_resultado.png" id="29_8rr78"]
+[ext_resource type="Texture2D" uid="uid://b55ermmey8f0v" path="res://Assets/2D/Fogo Lanterna/1_21_resultado.png" id="30_cvvwm"]
+[ext_resource type="Texture2D" uid="uid://v840yjpiiorg" path="res://Assets/2D/Fogo Lanterna/1_22_resultado.png" id="31_gnhd0"]
+[ext_resource type="Texture2D" uid="uid://hjy1k11815oe" path="res://Assets/2D/Fogo Lanterna/1_23_resultado.png" id="32_awspn"]
+[ext_resource type="Texture2D" uid="uid://d018c6jtduojv" path="res://Assets/2D/Fogo Lanterna/1_24_resultado.png" id="33_47nv5"]
+[ext_resource type="Texture2D" uid="uid://ba2thfe5g36gb" path="res://Assets/2D/Fogo Lanterna/1_25_resultado.png" id="34_ml2j2"]
+[ext_resource type="Texture2D" uid="uid://ctp38kphxq7d6" path="res://Assets/2D/Fogo Lanterna/1_26_resultado.png" id="35_plnq1"]
+[ext_resource type="Texture2D" uid="uid://d0qwigoxfy87m" path="res://Assets/2D/Fogo Lanterna/1_27_resultado.png" id="36_i1wx2"]
+[ext_resource type="Texture2D" uid="uid://b6hp17u82nkmo" path="res://Assets/2D/Fogo Lanterna/1_28_resultado.png" id="37_jmbrt"]
+[ext_resource type="Texture2D" uid="uid://dtxu0rkmauphb" path="res://Assets/2D/Fogo Lanterna/1_29_resultado.png" id="38_6a86w"]
+[ext_resource type="Texture2D" uid="uid://vm7gw01nqe75" path="res://Assets/2D/Fogo Lanterna/1_30_resultado.png" id="39_22q81"]
+[ext_resource type="Texture2D" uid="uid://syy8ku0ghpeu" path="res://Assets/2D/Fogo Lanterna/1_31_resultado.png" id="40_81gu5"]
+[ext_resource type="Texture2D" uid="uid://5d6nxivn1ap5" path="res://Assets/2D/Fogo Lanterna/1_32_resultado.png" id="41_pf3rq"]
+[ext_resource type="Texture2D" uid="uid://bpbw14bswrpch" path="res://Assets/2D/Fogo Lanterna/1_33_resultado.png" id="42_5opb0"]
+[ext_resource type="Texture2D" uid="uid://df2rlk3s5332g" path="res://Assets/2D/Fogo Lanterna/1_34_resultado.png" id="43_gpqv3"]
+[ext_resource type="Texture2D" uid="uid://c7ij0qi7uwqy8" path="res://Assets/2D/Fogo Lanterna/1_35_resultado.png" id="44_7ve27"]
+[ext_resource type="Texture2D" uid="uid://dqeig7mvkyvmi" path="res://Assets/2D/Fogo Lanterna/1_36_resultado.png" id="45_ldt7q"]
+[ext_resource type="Texture2D" uid="uid://rjgi48c6inaw" path="res://Assets/2D/Fogo Lanterna/1_37_resultado.png" id="46_7bej3"]
+[ext_resource type="Texture2D" uid="uid://bpblxwweiyg14" path="res://Assets/2D/Fogo Lanterna/1_38_resultado.png" id="47_8b85g"]
+[ext_resource type="Texture2D" uid="uid://cqo0qsfngawqg" path="res://Assets/2D/Fogo Lanterna/1_39_resultado.png" id="48_56b0b"]
+[ext_resource type="Texture2D" uid="uid://depl18kekbt2s" path="res://Assets/2D/Fogo Lanterna/1_40_resultado.png" id="49_w6yxy"]
+[ext_resource type="Texture2D" uid="uid://btbegxuw7apd0" path="res://Assets/2D/Fogo Lanterna/1_41_resultado.png" id="50_2crlr"]
+[ext_resource type="Texture2D" uid="uid://d3osmx63mcpi6" path="res://Assets/2D/Fogo Lanterna/1_42_resultado.png" id="51_xvldo"]
+[ext_resource type="Texture2D" uid="uid://slw2jv8q12j1" path="res://Assets/2D/Fogo Lanterna/1_43_resultado.png" id="52_ujqdw"]
+[ext_resource type="Texture2D" uid="uid://bqnjucjqnblyg" path="res://Assets/2D/Fogo Lanterna/1_44_resultado.png" id="53_ddxso"]
+[ext_resource type="Texture2D" uid="uid://spx0hor1824m" path="res://Assets/2D/Fogo Lanterna/1_45_resultado.png" id="54_yylel"]
+[ext_resource type="Texture2D" uid="uid://8gdycuknx46p" path="res://Assets/2D/Fogo Lanterna/1_46_resultado.png" id="55_t53un"]
+[ext_resource type="Texture2D" uid="uid://cfd40r8lmfxs7" path="res://Assets/2D/Fogo Lanterna/1_47_resultado.png" id="56_88f1v"]
+[ext_resource type="Texture2D" uid="uid://b0tc1u7oahplk" path="res://Assets/2D/Fogo Lanterna/1_48_resultado.png" id="57_yl4y1"]
+[ext_resource type="Texture2D" uid="uid://b8o3oshbhcid8" path="res://Assets/2D/Fogo Lanterna/1_49_resultado.png" id="58_ulp4i"]
+[ext_resource type="Texture2D" uid="uid://c2omp20h02cnt" path="res://Assets/2D/Fogo Lanterna/1_50_resultado.png" id="59_u23kb"]
+[ext_resource type="Texture2D" uid="uid://coaf8b2qfjv22" path="res://Assets/2D/Fogo Lanterna/1_51_resultado.png" id="60_8filg"]
+[ext_resource type="Texture2D" uid="uid://xc1d038t8g1i" path="res://Assets/2D/Fogo Lanterna/1_52_resultado.png" id="61_18yym"]
+[ext_resource type="Texture2D" uid="uid://c6ej4mkwh4meq" path="res://Assets/2D/Fogo Lanterna/1_53_resultado.png" id="62_pxqwv"]
+[ext_resource type="Texture2D" uid="uid://bt2q1smr8wdhy" path="res://Assets/2D/Fogo Lanterna/1_54_resultado.png" id="63_x3h74"]
+[ext_resource type="Texture2D" uid="uid://4i4xxyi7gj3e" path="res://Assets/2D/Fogo Lanterna/1_55_resultado.png" id="64_cywur"]
+[ext_resource type="Texture2D" uid="uid://cdqc71pk27a4v" path="res://Assets/2D/Fogo Lanterna/1_56_resultado.png" id="65_guy8i"]
+[ext_resource type="Texture2D" uid="uid://qsayobofjjdi" path="res://Assets/2D/Fogo Lanterna/1_57_resultado.png" id="66_slg74"]
+[ext_resource type="Texture2D" uid="uid://dnr6myvbuqsxy" path="res://Assets/2D/Fogo Lanterna/1_58_resultado.png" id="67_b37a0"]
+[ext_resource type="Texture2D" uid="uid://caw0liokauxg8" path="res://Assets/2D/Fogo Lanterna/1_59_resultado.png" id="68_44cd3"]
+[ext_resource type="Texture2D" uid="uid://cfd6jiwqo42io" path="res://Assets/2D/Fogo Lanterna/1_60_resultado.png" id="69_ey7ov"]
 
 [sub_resource type="Curve" id="Curve_mtuoh"]
 _data = [Vector2(0.06074766, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.20224726), 0.0, 0.0, 0, 0]
@@ -45,19 +106,210 @@ radius = 1.0
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tugb3"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uvnfx"]
-albedo_color = Color(1, 0.85882354, 0.6745098, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_a3d8c"]
-material = SubResource("StandardMaterial3D_uvnfx")
-radius = 0.3
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a3d8c"]
 albedo_color = Color(1, 0.85882354, 0.6745098, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_xpcdj"]
 material = SubResource("StandardMaterial3D_a3d8c")
 size = Vector3(0.15, 0.1, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t60a6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_hlqkp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_rbwwl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_dbngi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_geihd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_gs43p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_oshob")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_4h47k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_mcfd4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_f4of5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_8l7e3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_hn678")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_4hadm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_q0h8a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_mvmwy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_wb8kq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_oh6x4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_qc6x1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_bfk3i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_hdl7r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_mw4px")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_8rr78")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_cvvwm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_gnhd0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_awspn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_47nv5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_ml2j2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_plnq1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_i1wx2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_jmbrt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_6a86w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_22q81")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_81gu5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_pf3rq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_5opb0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_gpqv3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_7ve27")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_ldt7q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_7bej3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_8b85g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_56b0b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_w6yxy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_2crlr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_xvldo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_ujqdw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_ddxso")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_yylel")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_t53un")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_88f1v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_yl4y1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_ulp4i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_u23kb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("60_8filg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_18yym")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_pxqwv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_x3h74")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_cywur")
+}, {
+"duration": 1.0,
+"texture": ExtResource("65_guy8i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_slg74")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_b37a0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("68_44cd3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_ey7ov")
+}],
+"loop": true,
+"name": &"Chama",
+"speed": 12.0
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uvnfx"]
+albedo_color = Color(1, 0.85882354, 0.6745098, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_a3d8c"]
+material = SubResource("StandardMaterial3D_uvnfx")
+radius = 0.3
 
 [node name="Player" type="CharacterBody3D" unique_id=492244781 groups=["player"]]
 collision_layer = 2
@@ -86,10 +338,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11293316, 0)
 target_position = Vector3(0, 0, -4)
 
 [node name="LanternPivot" type="Node3D" parent="Head/Camera" unique_id=1499613278]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2173998, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9508064, -0.5024142, -1.4353895)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Head/Camera/LanternPivot" unique_id=1477728392]
-transform = Transform3D(0.99827284, -4.6548515e-10, 0.058748845, 0.002663999, 0.9989714, -0.04526723, -0.058688413, 0.045345552, 0.99724597, -0.2735262, -0.65729094, -1.4829729)
+transform = Transform3D(0.9939026, 0.0023447503, 0.11023636, 0.0026640003, 0.9989715, -0.045267235, -0.11022911, 0.045284893, 0.992874, 0.06725097, -0.13873875, 0.045664907)
 light_color = Color(0.70401, 0.37890625, 1, 1)
 light_energy = 16.0
 light_indirect_energy = 10.0
@@ -99,15 +351,8 @@ spot_range = 18.0
 spot_attenuation = 0.5
 spot_angle = 14.0
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Head/Camera/LanternPivot" unique_id=1867184387]
-light_color = Color(1, 0.60784316, 0, 1)
-light_energy = 5.0
-light_indirect_energy = 3.0
-light_volumetric_fog_energy = 2.0
-omni_range = 15.0
-
 [node name="BeamParticles" type="GPUParticles3D" parent="Head/Camera/LanternPivot" unique_id=489297084]
-transform = Transform3D(0.99384934, 0, 0.11074044, 0, 1, 0, -0.11074044, 0, 0.99384934, -0.082012415, -0.7136507, -2.0913575)
+transform = Transform3D(0.9855711, 0.024281649, 0.16751179, -0.02350351, 0.9997018, -0.00662655, -0.16762275, 0.002593819, 0.9858479, 0.009668589, -0.14252114, 0.034261584)
 amount = 40
 lifetime = 0.8
 local_coords = true
@@ -115,7 +360,7 @@ process_material = SubResource("ParticleProcessMaterial_mtuoh")
 draw_pass_1 = SubResource("SphereMesh_htcer")
 
 [node name="CombatOmniLight" type="OmniLight3D" parent="Head/Camera/LanternPivot" unique_id=645998108]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25589705, -0.4587388, -1.069139)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25589705, -0.4587388, -0.09611392)
 light_color = Color(0.7058824, 0.38039216, 1, 1)
 light_energy = 4.0
 light_indirect_energy = 2.0
@@ -125,18 +370,9 @@ omni_attenuation = 3.0
 
 [node name="LanternHitbox" type="Node3D" parent="Head/Camera" unique_id=54492552 groups=["lantern"]]
 script = ExtResource("2_mtuoh")
-max_energy = null
-energy_drain = null
 damage_per_second = 40.0
-slow_factor = null
-ultimate_cost = null
-ultimate_radius = null
-ultimate_damage = null
-ultimate_cooldown = null
 omni_base_energy = 4.0
 omni_flicker_amount = 0.2
-spot_base_energy = null
-spot_flicker_amount = null
 
 [node name="LanternRay" type="Area3D" parent="Head/Camera/LanternHitbox" unique_id=1957607858]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.005, 0, -6.2)
@@ -173,16 +409,48 @@ shape = SubResource("CapsuleShape3D_tugb3")
 
 [node name="Visual" type="Node3D" parent="." unique_id=826975719]
 
+[node name="ArmAndLantern" type="Node3D" parent="Visual" unique_id=1415333114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2173998, 2.265485, 0)
+
+[node name="LanternModels" type="Node3D" parent="Visual/ArmAndLantern" unique_id=1503215329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2173998, -2.265485, 0)
+
+[node name="BaseLampModel" parent="Visual/ArmAndLantern/LanternModels" unique_id=1655334363 instance=ExtResource("8_hlqkp")]
+transform = Transform3D(0.49748597, 0, -0.050076682, 0, 0.5, 0, 0.050076682, 0, 0.49748597, 0.95301545, 1.4315038, -1.0296276)
+
+[node name="Arm (placeholder)" type="MeshInstance3D" parent="Visual/ArmAndLantern" unique_id=385533420]
+transform = Transform3D(0.92703336, -0.15243982, -0.3425947, -0.07913996, 0.81351966, -0.5761274, 0.3665323, 0.5612022, 0.7420959, -0.42461097, -0.13160491, -0.6552728)
+mesh = SubResource("BoxMesh_xpcdj")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Visual/ArmAndLantern" unique_id=1867184387]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.27154368, -0.67254555, -1.0383471)
+light_color = Color(1, 0.60784316, 0, 1)
+light_energy = 3.0
+light_indirect_energy = 3.0
+light_volumetric_fog_energy = 2.0
+omni_range = 15.0
+omni_attenuation = 0.048
+
+[node name="AnimatedFire" type="AnimatedSprite3D" parent="Visual/ArmAndLantern" unique_id=1100491611]
+transform = Transform3D(0.44390804, -0.00031795216, 0, 0.0005733269, 0.24617986, 0, 0, 0, 0.5, -0.23603523, -0.6429616, -1.0311272)
+billboard = 1
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_t60a6")
+animation = &"Chama"
+autoplay = "Chama"
+frame = 52
+frame_progress = 0.061063904
+
+[node name="LuzRebatimento" type="OmniLight3D" parent="Visual/ArmAndLantern" unique_id=785904133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.71081233, -0.24870324, -1.1289492)
+light_color = Color(1, 0.9543457, 0.9140625, 1)
+light_energy = 0.238
+omni_range = 0.625
+omni_attenuation = -1.667
+
 [node name="Body (placeholder)" type="MeshInstance3D" parent="Visual" unique_id=980242945]
 transform = Transform3D(1.6, 0, 0, 0, 1, 0, 0, 0, 0.576, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_a3d8c")
-
-[node name="blockbench_export" parent="Visual" unique_id=1929152407 instance=ExtResource("8_jlvik")]
-transform = Transform3D(0.45115355, 0, -0.21554694, 0, 0.5, 0, 0.21554694, 0, 0.45115355, 0.9624667, 1.3725362, -1.0390528)
-
-[node name="Arm (placeholder)" type="MeshInstance3D" parent="Visual" unique_id=385533420]
-transform = Transform3D(0.92703336, -0.15243982, -0.3425947, -0.07913996, 0.81351966, -0.5761274, 0.3665323, 0.5612022, 0.7420959, 0.79278886, 2.1338801, -0.6552728)
-mesh = SubResource("BoxMesh_xpcdj")
 
 [node name="Debug" type="CanvasLayer" parent="." unique_id=97975937]
 

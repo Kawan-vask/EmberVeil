@@ -5,5 +5,6 @@
 [resource]
 script = ExtResource("1_gdy7d")
 display_name = "Lamparina Ampla"
+price = 35
 lantern_id = "wide"
 metadata/_custom_type_script = "uid://bjslh1v5j2rqm"

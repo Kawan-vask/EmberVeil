@@ -75,6 +75,7 @@ func _ready() -> void:
 	if night_config == null:
 		night_config = load("res://Resources/night_config_normal.tres")
 	_apply_night_settings()
+	start_night()
 
 #endregion
 

@@ -18,7 +18,7 @@
 [ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="15_1w6v2"]
 [ext_resource type="Resource" uid="uid://cnb8215vxtps4" path="res://Resources/PowerUps/powerup_energy_drain.tres" id="16_ueoa1"]
 [ext_resource type="Resource" uid="uid://bi51tfu8u30s5" path="res://Resources/PowerUps/powerup_energy_max.tres" id="17_6vcvc"]
-[ext_resource type="Resource" uid="uid://c1x3nb7td546s" path="res://Resources/PowerUps/powerup_health_max.tres.tres" id="18_7k868"]
+[ext_resource type="Resource" uid="uid://c1x3nb7td546s" path="res://Resources/PowerUps/powerup_health_max.tres" id="18_7k868"]
 [ext_resource type="Resource" uid="uid://ba70hcp1hsyi3" path="res://Resources/PowerUps/powerup_lantern_damage.tres" id="19_hpc6h"]
 [ext_resource type="Resource" uid="uid://bd4gnkhd5spwv" path="res://Resources/PowerUps/powerup_lantern_slow.tres" id="20_kltya"]
 [ext_resource type="Resource" uid="uid://byoivq1oofnct" path="res://Resources/PowerUps/powerup_sprint_speed.tres" id="21_e08e2"]
