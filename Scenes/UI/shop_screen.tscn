@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://bldx3axwbavb7"]
+
+[ext_resource type="Script" uid="uid://bcpoqm4ktxkdn" path="res://Scripts/UI/shop_screen.gd" id="1_vrl6t"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wmicn"]
+font_size = 30
+font_color = Color(1, 0.75, 0, 1)
+
+[node name="ShopScreen" type="CanvasLayer" unique_id=990972876 groups=["shop_screen"]]
+script = ExtResource("1_vrl6t")
+metadata/_edit_vertical_guides_ = [960.0]
+metadata/_edit_horizontal_guides_ = [540.0]
+
+[node name="Background" type="ColorRect" parent="." unique_id=1258468275]
+anchors_preset = -1
+anchor_left = 0.193
+anchor_top = 0.23500001
+anchor_right = 0.80500007
+anchor_bottom = 0.76100004
+offset_left = 0.44000244
+offset_top = 0.19998169
+offset_right = 0.39990234
+offset_bottom = 0.11993408
+color = Color(0, 0, 0, 0.34901962)
+
+[node name="CoinsLabel" type="Label" parent="Background" unique_id=1226595431]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.32000002
+anchor_top = 0.053000003
+anchor_right = 0.683
+anchor_bottom = 0.14600001
+offset_left = -3.0517578e-05
+offset_top = -0.104002
+offset_right = -0.5250244
+offset_bottom = 0.07199097
+label_settings = SubResource("LabelSettings_wmicn")
+horizontal_alignment = 1
+
+[node name="ItemsContainer" type="VBoxContainer" parent="Background" unique_id=314700120]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.059000004
+anchor_top = 0.18100001
+anchor_right = 0.94600004
+anchor_bottom = 0.82900006
+offset_left = -0.32500458
+offset_top = 0.19199371
+offset_right = 0.44995117
+offset_bottom = 0.1279602
+theme_override_constants/separation = 8
+
+[node name="CloseButton" type="Button" parent="Background" unique_id=264348610]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.388
+anchor_top = 1.026
+anchor_right = 0.615
+anchor_bottom = 1.146
+offset_left = 0.099975586
+offset_top = 0.23199463
+offset_right = 0.375
+offset_bottom = 0.07196045
+theme_override_font_sizes/font_size = 40
+
+[node name="StatusLabel" type="Label" parent="Background" unique_id=193814704]
+layout_mode = 0
+offset_left = 415.0
+offset_top = 498.0
+offset_right = 765.0
+offset_bottom = 545.0
+horizontal_alignment = 1

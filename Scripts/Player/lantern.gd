@@ -138,12 +138,33 @@ func _ready():
 	if _lantern_model == null:
 		DebugManager.log("Lantern", "LanternModels não encontrado. Troca de modelo desabilitada.")
 
-	SignalBus.ui_exclusive_opened.connect(func(): set_process(false))
-	SignalBus.ui_exclusive_closed.connect(func(): set_process(true))
+	SignalBus.ui_exclusive_opened.connect(_on_ui_opened)
+	SignalBus.ui_exclusive_closed.connect(_on_ui_closed)
 
 	# Conecta signals do cone
 	lantern_cone.body_entered.connect(_on_cone_body_entered)
 	lantern_cone.body_exited.connect(_on_cone_body_exited)
+
+#endregion
+
+
+# ==============================================================================
+#region UI LOCK
+# ==============================================================================
+
+var _ui_lock_count: int = 0
+
+func _on_ui_opened() -> void:
+	_ui_lock_count += 1
+	if _ui_lock_count == 1:
+		set_combat_mode(false)
+		set_process(false)
+
+func _on_ui_closed() -> void:
+	_ui_lock_count = maxi(_ui_lock_count - 1, 0)
+	if _ui_lock_count == 0:
+		set_combat_mode(false)
+		set_process(true)
 
 #endregion
 

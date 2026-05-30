@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://bushq70mf42iw" path="res://Scripts/Managers/powerup_manager.gd" id="14_cbgmd"]
 [ext_resource type="PackedScene" uid="uid://h0j1d8nfpe5m" path="res://Scenes/UI/night_transition.tscn" id="14_wsu2k"]
 [ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="15_1w6v2"]
+[ext_resource type="PackedScene" uid="uid://bldx3axwbavb7" path="res://Scenes/UI/shop_screen.tscn" id="15_ueoa1"]
 [ext_resource type="Resource" uid="uid://cnb8215vxtps4" path="res://Resources/PowerUps/powerup_energy_drain.tres" id="16_ueoa1"]
 [ext_resource type="Resource" uid="uid://bi51tfu8u30s5" path="res://Resources/PowerUps/powerup_energy_max.tres" id="17_6vcvc"]
 [ext_resource type="Resource" uid="uid://c1x3nb7td546s" path="res://Resources/PowerUps/powerup_health_max.tres" id="18_7k868"]
@@ -227,6 +228,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -15.5)
 [node name="PowerupScreen" parent="UI" unique_id=1631288617 instance=ExtResource("12_u50mg")]
 
 [node name="DialogScreen" parent="UI" unique_id=61470964 instance=ExtResource("14_1w6v2")]
+
+[node name="ShopScreen" parent="UI" unique_id=990972876 instance=ExtResource("15_ueoa1")]
 
 [node name="DevTools" type="Node" parent="." unique_id=1665922896]
 script = ExtResource("12_6iyac")

@@ -43,7 +43,7 @@ func _ready() -> void:
 	visible      = false
 	_setup_layout()
 	_setup_cards_once()
-	SignalBus.night_transition_finished.connect(_on_transition_finished)
+	SignalBus.night_powerup_available.connect(_on_transition_finished)
 
 #endregion
 
@@ -129,11 +129,15 @@ func _setup_cards_once() -> void:
 func _on_transition_finished() -> void:
 	_powerup_manager = get_tree().get_first_node_in_group("powerup_manager")
 	if _powerup_manager == null:
-		DebugManager.log("PowerUpScreen", "PowerUpManager não encontrado!"); return
+		DebugManager.log("PowerUpScreen", "PowerUpManager não encontrado!")
+		get_tree().paused = false
+		return
 
 	_choices = _powerup_manager.get_random_choices(3)
 	if _choices.is_empty():
-		DebugManager.log("PowerUpScreen", "Nenhum power-up disponível!"); return
+		DebugManager.log("PowerUpScreen", "Nenhum power-up disponível!")
+		get_tree().paused = false
+		return
 
 	for i in _choices.size():
 		cards[i].get_node("VBoxContainer/Name").text        = _choices[i].display_name

@@ -27,7 +27,9 @@ func _ready() -> void:
 #endregion
 
 
-#region TRANSIÇÃO
+#===============================================================================
+#region TRANSIÇÃ0 
+
 func _on_transition_started() -> void:
 	visible = true
 	get_tree().paused = true
@@ -40,30 +42,24 @@ func _on_transition_started() -> void:
 	await get_tree().create_timer(hold_duration).timeout
 
 	_reset_player()
-
-	# EXCEÇÃO DE TIMING DOCUMENTADA — não refatorar antes da Fase 5.
 	GameManager.night_changed.emit(GameManager.current_night)
-
 	night_label.visible = false
+
+	# Abre PowerUpScreen durante o blackout — antes da fade-in
+	# NightTransition NÃO despausa: PowerUpScreen assume o controle do pause
+	SignalBus.night_powerup_available.emit()
 
 	await _fade(0.0)
 
-	# Despausa e reseta ANTES de emitir finished
-	# Assim a PowerUpScreen recebe o jogo já despausado e pausa por conta própria
-	get_tree().paused = false
 	visible = false
 	_reset_resources()
-
-	# Emite por último — PowerUpScreen abre com estado limpo
 	GameManager.start_night()
 	SignalBus.night_transition_finished.emit()
-
 
 func _fade(to: float) -> void:
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate:a", to, fade_duration)
 	await tween.finished
-
 
 func _reset_player() -> void:
 	var spawn: Node  = get_tree().get_first_node_in_group("spawn_point")
@@ -77,7 +73,6 @@ func _reset_player() -> void:
 	if lantern:
 		lantern.add_energy(lantern.max_energy)
 
-
 func _reset_resources() -> void:
 	var resources := get_tree().get_nodes_in_group("resource_pickup")
 	for r in resources:
@@ -86,4 +81,5 @@ func _reset_resources() -> void:
 		if body:
 			body.process_mode = Node.PROCESS_MODE_INHERIT
 	DebugManager.log("NightTransition", "Recursos resetados: " + str(resources.size()))
+
 #endregion

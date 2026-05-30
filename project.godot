@@ -47,6 +47,7 @@ powerup_manager=""
 wood_depot=""
 vendor=""
 dialog_screen=""
+shop_screen=""
 
 [importer_defaults]
 

@@ -64,8 +64,6 @@ func _on_dialog_requested(data: DialogData, npc_node: Node3D) -> void:
 					child.visible = false
 		_tween_camera_to_npc()
 
-	SignalBus.player_entered_safe_zone.emit()
-
 	speaker_name.text    = tr(data.speaker_name_key)
 	advance_hint.visible = false
 	_clear_buttons()
@@ -201,6 +199,7 @@ func _on_choice_pressed(id: String) -> void:
 	SignalBus.dialog_choice_made.emit(id)
 	if id == "buy":
 		visible = false
+		SignalBus.ui_exclusive_closed.emit()
 		return
 	_close()
 
@@ -223,7 +222,6 @@ func _close() -> void:
 
 	_player = null
 
-	SignalBus.player_exited_safe_zone.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	SignalBus.ui_exclusive_closed.emit()
 	SignalBus.dialog_closed.emit()
@@ -233,6 +231,7 @@ func _on_shop_closed() -> void:
 	if _data == null:
 		return
 	visible = true
+	SignalBus.ui_exclusive_opened.emit()
 	_show_buttons()
 
 #endregion

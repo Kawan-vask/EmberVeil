@@ -69,6 +69,10 @@ signal night_transition_started
 @warning_ignore("unused_signal")
 signal night_transition_finished
 
+## Emitido durante o blackout da transição — PowerUpScreen ouve para abrir durante a tela preta
+@warning_ignore("unused_signal")
+signal night_powerup_available
+
 #endregion
 
 # ==============================================================================
@@ -104,9 +108,9 @@ signal dialog_choice_made(id: String)
 signal dialog_closed
 
 ## Emitido pela DialogScreen quando player escolhe "Comprar"
-## Substitui shop_opened no fluxo do vendedor — ShopScreen ouve este
+## ShopScreen ouve e recebe os itens do vendedor
 @warning_ignore("unused_signal")
-signal shop_requested
+signal shop_requested(data: VendorData)
 
 ## Emitido pela ShopScreen ao fechar — DialogScreen reaparece
 @warning_ignore("unused_signal")

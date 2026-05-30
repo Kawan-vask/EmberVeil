@@ -7,3 +7,6 @@ CHOICE_BUY,Comprar
 CHOICE_LEAVE,Não obrigado
 CHOICE_CLOSE,Fechar
 CHOICE_CONTINUE,Continuar
+SHOP_CLOSE,Fechar
+SHOP_NO_COINS,Moedas insuficientes.
+SHOP_PURCHASED,Comprado!

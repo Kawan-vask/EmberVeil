@@ -24,7 +24,7 @@ func _on_choice_made(id: String) -> void:
 		return
 	match id:
 		"buy":
-			SignalBus.shop_requested.emit()
+			SignalBus.shop_requested.emit(vendor_data)
 		"leave":
 			SignalBus.vendor_dismissed.emit()
 #endregion

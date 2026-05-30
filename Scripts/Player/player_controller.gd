@@ -96,7 +96,7 @@ func _handle_camera_bob(delta: float) -> void:
 #region ESTADO DO DIÁLOGO
 
 ## True enquanto DialogScreen está ativa — bloqueia câmera e movimento
-var _dialog_active: bool = false
+var _dialog_lock_count: int = 0
 
 #endregion
 
@@ -130,8 +130,8 @@ func _ready() -> void:
 	interaction_ray.add_exception(self)
 	_camera_base_y = camera.position.y
 	process_mode = Node.PROCESS_MODE_PAUSABLE
-	SignalBus.ui_exclusive_opened.connect(func(): _dialog_active = true)
-	SignalBus.ui_exclusive_closed.connect(func(): _dialog_active = false)
+	SignalBus.ui_exclusive_opened.connect(func(): _dialog_lock_count += 1)
+	SignalBus.ui_exclusive_closed.connect(func(): _dialog_lock_count = maxi(_dialog_lock_count - 1, 0))
 	
 	
 #endregion
@@ -158,7 +158,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if health.is_dead():
 		return
-	if _dialog_active:
+	if _dialog_lock_count > 0:
 		return
 
 	_handle_camera()
@@ -186,7 +186,7 @@ func _physics_process(delta: float) -> void:
 	
 	if health.is_dead():
 		return
-	if _dialog_active:
+	if _dialog_lock_count > 0:
 		velocity.x = move_toward(velocity.x, 0, deceleration * delta)
 		velocity.z = move_toward(velocity.z, 0, deceleration * delta)
 		move_and_slide()

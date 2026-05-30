@@ -78,6 +78,9 @@ var nests: Array          = []
 var player: Node3D        = null
 var player_inside_safe_zone: bool = false
 
+# Adiciona junto com as outras vars de runtime:
+var _ui_open_count: int = 0
+
 #endregion
 
 
@@ -87,6 +90,7 @@ var player_inside_safe_zone: bool = false
 
 func _ready() -> void:
 	instance = self
+	
 
 	nests  = get_tree().get_nodes_in_group("enemy_nest")
 	player = get_tree().get_first_node_in_group("player")
@@ -96,6 +100,9 @@ func _ready() -> void:
 
 	SignalBus.player_entered_safe_zone.connect(_on_player_entered_safe_zone)
 	SignalBus.player_exited_safe_zone.connect(_on_player_exited_safe_zone)
+	
+	SignalBus.ui_exclusive_opened.connect(func(): _ui_open_count += 1)
+	SignalBus.ui_exclusive_closed.connect(func(): _ui_open_count = maxi(_ui_open_count - 1, 0))
 
 	create_pool()
 	apply_night_settings(GameManager.current_night)
@@ -228,7 +235,7 @@ func _reset_for_new_night() -> void:
 # ==============================================================================
 
 func _process(delta: float) -> void:
-	if player_inside_safe_zone:
+	if player_inside_safe_zone or _ui_open_count > 0:
 		return
 	match state:
 		DirectorState.COOLDOWN:  _handle_cooldown(delta)
