@@ -4,7 +4,6 @@
 # Console de desenvolvimento para testar sistemas em runtime.
 #
 # USO:
-# - Tecla ` (acento grave) → abre/fecha
 # - Digite um comando e pressione Enter
 # - Seta cima/baixo → navega histórico de comandos
 # - Digite "help" → lista todos os comandos disponíveis
@@ -136,7 +135,6 @@ func _update_panel_size() -> void:
 	
 #endregion
  
-
 # ==============================================================================
 #region INPUT — TOGGLE E HISTÓRICO
 # ==============================================================================
@@ -307,11 +305,19 @@ func _register_all_commands() -> void:
 	_register("reset_powerups",      _cmd_reset_powerups,      "remove todos os power-ups", "powerups")
 
 
-	# PLACEHOLDERS — descomentar quando os sistemas existirem
 	_register("add_coins",      _cmd_add_coins,      "add_coins [n]",      "economia")
 	_register("set_coins", _cmd_set_coins, "set_coins [n] — define saldo exato", "economia")
-	# _register("open_shop",      _cmd_open_shop,      "abre a loja",        "economia")
-	# _register("equip_lantern",  _cmd_equip_lantern,  "equip_lantern [tipo]","lanternas")
+	_register("open_shop",      _cmd_open_shop,      "abre a loja do vendedor (bypass)",          "economia")
+	
+	_register("equip_lantern",  _cmd_equip_lantern,  "equip_lantern [id] — equipa lanterna",      "lanternas")
+	_register("list_lanterns",  _cmd_list_lanterns,  "lista lanternas disponíveis",               "lanternas")
+	_register("open_dialog",    _cmd_open_dialog,    "abre diálogo do vendedor (bypass)",         "economia")
+	_register("add_capacity",   _cmd_add_capacity,   "add_capacity [n] — expande bolsa",          "player")
+	_register("deposit_wood",   _cmd_deposit_wood,   "deposita toda madeira no WoodDepot",        "player")
+	_register("set_jump_force", _cmd_set_jump_force, "set_jump_force [n] — altera altura do pulo","player")
+	
+	
+	# PLACEHOLDERS — descomentar quando os sistemas existirem
 	# _register("show_nests",     _cmd_show_nests,     "mostra nests ativos", "mundo")
 	# _register("show_nav",       _cmd_show_nav,       "toggle navegação",    "mundo")
 
@@ -464,6 +470,39 @@ func _cmd_teleport(args: Array) -> void:
 	player.global_position = Vector3(float(args[0]), float(args[1]), float(args[2]))
 	_print_output("[color=green]Player teleportado para " +
 		str(player.global_position) + "[/color]") 
+		
+
+func _cmd_add_capacity(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: add_capacity [n][/color]")
+		return
+	var player := _get_player()
+	if player == null: return
+	player.inventory.increase_capacity(int(args[0]))
+	_print_output("[color=green]Capacidade: " + str(player.inventory.max_capacity) + "[/color]")
+
+
+func _cmd_deposit_wood(_args: Array) -> void:
+	var depot: Node = get_tree().get_first_node_in_group("wood_depot")
+	if depot == null:
+		_print_output("[color=red]WoodDepot não encontrado.[/color]")
+		return
+	var player := _get_player()
+	if player == null: return
+	var before: int = player.inventory.get_wood_count()
+	depot.interact()
+	_print_output("[color=green]Depositado: " + str(before) + " madeiras.[/color]")
+
+
+func _cmd_set_jump_force(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: set_jump_force [n][/color]")
+		return
+	var player := _get_player()
+	if player == null: return
+	player.jump_velocity = float(args[0])
+	_print_output("[color=green]Jump velocity: " + args[0] + "[/color]")
+
 #endregion
  
  
@@ -705,5 +744,63 @@ func _cmd_reset_powerups(_args: Array) -> void:
 	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
 	if pm: pm.reset()
 	_print_output("[color=green]Power-ups resetados.[/color]")
+
+#endregion
+
+# ==============================================================================
+#region COMANDOS — LANTERNAS
+# ==============================================================================
+
+func _cmd_equip_lantern(args: Array) -> void:
+	if args.is_empty():
+		_print_output("[color=red]Uso: equip_lantern [id]  (ex: default, focused, wide)[/color]")
+		return
+	var lantern := _get_lantern()
+	if lantern == null:
+		_print_output("[color=red]Lanterna não encontrada.[/color]")
+		return
+	var path: String = "res://Resources/Lanterns/lantern_" + args[0] + ".tres"
+	var data: LanternData = load(path)
+	if data == null:
+		_print_output("[color=red]LanternData não encontrada: " + path + "[/color]")
+		return
+	lantern.equip(data)
+	_print_output("[color=green]Lanterna equipada: " + data.display_name + "[/color]")
+
+
+func _cmd_list_lanterns(_args: Array) -> void:
+	var ids := ["default", "focused", "wide"]
+	_print_output("[color=yellow]── LANTERNAS ──[/color]")
+	for id in ids:
+		var path: String  = "res://Resources/Lanterns/lantern_" + id + ".tres"
+		var data: LanternData = load(path)
+		if data != null:
+			_print_output("  [color=cyan]" + id + "[/color] — " + data.display_name)
+		else:
+			_print_output("  [color=red]" + id + "[/color] — arquivo não encontrado")
+
+#endregion
+
+
+# ==============================================================================
+#region COMANDOS — ECONOMIA / VENDEDOR
+# ==============================================================================
+
+func _cmd_open_shop(_args: Array) -> void:
+	var data: VendorData = load("res://Resources/Shop/vendor_default.tres")
+	if data == null:
+		_print_output("[color=red]vendor_default.tres não encontrado.[/color]")
+		return
+	SignalBus.shop_requested.emit(data)
+	_print_output("[color=green]ShopScreen aberta.[/color]")
+
+
+func _cmd_open_dialog(_args: Array) -> void:
+	var data: DialogData = load("res://Resources/Dialogs/vendor_greeting.tres")
+	if data == null:
+		_print_output("[color=red]vendor_greeting.tres não encontrado.[/color]")
+		return
+	SignalBus.dialog_requested.emit(data, null)
+	_print_output("[color=green]DialogScreen aberta.[/color]")
 
 #endregion
