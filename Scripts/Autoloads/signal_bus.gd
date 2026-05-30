@@ -90,6 +90,35 @@ signal shop_opened
 #endregion
 
 
+#region DIÁLOGO
+
+## Emitido pelo Vendor ao ser interagido — DialogScreen ouve e exibe o diálogo
+## Ouvido por: DialogScreen
+@warning_ignore("unused_signal")
+signal dialog_requested(data: DialogData, npc_node: Node3D)
+
+## Emitido pela DialogScreen quando o player escolhe uma opção
+## Ouvido por: Vendor
+@warning_ignore("unused_signal")
+signal dialog_choice_made(id: String)
+
+## Emitido pela DialogScreen ao fechar
+## Ouvido por: sistemas que precisam saber que o diálogo terminou
+@warning_ignore("unused_signal")
+signal dialog_closed
+
+## Emitido pela DialogScreen quando player escolhe "Comprar"
+## Substitui shop_opened no fluxo do vendedor — ShopScreen ouve este
+@warning_ignore("unused_signal")
+signal shop_requested
+
+## Emitido pela ShopScreen ao fechar — DialogScreen reaparece
+@warning_ignore("unused_signal")
+signal shop_closed
+
+#endregion
+
+
 # ==============================================================================
 #region POWER-UPS
 # ==============================================================================

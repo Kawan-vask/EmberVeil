@@ -90,12 +90,7 @@ func interact() -> void:
 		DoorState.OPEN:
 			set_state(DoorState.CLOSED)
 		DoorState.VENDOR:
-			# Abre a porta fisicamente antes de iniciar o fluxo do vendedor
-			# A porta permanece em estado VENDOR até vendor_dismissed ser emitido
 			_animate_door(open_angle_deg)
-			# Placeholder até Passo E (DialogSystem)
-			# Será: SignalBus.dialog_requested.emit(dialog_data, self)
-			SignalBus.shop_opened.emit()
 
 #endregion
 
@@ -147,8 +142,8 @@ func _animate_door(target_angle_deg: float) -> void:
 # ==============================================================================
 
 func _on_night_transition_finished() -> void:
-	# start_night() já foi chamado pela NightTransition antes deste signal
-	set_state(DoorState.CLOSED)
+	if state != DoorState.VENDOR:
+		set_state(DoorState.CLOSED)
 
 
 func _on_vendor_arrived() -> void:

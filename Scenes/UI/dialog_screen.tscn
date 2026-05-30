@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://by3xsob4kx1ap"]
+
+[ext_resource type="Script" uid="uid://d0qp7635a0o7q" path="res://Scripts/UI/dialog_screen.gd" id="1_74j0h"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_74j0h"]
+font_size = 30
+font_color = Color(1, 0.6328125, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ga0ek"]
+font_color = Color(0.50390625, 0.50390625, 0.50390625, 1)
+
+[node name="DialogScreen" type="CanvasLayer" unique_id=61470964 groups=["dialog_screen"]]
+script = ExtResource("1_74j0h")
+metadata/_edit_vertical_guides_ = [960.0]
+
+[node name="Background" type="ColorRect" parent="." unique_id=754263366]
+offset_left = 566.0
+offset_top = 664.0
+offset_right = 1355.0
+offset_bottom = 846.0
+color = Color(0, 0, 0, 0.34901962)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=676957771]
+layout_direction = 4
+anchors_preset = -1
+anchor_left = 0.351
+anchor_top = 0.615
+anchor_right = 0.64900005
+anchor_bottom = 0.77800006
+offset_left = 0.079956055
+offset_top = -46.200012
+offset_right = 0.9199219
+offset_bottom = 54.75995
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=2052812202]
+layout_mode = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="SpeakerName" type="Label" parent="MarginContainer/VBoxContainer" unique_id=448587781]
+layout_mode = 2
+text = "Vendedor"
+label_settings = SubResource("LabelSettings_74j0h")
+horizontal_alignment = 1
+
+[node name="LineText" type="RichTextLabel" parent="MarginContainer/VBoxContainer" unique_id=88042916]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 20
+text = "Linha de diálogo"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="AdvanceHint" type="Label" parent="MarginContainer/VBoxContainer" unique_id=14144641]
+layout_mode = 2
+text = "[E]"
+label_settings = SubResource("LabelSettings_ga0ek")
+horizontal_alignment = 1
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="." unique_id=971670142]
+offset_left = 682.0
+offset_top = 864.0
+offset_right = 1242.0
+offset_bottom = 928.0
+size_flags_vertical = 4
+alignment = 1

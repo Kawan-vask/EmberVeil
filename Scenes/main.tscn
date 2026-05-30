@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://du0yx043iafwq" path="res://Scenes/InteractiveItems/sap_pickup.tscn" id="11_wsu2k"]
 [ext_resource type="Script" uid="uid://ce1uvxfngtvcx" path="res://Scenes/Systems/dev_tools_loader.gd" id="12_6iyac"]
 [ext_resource type="PackedScene" uid="uid://dvj6p8u5ipyfo" path="res://Scenes/UI/powerup_screen.tscn" id="12_u50mg"]
+[ext_resource type="PackedScene" uid="uid://by3xsob4kx1ap" path="res://Scenes/UI/dialog_screen.tscn" id="14_1w6v2"]
 [ext_resource type="Script" uid="uid://bushq70mf42iw" path="res://Scripts/Managers/powerup_manager.gd" id="14_cbgmd"]
 [ext_resource type="PackedScene" uid="uid://h0j1d8nfpe5m" path="res://Scenes/UI/night_transition.tscn" id="14_wsu2k"]
 [ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="15_1w6v2"]
@@ -90,7 +91,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0, -31)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5, 0, -31)
 
 [node name="EnemyNest3" parent="World/Nests" unique_id=1248851436 groups=["enemy_nest"] instance=ExtResource("4_ynf5e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -83)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.2093023, -83)
 
 [node name="Cabin" parent="World" unique_id=1059921067 instance=ExtResource("4_6iyac")]
 
@@ -224,6 +225,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -15.5)
 [node name="NightTransition" parent="UI" unique_id=1762464355 instance=ExtResource("14_wsu2k")]
 
 [node name="PowerupScreen" parent="UI" unique_id=1631288617 instance=ExtResource("12_u50mg")]
+
+[node name="DialogScreen" parent="UI" unique_id=61470964 instance=ExtResource("14_1w6v2")]
 
 [node name="DevTools" type="Node" parent="." unique_id=1665922896]
 script = ExtResource("12_6iyac")

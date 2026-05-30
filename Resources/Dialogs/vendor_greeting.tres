@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DialogData" format=3 uid="uid://csqfewbvq40gy"]
+
+[ext_resource type="Script" uid="uid://b87sp12hiblk2" path="res://Scripts/Resources/dialog_data.gd" id="1_ttfby"]
+
+[resource]
+script = ExtResource("1_ttfby")
+speaker_name_key = "VENDOR_NAME"
+lines = Array[String](["VENDOR_GREET_L1", "VENDOR_GREET_L2"])
+choice_labels = Array[String](["CHOICE_BUY", "CHOICE_LEAVE"])
+choice_ids = Array[String](["buy", "leave"])
+metadata/_custom_type_script = "uid://b87sp12hiblk2"

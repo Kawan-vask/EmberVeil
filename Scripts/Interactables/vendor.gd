@@ -2,6 +2,8 @@ class_name Vendor
 extends Interactable
 
 @export var vendor_data: VendorData
+@export var dialog_data: DialogData
+@export var farewell_data: DialogData
 
 #region READY
 func _ready() -> void:
@@ -9,12 +11,21 @@ func _ready() -> void:
 	SignalBus.vendor_available.connect(_on_vendor_arrived)
 	SignalBus.vendor_dismissed.connect(_on_vendor_left)
 	SignalBus.night_transition_started.connect(_on_vendor_left)
+	SignalBus.dialog_choice_made.connect(_on_choice_made)
 #endregion
 
 #region INTERAÇÃO
 func interact() -> void:
-	# Placeholder até Passo E (DialogSystem)
-	SignalBus.shop_opened.emit()
+	SignalBus.dialog_requested.emit(dialog_data, self)
+#endregion
+
+#region ESCOLHA DO DIÁLOGO
+func _on_choice_made(id: String) -> void:
+	match id:
+		"buy":
+			SignalBus.shop_requested.emit()
+		"leave":
+			SignalBus.vendor_dismissed.emit()
 #endregion
 
 #region LISTENERS

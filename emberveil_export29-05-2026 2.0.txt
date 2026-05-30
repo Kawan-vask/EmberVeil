@@ -1,32 +1,26 @@
 ============================================================
-  EMBERVEIL — EXPORT DO PROJETO [COMPLETO]
+  EMBERVEIL — EXPORT DO PROJETO [SLIM]
 ============================================================
 
 ############################################################
-#  SCRIPTS (.gd) (37 arquivos)
+#  SCRIPTS (.gd) (39 arquivos)
 ############################################################
 
 ============================================================
 ARQUIVO: Resources\night_config.gd
 ============================================================
-# ==============================================================================
 # NIGHT CONFIG
-# ------------------------------------------------------------------------------
 # Resource que centraliza todas as fórmulas de escalada por noite.
 #
 # Uso:
 # - Crie um .tres no Inspector herdando deste script
 # - Arraste o .tres no GameManager e no EnemyDirector
 # - Para dificuldades diferentes: crie novos .tres (night_config_hard.tres, etc)
-# ==============================================================================
 
 class_name NightConfig
 extends Resource
 
-
-# ==============================================================================
 #region MADEIRA
-# ==============================================================================
 
 ## Objetivo de madeira na noite 1
 @export var base_wood_goal: int = 5
@@ -37,10 +31,7 @@ extends Resource
 
 #endregion
 
-
-# ==============================================================================
 #region INIMIGOS — LIMITE DE VIVOS
-# ==============================================================================
 
 ## Máximo de inimigos vivos simultâneos na noite 1
 @export var base_max_alive: int = 3
@@ -51,10 +42,7 @@ extends Resource
 
 #endregion
 
-
-# ==============================================================================
 #region INIMIGOS — WAVE SIZE
-# ==============================================================================
 
 ## Tamanho da wave na noite 1
 @export var base_wave_size: int = 4
@@ -65,27 +53,21 @@ extends Resource
 
 #endregion
 
-
-# ==============================================================================
 #region API PÚBLICA
-# ==============================================================================
 
 ## Retorna o objetivo de madeira para a noite informada
 func get_wood_goal(night: int) -> int:
 	return base_wood_goal + (night - 1) * wood_per_night
 
-
 ## Retorna o máximo de inimigos vivos para a noite informada
 func get_max_alive(night: int) -> int:
 	return base_max_alive + (night - 1) * max_alive_per_night
-
 
 ## Retorna o tamanho da wave para a noite informada
 func get_wave_size(night: int) -> int:
 	return base_wave_size + (night - 1) * wave_size_per_night
 
 #endregion
-
 
 
 ============================================================
@@ -101,41 +83,31 @@ func _ready() -> void:
 		add_child(console)
 
 
-
 ============================================================
 ARQUIVO: Scripts\Autoloads\debug_manager.gd
 ============================================================
-# ==============================================================================
 # DEBUG MANAGER
-# ------------------------------------------------------------------------------
 # Centraliza todo código de debug do projeto.
 # Em produção, basta setar DEBUG_ENABLED = false — zero custo de performance.
 #
 # REGRA: nenhum script usa print() ou label.text = diretamente.
 # Tudo passa por aqui.
-# ==============================================================================
 extends Node
 
-# ==============================================================================
 #region CONFIGURAÇÃO
-# ==============================================================================
 
 ## Mude para false antes de fazer o build de produção.
 const DEBUG_ENABLED := true
 
 #endregion
 
-
-# ==============================================================================
 #region API PÚBLICA
-# ==============================================================================
 
 ## Substitui print() direto — desligado automaticamente em produção.
 func log(system: String, message: String) -> void:
 	if not DEBUG_ENABLED:
 		return
 	print("[", system, "] ", message)
-
 
 ## Substitui label.text = direto — desligado automaticamente em produção.
 func label(label_node: Label, text: String) -> void:
@@ -147,13 +119,10 @@ func label(label_node: Label, text: String) -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Autoloads\layers.gd
 ============================================================
-# ==============================================================================
 # LAYERS
-# ------------------------------------------------------------------------------
 # Constantes nomeadas para todas as collision layers do projeto.
 #
 # REGRA: nunca use números mágicos para collision layers em cenas ou scripts.
@@ -167,14 +136,10 @@ ARQUIVO: Scripts\Autoloads\layers.gd
 #   collision_layer = Layers.ENEMY
 #   collision_mask  = Layers.GROUND | Layers.PLAYER
 #   ray_query.collision_mask = Layers.GROUND
-# ==============================================================================
 
 extends Node
 
-
-# ==============================================================================
 #region LAYERS DO PROJETO
-# ------------------------------------------------------------------------------
 # Mapa atual das layers (espelha Project Settings → Layer Names → 3D Physics):
 #
 # Layer 1  (valor 1)   → GROUND       — chão e geometria estática do mundo
@@ -190,7 +155,6 @@ extends Node
 # 1. Configure primeiro em Project Settings → Layer Names → 3D Physics
 # 2. Documente aqui com nome descritivo e valor correto
 # 3. Use a constante em todos os scripts e cenas — nunca o número direto
-# ==============================================================================
 
 ## Chão e geometria estática do mundo
 const GROUND:       int = 1
@@ -218,13 +182,9 @@ const LAMP:         int = 128
 
 #endregion
 
-
-# ==============================================================================
 #region MÁSCARAS COMPOSTAS
-# ------------------------------------------------------------------------------
 # Combinações pré-definidas de layers para uso frequente.
 # Evita repetir Layers.X | Layers.Y em vários lugares.
-# ==============================================================================
 
 ## Máscara padrão do player — detecta chão, inimigos, interagíveis e pickups
 const PLAYER_MASK: int = GROUND | ENEMY | INTERACTABLE | PICKUP
@@ -250,13 +210,10 @@ const HURTBOX_MASK: int = LAMP
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Autoloads\signal_bus.gd
 ============================================================
-# ==============================================================================
 # SIGNAL BUS
-# ------------------------------------------------------------------------------
 # Barramento global de eventos entre sistemas desacoplados.
 #
 # REGRA DE USO:
@@ -265,14 +222,10 @@ ARQUIVO: Scripts\Autoloads\signal_bus.gd
 #                                    (sempre no _ready() do sistema)
 #
 # NUNCA adicione lógica aqui — apenas declarações de signal.
-# ==============================================================================
 
 extends Node
 
-
-# ==============================================================================
 #region PLAYER — ZONA SEGURA
-# ==============================================================================
 
 ## Emitido pela SafeZone quando o player entra na área segura.
 ## Ouvido por: EnemyDirector, EnemyBase
@@ -286,10 +239,7 @@ signal player_exited_safe_zone
 
 #endregion
 
-
-# ==============================================================================
 #region PLAYER — ESTADO
-# ==============================================================================
 
 ## Emitido pelo player quando morre.
 ## Ouvido por: DeathScreen, sistemas futuros
@@ -298,10 +248,7 @@ signal player_died
 
 #endregion
 
-
-# ==============================================================================
 #region RECURSOS — MADEIRA
-# ==============================================================================
 
 ## Emitido pela Fireplace quando madeira é entregue com sucesso.
 ## Ouvido por: HUD, sistemas futuros de progressão
@@ -310,10 +257,7 @@ signal wood_delivered(amount: int)
 
 #endregion
 
-
-# ==============================================================================
 #region NOITE
-# ==============================================================================
 
 ## Emitido quando a transição de noite começa (fade out)
 ## Ouvido por: NightTransition, sistemas de reset
@@ -327,9 +271,7 @@ signal night_transition_finished
 
 #endregion
 
-# ==============================================================================
 #region VENDEDOR
-# ==============================================================================
 
 ## Emitido pelo GameManager quando o vendedor chega entre noites
 @warning_ignore("unused_signal")
@@ -345,10 +287,35 @@ signal shop_opened
 
 #endregion
 
+#region DIÁLOGO
 
-# ==============================================================================
+## Emitido pelo Vendor ao ser interagido — DialogScreen ouve e exibe o diálogo
+## Ouvido por: DialogScreen
+@warning_ignore("unused_signal")
+signal dialog_requested(data: DialogData, npc_node: Node3D)
+
+## Emitido pela DialogScreen quando o player escolhe uma opção
+## Ouvido por: Vendor
+@warning_ignore("unused_signal")
+signal dialog_choice_made(id: String)
+
+## Emitido pela DialogScreen ao fechar
+## Ouvido por: sistemas que precisam saber que o diálogo terminou
+@warning_ignore("unused_signal")
+signal dialog_closed
+
+## Emitido pela DialogScreen quando player escolhe "Comprar"
+## Substitui shop_opened no fluxo do vendedor — ShopScreen ouve este
+@warning_ignore("unused_signal")
+signal shop_requested
+
+## Emitido pela ShopScreen ao fechar — DialogScreen reaparece
+@warning_ignore("unused_signal")
+signal shop_closed
+
+#endregion
+
 #region POWER-UPS
-# ==============================================================================
 
 ## Emitido pelo PowerUpManager quando um power-up é aplicado
 @warning_ignore("unused_signal")
@@ -365,13 +332,10 @@ signal ui_exclusive_closed
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Enemies\enemy_base.gd
 ============================================================
-# ==============================================================================
 # ENEMY BASE
-# ------------------------------------------------------------------------------
 # Inimigo base do Emberveil. Funciona com o sistema de Object Pool do Director.
 #
 # activate() → chamado pelo Director ao tirar do pool (inicializa o inimigo)
@@ -381,14 +345,11 @@ ARQUIVO: Scripts\Enemies\enemy_base.gd
 # - CHASE  → persegue o player via NavigationAgent
 # - ATTACK → para e ataca quando player está no raio de ataque
 # - DEAD   → morreu, aguarda ser devolvido ao pool
-# ==============================================================================
 
 class_name EnemyBase
 extends CharacterBody3D
 
-# ==============================================================================
 #region DADOS
-# ==============================================================================
 
 ## Resource com todos os stats deste inimigo.
 ## Arraste o .tres correspondente no Inspector.
@@ -396,29 +357,21 @@ extends CharacterBody3D
 
 #endregion
 
-# ==============================================================================
 #region CONFIGURAÇÃO — MOVIMENTO
-# ==============================================================================
 
 var move_speed: float     = 3.5
 var rotation_speed: float = 6.0
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO — VIDA
-# ==============================================================================
 
 var max_health: float     = 50.0
 var current_health: float = max_health
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO — ATAQUE
-# ==============================================================================
 
 var attack_damage: float  = 10.0
 var attack_cooldown: float = 1.0
@@ -426,19 +379,13 @@ var attack_timer: float   = 0.0
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO — DESPAWN
-# ==============================================================================
 
 var despawn_distance: float = 65.0
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADOS
-# ==============================================================================
 
 enum State {
 	CHASE,
@@ -450,13 +397,9 @@ var current_state: State = State.CHASE
 
 #endregion
 
-
-# ==============================================================================
 #region EFEITOS
-# ------------------------------------------------------------------------------
 # slow_multiplier: alimentado pelo Lantern System.
 # 1.0 = velocidade normal | 0.4 = 40% da velocidade original
-# ==============================================================================
 
 var slow_multiplier: float = 1.0
 
@@ -465,10 +408,7 @@ func set_slow(value: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region REFERÊNCIAS DE NÓS
-# ==============================================================================
 
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var hurtbox: Area3D = $Hurtbox
@@ -476,20 +416,14 @@ func set_slow(value: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region RUNTIME
-# ==============================================================================
 
 var player: Node3D = null
 var player_inside_attack: bool = false
 
 #endregion
 
-
-# ==============================================================================
 #region POOL — FLAGS DE CONTROLE
-# ==============================================================================
 
 ## Bloqueia o _physics_process até o activate() ser chamado
 var _is_active: bool = false
@@ -506,10 +440,7 @@ const NAV_THROTTLE: float = 0.15
 
 #endregion
 
-
-# ==============================================================================
 #region POOL — ACTIVATE E RESET
-# ==============================================================================
 
 func activate() -> void:
 	# Lê stats do Resource
@@ -533,7 +464,6 @@ func activate() -> void:
 	_frames_since_activate = 0
 	_is_active = true
 
-
 func reset() -> void:
 	_is_active = false
 	_frames_since_activate = 0
@@ -545,10 +475,7 @@ func reset() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	# Conecta ao SignalBus — sem acoplamento direto ao EnemyDirector
@@ -556,10 +483,7 @@ func _ready() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region PHYSICS PROCESS
-# ==============================================================================
 
 func _physics_process(delta: float) -> void:
 	if not _is_active:
@@ -587,10 +511,7 @@ func _physics_process(delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CHASE
-# ==============================================================================
 
 func _handle_chase(delta: float) -> void:
 	if player_inside_attack:
@@ -615,10 +536,7 @@ func _handle_chase(delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region ATTACK
-# ==============================================================================
 
 func _handle_attack(delta: float) -> void:
 	velocity = Vector3.ZERO
@@ -636,10 +554,7 @@ func _handle_attack(delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region DANO AO PLAYER
-# ==============================================================================
 
 func _attack_player() -> void:
 	if player == null:
@@ -649,10 +564,7 @@ func _attack_player() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region RECEBER DANO
-# ==============================================================================
 
 func take_damage(damage: float) -> void:
 	if current_state == State.DEAD:
@@ -665,10 +577,7 @@ func take_damage(damage: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region MORTE
-# ==============================================================================
 
 func _die() -> void:
 	current_state = State.DEAD
@@ -676,10 +585,7 @@ func _die() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region DESPAWN POR DISTÂNCIA
-# ==============================================================================
 
 func _check_despawn_distance() -> void:
 	if player == null:
@@ -691,25 +597,18 @@ func _check_despawn_distance() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADOS
-# ==============================================================================
 
 func _change_state(new_state: State) -> void:
 	current_state = new_state
 
 #endregion
 
-
-# ==============================================================================
 #region ÁREA DE ATAQUE — SIGNALS
-# ==============================================================================
 
 func _on_enemy_attack_area_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		player_inside_attack = true
-
 
 func _on_enemy_attack_area_body_exited(body: Node3D) -> void:
 	if body.is_in_group("player"):
@@ -717,16 +616,13 @@ func _on_enemy_attack_area_body_exited(body: Node3D) -> void:
 
 #endregion
 
-# ==============================================================================
 #region SIGNAL BUS — SAFE ZONE
-# ==============================================================================
 
 func _on_player_entered_safe_zone() -> void:
 	current_state = State.DEAD
 	velocity = Vector3.ZERO
 
 #endregion
-
 
 
 ============================================================
@@ -742,28 +638,21 @@ func can_spawn() -> bool:
 	return enabled
 
 
-
 ============================================================
 ARQUIVO: Scripts\Enemies\Resources\enemy_data.gd
 ============================================================
-# ==============================================================================
 # ENEMY DATA
-# ------------------------------------------------------------------------------
 # Resource que armazena todos os stats configuráveis de um inimigo.
 #
 # Uso:
 # - Crie um .tres no Inspector herdando deste script
 # - Arraste o .tres no campo "data" do enemy_base.gd
 # - Para variantes futuras (rápido, tanque): crie novos .tres com valores diferentes
-# ==============================================================================
 
 class_name EnemyData
 extends Resource
 
-
-# ==============================================================================
 #region MOVIMENTO
-# ==============================================================================
 
 ## Velocidade base de movimento
 @export var move_speed: float = 3.5
@@ -773,20 +662,14 @@ extends Resource
 
 #endregion
 
-
-# ==============================================================================
 #region VIDA
-# ==============================================================================
 
 ## Vida máxima
 @export var max_health: float = 50.0
 
 #endregion
 
-
-# ==============================================================================
 #region ATAQUE
-# ==============================================================================
 
 ## Dano por ataque
 @export var attack_damage: float = 10.0
@@ -796,12 +679,8 @@ extends Resource
 
 #endregion
 
-
-# ==============================================================================
 #region DESPAWN
-# ------------------------------------------------------------------------------
 # IMPORTANTE: deve ser sempre maior que max_spawn_distance do EnemyDirector (50.0)
-# ==============================================================================
 
 ## Distância máxima do player antes de ser devolvido ao pool
 @export var despawn_distance: float = 65.0
@@ -809,16 +688,12 @@ extends Resource
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Interactables\apple_pickup.gd
 ============================================================
-# ==============================================================================
 # APPLE PICKUP — MAÇÃ
-# ------------------------------------------------------------------------------
 # Recupera vida do player ao ser coletada.
 # Pertence ao grupo "resource_pickup" para reset entre noites (Fase 2).
-# ==============================================================================
 
 extends Interactable
 
@@ -840,20 +715,16 @@ func interact() -> void:
 		body.process_mode = Node.PROCESS_MODE_DISABLED
 
 
-
 ============================================================
 ARQUIVO: Scripts\Interactables\bed.gd
 ============================================================
-# ==============================================================================
 # BED
-# ------------------------------------------------------------------------------
 # Interagir avança para a próxima noite.
 # Condições:
 # 1. Objetivo de madeira atingido
 # 2. PowerUpScreen não está visível
 # Converte depósito em moedas antes de avançar.
 # Madeira não depositada permanece no inventário.
-# ==============================================================================
 
 extends Interactable
 
@@ -879,26 +750,19 @@ func interact() -> void:
 	GameManager.advance_to_next_night(player)
 
 
-
 ============================================================
 ARQUIVO: Scripts\Interactables\fireplace.gd
 ============================================================
-# ==============================================================================
 # FIREPLACE
-# ------------------------------------------------------------------------------
 # Recebe madeira do player e entrega ao GameManager.
 # Atualiza o visual automaticamente ouvindo os signals do GameManager.
 # Não é mais chamada diretamente por nenhum sistema externo para se atualizar.
-# ==============================================================================
 
 extends Interactable
 
 @onready var wood_label: Label = $SubViewport/Label
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	# Conecta aos signals do GameManager para se manter atualizada
@@ -909,10 +773,7 @@ func _ready() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region INTERAÇÃO
-# ==============================================================================
 
 func interact() -> void:
 	var player: Node3D = get_tree().get_first_node_in_group("player")
@@ -939,10 +800,7 @@ func interact() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region VISUAL
-# ==============================================================================
 
 func update_visual() -> void:
 	wood_label.text = (
@@ -953,21 +811,16 @@ func update_visual() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region LISTENERS DO GAME MANAGER
-# ==============================================================================
 
 func _on_night_changed(_new_night: int) -> void:
 	update_visual()
-
 
 func _on_night_objective_reached() -> void:
 	# Gancho para feedback visual futuro (animação, brilho, som)
 	update_visual()
 
 #endregion
-
 
 
 ============================================================
@@ -984,16 +837,12 @@ func interact():
 	pass
 
 
-
 ============================================================
 ARQUIVO: Scripts\Interactables\inventory_upgrade.gd
 ============================================================
-# ==============================================================================
 # INVENTORY UPGRADE
-# ------------------------------------------------------------------------------
 # Item raro encontrado na floresta.
 # Aumenta permanentemente a capacidade da bolsa do player na run atual.
-# ==============================================================================
 
 class_name InventoryUpgrade
 extends Interactable
@@ -1018,16 +867,12 @@ func interact() -> void:
 		str(player.inventory.max_capacity))
 
 
-
 ============================================================
 ARQUIVO: Scripts\Interactables\sap_pickup.gd
 ============================================================
-# ==============================================================================
 # SAP PICKUP — SEIVA
-# ------------------------------------------------------------------------------
 # Reabastece energia da lamparina ao ser coletada.
 # Pertence ao grupo "resource_pickup" para reset entre noites (Fase 2).
-# ==============================================================================
 
 extends Interactable
 
@@ -1054,7 +899,6 @@ func interact() -> void:
 		body.process_mode = Node.PROCESS_MODE_DISABLED
 
 
-
 ============================================================
 ARQUIVO: Scripts\Interactables\vendor.gd
 ============================================================
@@ -1062,6 +906,8 @@ class_name Vendor
 extends Interactable
 
 @export var vendor_data: VendorData
+@export var dialog_data: DialogData
+@export var farewell_data: DialogData
 
 #region READY
 func _ready() -> void:
@@ -1069,12 +915,21 @@ func _ready() -> void:
 	SignalBus.vendor_available.connect(_on_vendor_arrived)
 	SignalBus.vendor_dismissed.connect(_on_vendor_left)
 	SignalBus.night_transition_started.connect(_on_vendor_left)
+	SignalBus.dialog_choice_made.connect(_on_choice_made)
 #endregion
 
 #region INTERAÇÃO
 func interact() -> void:
-	# Placeholder até Passo E (DialogSystem)
-	SignalBus.shop_opened.emit()
+	SignalBus.dialog_requested.emit(dialog_data, self)
+#endregion
+
+#region ESCOLHA DO DIÁLOGO
+func _on_choice_made(id: String) -> void:
+	match id:
+		"buy":
+			SignalBus.shop_requested.emit()
+		"leave":
+			SignalBus.vendor_dismissed.emit()
 #endregion
 
 #region LISTENERS
@@ -1100,34 +955,27 @@ func _set_active(active: bool) -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Interactables\wood_depot.gd
 ============================================================
-# ==============================================================================
 # WOOD DEPOT
-# ------------------------------------------------------------------------------
 # Local fora da cabana onde o player deposita madeira excedente por moedas.
 # A conversão acontece ao dormir via Bed.convert_to_coins().
 #
 # Narrativa: Elias Voss deixa a madeira num local acordado com o vendedor.
 # Acorda com as moedas já no saldo.
-# ==============================================================================
 
 class_name WoodDepot
 extends Interactable
-
 
 #region ESTADO
 var _deposited_wood: int = 0
 #endregion
 
-
 #region READY
 func _ready() -> void:
 	SignalBus.night_transition_started.connect(_on_night_started)
 #endregion
-
 
 #region INTERAÇÃO
 func interact() -> void:
@@ -1148,7 +996,6 @@ func interact() -> void:
 		" | Total no depósito: " + str(_deposited_wood))
 #endregion
 
-
 #region CONVERSÃO AO DORMIR
 ## Chamado pelo Bed antes de advance_to_next_night()
 func convert_to_coins() -> int:
@@ -1161,28 +1008,22 @@ func convert_to_coins() -> int:
 	return earned
 #endregion
 
-
 #region RESET
 func _on_night_started() -> void:
 	_deposited_wood = 0
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Interactables\wood_pickup.gd
 ============================================================
-# ==============================================================================
 # WOOD PICKUP
-# ------------------------------------------------------------------------------
 # NÃO usa queue_free(). Fica invisível ao ser coletado.
 # Resetado pelo NightTransition via grupo "resource_pickup".
-# ==============================================================================
 
 extends Interactable
 
 @export var wood_amount: int = 1
-
 
 func interact() -> void:
 	var player: Node = get_tree().get_first_node_in_group("player")
@@ -1205,13 +1046,10 @@ func interact() -> void:
 		str(player.inventory.max_capacity))
 
 
-
 ============================================================
 ARQUIVO: Scripts\Managers\enemy_director.gd
 ============================================================
-# ==============================================================================
 # ENEMY DIRECTOR
-# ------------------------------------------------------------------------------
 # Sistema central que controla tudo relacionado a inimigos.
 #
 # NÃO guarda o número da noite — ouve o signal night_changed do GameManager.
@@ -1222,27 +1060,20 @@ ARQUIVO: Scripts\Managers\enemy_director.gd
 # - Wave System     → ondas com budget, cooldown e escalada por noite
 # - Spawn por nest  → distância filtrada, sensação de floresta viva
 # - Safe Zone       → pausa e devolve inimigos ao pool via SignalBus
-# ==============================================================================
 
 class_name EnemyDirector
 extends Node
 
 static var instance: EnemyDirector
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO DO POOL
-# ==============================================================================
 
 @export var enemy_scene: PackedScene
 @export var pool_size: int = 20
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO BASE DE WAVES
-# ==============================================================================
 
 @export var wave_cooldown: float       = 8.0
 @export var spawn_interval: float      = 1.5
@@ -1251,10 +1082,7 @@ static var instance: EnemyDirector
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADO CALCULADO DA NOITE ATUAL
-# ==============================================================================
 
 @export var night_config: NightConfig
 
@@ -1263,10 +1091,7 @@ var wave_size: int         = 4
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADO INTERNO DAS WAVES
-# ==============================================================================
 
 var current_wave: int               = 0
 var enemies_remaining_in_wave: int  = 0
@@ -1278,10 +1103,7 @@ var state: DirectorState = DirectorState.IDLE
 
 #endregion
 
-
-# ==============================================================================
 #region RUNTIME
-# ==============================================================================
 
 var pool: Array           = []
 var active_enemies: Array = []
@@ -1291,10 +1113,7 @@ var player_inside_safe_zone: bool = false
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	instance = self
@@ -1313,26 +1132,19 @@ func _ready() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region LISTENERS DO GAME MANAGER
-# ==============================================================================
 
 func _on_night_changed(new_night: int) -> void:
 	_reset_for_new_night()
 	apply_night_settings(new_night)
 	DebugManager.log("EnemyDirector", "Atualizado para noite " + str(new_night))
 
-
 func _on_night_started() -> void:
 	start_night()
 
 #endregion
 
-
-# ==============================================================================
 #region LISTENERS DO SIGNAL BUS — SAFE ZONE
-# ==============================================================================
 
 func _on_player_entered_safe_zone() -> void:
 	player_inside_safe_zone = true
@@ -1344,7 +1156,6 @@ func _on_player_entered_safe_zone() -> void:
 	state = DirectorState.IDLE
 	DebugManager.log("EnemyDirector", "Safe zone. Inimigos devolvidos ao pool.")
 
-
 func _on_player_exited_safe_zone() -> void:
 	player_inside_safe_zone = false
 	state = DirectorState.COOLDOWN
@@ -1353,10 +1164,7 @@ func _on_player_exited_safe_zone() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region ESCALADA DE DIFICULDADE
-# ==============================================================================
 
 func apply_night_settings(night: int) -> void:
 	if night_config != null:
@@ -1373,10 +1181,7 @@ func apply_night_settings(night: int) -> void:
 	
 #endregion
 
-
-# ==============================================================================
 #region OBJECT POOL
-# ==============================================================================
 
 func create_pool() -> void:
 	if enemy_scene == null:
@@ -1392,13 +1197,11 @@ func create_pool() -> void:
 
 	DebugManager.log("EnemyDirector", "Pool criado com " + str(pool_size) + " inimigos.")
 
-
 func get_from_pool() -> Node3D:
 	for enemy in pool:
 		if not enemy.visible:
 			return enemy
 	return null
-
 
 func return_to_pool(enemy: Node3D) -> void:
 	active_enemies.erase(enemy)
@@ -1410,17 +1213,13 @@ func return_to_pool(enemy: Node3D) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CONTROLE DE NOITE
-# ==============================================================================
 
 func start_night() -> void:
 	current_wave   = 0
 	state          = DirectorState.COOLDOWN
 	cooldown_timer = 3.0
 	DebugManager.log("EnemyDirector", "Primeira wave em 3 segundos.")
-
 
 func _reset_for_new_night() -> void:
 	for i in range(active_enemies.size() - 1, -1, -1):
@@ -1433,10 +1232,7 @@ func _reset_for_new_night() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region PROCESS
-# ==============================================================================
 
 func _process(delta: float) -> void:
 	if player_inside_safe_zone:
@@ -1448,16 +1244,12 @@ func _process(delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region WAVE SYSTEM
-# ==============================================================================
 
 func _handle_cooldown(delta: float) -> void:
 	cooldown_timer -= delta
 	if cooldown_timer <= 0:
 		_start_next_wave()
-
 
 func _start_next_wave() -> void:
 	current_wave              += 1
@@ -1467,7 +1259,6 @@ func _start_next_wave() -> void:
 	DebugManager.log("EnemyDirector",
 		"Wave " + str(current_wave) + " iniciada! (" + str(wave_size) + " inimigos)"
 	)
-
 
 func _handle_spawning(delta: float) -> void:
 	if enemies_remaining_in_wave > 0:
@@ -1479,7 +1270,6 @@ func _handle_spawning(delta: float) -> void:
 	elif active_enemies.is_empty():
 		_wave_completed()
 
-
 func _wave_completed() -> void:
 	DebugManager.log("EnemyDirector",
 		"Wave " + str(current_wave) + " completa! Próxima em " + str(wave_cooldown) + "s."
@@ -1489,10 +1279,7 @@ func _wave_completed() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region SPAWN
-# ==============================================================================
 
 func _try_spawn_enemy() -> void:
 	if player == null:
@@ -1547,10 +1334,7 @@ func _try_spawn_enemy() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region GERENCIAMENTO DE INIMIGOS
-# ==============================================================================
 
 func on_enemy_died(enemy: Node3D) -> void:
 	return_to_pool(enemy)
@@ -1558,13 +1342,10 @@ func on_enemy_died(enemy: Node3D) -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Managers\game_manager.gd
 ============================================================
-# ==============================================================================
 # GAME MANAGER
-# ------------------------------------------------------------------------------
 # Controlador central do jogo. É a ÚNICA fonte da verdade para:
 # - Número da noite atual
 # - Progresso de madeira
@@ -1572,14 +1353,10 @@ ARQUIVO: Scripts\Managers\game_manager.gd
 #
 # Quando a noite avança, emite signals para que TODOS os sistemas se atualizem.
 # O GameManager não conhece nenhum objeto de cena específico — apenas emite.
-# ==============================================================================
 
 extends Node
 
-
-# ==============================================================================
 #region SIGNALS
-# ==============================================================================
 
 ## Emitido quando a noite avança — todos os sistemas que dependem da noite ouvem
 @warning_ignore("unused_signal")
@@ -1593,10 +1370,7 @@ signal night_objective_reached
 
 #endregion
 
-
-# ==============================================================================
 #region NOITE
-# ==============================================================================
 
 ## Noite atual — ÚNICA fonte da verdade de todo o jogo.
 ## Nunca modifique diretamente de fora — use as funções abaixo.
@@ -1604,10 +1378,7 @@ var current_night: int = 1
 @export var night_config: NightConfig
 #endregion
 
-
-# ==============================================================================
 #region MADEIRA
-# ==============================================================================
 
 ## Quantidade de madeira necessária para completar a noite atual
 var wood_goal: int = 0
@@ -1617,10 +1388,7 @@ var delivered_wood: int = 0
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADO DA NOITE
-# ==============================================================================
 
 ## True quando o player entregou madeira suficiente para dormir
 var night_completed: bool = false
@@ -1630,10 +1398,7 @@ var night_active: bool = false
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	if night_config == null:
@@ -1643,13 +1408,9 @@ func _ready() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO DE NOITE
-# ------------------------------------------------------------------------------
 # Centraliza todos os valores que mudam a cada noite.
 # TODO (Refatoração 4): mover fórmulas para NightConfig.tres (Resource).
-# ==============================================================================
 
 func _apply_night_settings() -> void:
 	if night_config != null:
@@ -1663,13 +1424,6 @@ func _apply_night_settings() -> void:
 		" | Objetivo de madeira: " + str(wood_goal)
 	)
 	
-	# Vendedor aparece nas noites 4, 7, 10, 13...
-	if current_night > 1 and (current_night - 1) % 3 == 0:
-		SignalBus.vendor_available.emit()
-		DebugManager.log("GameManager", "Vendedor chegou na noite " + str(current_night))
-
-
-
 ## Retorna um valor escalado pela noite.
 ## Exemplo: get_scaled_value(10.0, 0.2) na noite 3 = 14.0
 func get_scaled_value(base_value: float, scale_per_night: float) -> float:
@@ -1677,17 +1431,19 @@ func get_scaled_value(base_value: float, scale_per_night: float) -> float:
 
 #endregion
 
-
-# ==============================================================================
 #region CONTROLE DE NOITE
-# ==============================================================================
 
 ## Chamado quando o player sai da cabana e a noite começa de fato
 func start_night() -> void:
 	night_active = true
 	night_started.emit()
-	DebugManager.log("GameManager", "Noite " + str(current_night) + " iniciada!")
+	
+	# Vendedor aparece nas noites 4, 7, 10, 13...
+	if current_night > 1 and (current_night - 1) % 3 == 0:
+		SignalBus.vendor_available.emit()
+		DebugManager.log("GameManager", "Vendedor chegou na noite " + str(current_night))
 
+	DebugManager.log("GameManager", "Noite " + str(current_night) + " iniciada!")
 
 ## Chamado pela cama quando o player vai dormir.
 ## Recebe referência do player para resetar inventário.
@@ -1708,16 +1464,12 @@ func advance_to_next_night(_player: Node) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region SISTEMA DE MADEIRA
-# ==============================================================================
 
 func add_delivered_wood(amount: int) -> void:
 	delivered_wood += amount
 	delivered_wood = clamp(delivered_wood, 0, wood_goal)
 	_check_night_completion()
-
 
 func _check_night_completion() -> void:
 	if delivered_wood >= wood_goal:
@@ -1727,9 +1479,7 @@ func _check_night_completion() -> void:
 
 #endregion
 
-# ==============================================================================
 #region MOEDAS
-# ==============================================================================
 
 ## Saldo atual de moedas — persiste entre noites, reseta ao morrer
 var coins: int = 0
@@ -1737,12 +1487,10 @@ var coins: int = 0
 ## Emitido sempre que o saldo muda — ouvido pela HUD
 signal coins_changed(new_amount: int)
 
-
 func add_coins(amount: int) -> void:
 	coins += amount
 	coins_changed.emit(coins)
 	DebugManager.log("GameManager", "Moedas: " + str(coins))
-
 
 ## Retorna false se saldo insuficiente — nunca vai negativo
 func spend_coins(amount: int) -> bool:
@@ -1756,13 +1504,10 @@ func spend_coins(amount: int) -> bool:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Managers\powerup_manager.gd
 ============================================================
-# ==============================================================================
 # POWERUP MANAGER
-# ------------------------------------------------------------------------------
 # Gerencia a aplicação de power-ups ao player.
 #
 # - Mantém lista de power-ups ativos da run atual
@@ -1770,15 +1515,11 @@ ARQUIVO: Scripts\Managers\powerup_manager.gd
 # - Reseta ao morrer (roguelike)
 #
 # Instanciar como filho da main.tscn, grupo "powerup_manager"
-# ==============================================================================
 
 class_name PowerUpManager
 extends Node
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO
-# ==============================================================================
 
 ## Pool de power-ups disponíveis para sorteio
 ## Arraste os .tres criados no Inspector
@@ -1786,30 +1527,21 @@ extends Node
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADO
-# ==============================================================================
 
 ## Power-ups aplicados na run atual
 var active_powerups: Array[PowerUpData] = []
 
 #endregion
 
-
-# ==============================================================================
 #region SIGNALS
-# ==============================================================================
 
 ## Emitido quando um power-up é aplicado — ouvido pela HUD
 signal powerup_applied(data: PowerUpData)
 
 #endregion
 
-
-# ==============================================================================
 #region API PÚBLICA
-# ==============================================================================
 
 ## Retorna N power-ups aleatórios do pool disponível
 ## Garante que não repete power-ups já ativos (se pool permitir)
@@ -1821,7 +1553,6 @@ func get_random_choices(count: int) -> Array[PowerUpData]:
 	var pool: Array[PowerUpData] = available_powerups.duplicate()
 	pool.shuffle()
 	return pool.slice(0, mini(count, pool.size()))
-
 
 ## Aplica o efeito do power-up ao player via API pública
 func apply(data: PowerUpData, player: Node) -> void:
@@ -1855,7 +1586,6 @@ func apply(data: PowerUpData, player: Node) -> void:
 	powerup_applied.emit(data)
 	DebugManager.log("PowerUpManager", "Aplicado: " + data.display_name)
 
-
 ## Reseta todos os power-ups — chamado ao morrer (roguelike reset)
 func reset() -> void:
 	active_powerups.clear()
@@ -1864,31 +1594,23 @@ func reset() -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Player\lantern.gd
 ============================================================
-# ==============================================================================
 # LANTERN SYSTEM
-# ------------------------------------------------------------------------------
 # Dois modos de operação:
 # - NORMAL:  OmniLight ativo — ilumina ao redor, sem dano, sem consumo
 # - COMBATE: OmniLight apaga, SpotLight acende — dano contínuo, consome energia
 #
 # Energia só é consumida no modo combate.
 # Quando energia acaba, volta ao modo normal sem possibilidade de combate.
-# ==============================================================================
 
 class_name Lantern
 extends Node3D
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO DE ENERGIA
-# ==============================================================================
 
 # DEBUG
-
 
 # Energia máxima da lamparina
 @export var max_energy := 100.0
@@ -1902,13 +1624,9 @@ var current_energy := 100.0
 # True quando está no modo combate (spotlight ativo)
 var is_active := false
 
-
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO DE DANO
-# ==============================================================================
 
 # Dano por segundo nos inimigos dentro do cone
 @export var damage_per_second := 20.0
@@ -1933,10 +1651,7 @@ var _ultimate_timer: float = 0.0
 
 #endregion
 
-
-# ==============================================================================
 #region REFERÊNCIAS DE NÓS
-# ==============================================================================
 
 # Luz direcional — modo combate
 @onready var spot_light: SpotLight3D = $"../LanternPivot/SpotLight3D"
@@ -1961,13 +1676,9 @@ var _lantern_model: Node3D = null
 ## null se o modelo não tiver esse método
 var _model_controller: Node = null
 
-
 #endregion
 
-
-# ==============================================================================
 #region SIGNALS
-# ==============================================================================
 
 ## Emitido quando a energia muda — ouvido pela HUD diegética
 signal energy_changed(current: float, max_value: float)
@@ -1977,20 +1688,14 @@ signal ultimate_used
 
 #endregion
 
-
-# ==============================================================================
 #region RUNTIME
-# ==============================================================================
 
 # Inimigos atualmente dentro do cone de luz
 var enemies_in_cone: Array = []
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready():
 	current_energy = max_energy
@@ -2017,10 +1722,7 @@ func _ready():
 
 #endregion
 
-
-# ==============================================================================
 #region PROCESS
-# ==============================================================================
 
 func _process(delta):
 	handle_input()
@@ -2034,14 +1736,10 @@ func _process(delta):
 
 #endregion
 
-
-# ==============================================================================
 #region INPUT
-# ------------------------------------------------------------------------------
 # Segurar o botão ativa modo combate.
 # Soltar volta ao modo normal.
 # Sem energia = não pode ativar modo combate.
-# ==============================================================================
 
 func handle_input():
 	if Input.is_action_pressed("lantern") and current_energy > 0:
@@ -2051,13 +1749,9 @@ func handle_input():
 
 #endregion
 
-
-# ==============================================================================
 #region ENERGIA
-# ------------------------------------------------------------------------------
 # Energia só é consumida no modo combate.
 # Ao acabar, desativa o modo combate automaticamente.
-# ==============================================================================
 
 func handle_energy(delta: float) -> void:
 	if not is_active:
@@ -2072,13 +1766,11 @@ func handle_energy(delta: float) -> void:
 		set_combat_mode(false)
 		DebugManager.log("Lantern", "Energia esgotada.")
 
-
 # Chamado pela seiva para reabastecer energia
 func add_energy(amount: float) -> void:
 	current_energy = minf(current_energy + amount, max_energy)
 	energy_changed.emit(current_energy, max_energy)
 	DebugManager.log("Lantern", "Energia reabastecida. Atual: " + str(current_energy))
-
 
 # Retorna porcentagem de energia (0.0 a 1.0) — usado pela UI
 func get_energy_percent() -> float:
@@ -2086,12 +1778,8 @@ func get_energy_percent() -> float:
 
 #endregion
 
-
-# ==============================================================================
 #region MODO COMBATE
-# ------------------------------------------------------------------------------
 # Alterna entre modo normal (omni) e modo combate (spot + hitbox).
-# ==============================================================================
 
 func set_combat_mode(active: bool):
 	# Evita processar se o estado não mudou
@@ -2120,10 +1808,7 @@ func set_combat_mode(active: bool):
 
 #endregion
 
-
-# ==============================================================================
 #region DANO CONTÍNUO
-# ==============================================================================
 
 func handle_damage(delta: float) -> void:
 	if not is_active:
@@ -2143,17 +1828,13 @@ func handle_damage(delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region SLOW NOS INIMIGOS
-# ==============================================================================
 
 func apply_slow(enemy: Node3D):
 	if enemy.has_method("set_slow"):
 		enemy.set_slow(slow_factor)
 	elif "slow_multiplier" in enemy:
 		enemy.slow_multiplier = slow_factor
-
 
 func remove_slow(enemy: Node3D):
 	if not is_instance_valid(enemy):
@@ -2163,7 +1844,6 @@ func remove_slow(enemy: Node3D):
 	elif "slow_multiplier" in enemy:
 		enemy.slow_multiplier = 1.0
 
-
 func restore_all_slow() -> void:
 	for i in range(enemies_in_cone.size() - 1, -1, -1):
 		remove_slow(enemies_in_cone[i])
@@ -2171,10 +1851,7 @@ func restore_all_slow() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region ULTIMATE
-# ==============================================================================
 
 func use_ultimate() -> void:
 		
@@ -2220,17 +1897,12 @@ func use_ultimate() -> void:
 
 #endregion
 
-
-
-# ==============================================================================
 #region SIGNALS DO CONE
-# ==============================================================================
 
 func _on_cone_body_entered(body):
 	if body.is_in_group("enemy"):
 		enemies_in_cone.append(body)
 		apply_slow(body)
-
 
 func _on_cone_body_exited(body):
 	if body.is_in_group("enemy"):
@@ -2239,12 +1911,9 @@ func _on_cone_body_exited(body):
 
 #endregion
 
-# ==============================================================================
 #region FLICKER DA OMNILIGHT
-# ------------------------------------------------------------------------------
 # Simula a chama do lampião variando a intensidade da OmniLight.
 # Usa sin() com variação aleatória pra parecer orgânico, não mecânico.
-# ==============================================================================
 
 # Intensidade base da OmniLight (valor central do flicker)
 @export var omni_base_energy := 2.0
@@ -2279,12 +1948,9 @@ func handle_flicker(delta):
 
 #endregion
 
-# ==============================================================================
 #region FLICKER DO SPOTLIGHT
-# ------------------------------------------------------------------------------
 # Simula instabilidade do feixe no modo combate.
 # Energia violenta e irregular — diferente do flicker suave da OmniLight.
-# ==============================================================================
 
 # Energia base do SpotLight
 @export var spot_base_energy := 15.0
@@ -2316,7 +1982,6 @@ func handle_spot_flicker(delta):
 		)
 
 #endregion
-
 
 #region EQUIP
 ## Troca a lanterna aplicando os stats do Resource e (se definido) o modelo 3D.
@@ -2350,27 +2015,20 @@ func equip(data: LanternData) -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Player\player_controller.gd
 ============================================================
-# ==============================================================================
 # PLAYER CONTROLLER
-# ------------------------------------------------------------------------------
 # Responsabilidade: movimento, câmera, gravidade, interação. em breve sera
 #fragmentado pra não se tornar um god_entity (muito código em um lugar)
 #
 # Separação de ciclos:
 # - _process       → câmera (roda no framerate real, sem jitter)
 # - _physics_process → movimento, física, interação (roda no ciclo de física)
-# ==============================================================================
 
 extends CharacterBody3D
 
-
-# ==============================================================================
 #region DEBUG
-# ==============================================================================
 
 @onready var debug_label_stamina: Label = $"./Debug/VBoxContainer/Stamina"
 @onready var debug_label_madeira: Label = $"./Debug/VBoxContainer/Madeira"
@@ -2378,10 +2036,7 @@ extends CharacterBody3D
 
 #endregion
 
-
-# ==============================================================================
 #region MOVIMENTO
-# ==============================================================================
 
 @export var walk_speed: float = 4.0
 @export var sprint_speed: float = 10.0
@@ -2390,15 +2045,14 @@ extends CharacterBody3D
 @export var acceleration: float = 30.0
 @export var deceleration: float   = 45.0
 
+@export var jump_velocity: float = 4.5
+
 var current_speed: float      = walk_speed
 var input_direction: Vector2  = Vector2.ZERO
 
 #endregion
 
-
-# ==============================================================================
 #region CÂMERA
-# ==============================================================================
 
 # Limites de pitch da câmera em radianos — constantes evitam cálculo todo frame
 const MAX_PITCH: float = 1.3963  # deg_to_rad(80)
@@ -2408,10 +2062,7 @@ var mouse_delta: Vector2 = Vector2.ZERO
 
 #endregion
 
-
-# ==============================================================================
 #region CAMERA BOB
-# ==============================================================================
 
 ## Frequência da oscilação
 @export var bob_frequency: float  = 2.0
@@ -2425,7 +2076,6 @@ var mouse_delta: Vector2 = Vector2.ZERO
 var _bob_time: float = 0.0
 
 var _camera_base_y: float = 0.0
-
 
 func _handle_camera_bob(delta: float) -> void:
 	var is_moving: bool    = input_direction != Vector2.ZERO
@@ -2443,12 +2093,9 @@ func _handle_camera_bob(delta: float) -> void:
 	camera.position.y = _camera_base_y + sin(_bob_time * TAU) * amp
 	camera.position.x = sin(_bob_time * PI) * amp * 0.5  # ← oscilação lateral mais sutil
 	
-	
 #endregion
 
-# ==============================================================================
 #region NODE REFERENCES
-# ==============================================================================
 
 @onready var head: Node3D = $Head
 @onready var interaction_ray: RayCast3D = $Head/Camera/InteractionRay
@@ -2462,26 +2109,24 @@ func _handle_camera_bob(delta: float) -> void:
 
 @onready var camera: Camera3D = $Head/Camera
 
-
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
+
+var _dialog_active: bool = false
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	interaction_ray.add_exception(self)
 	_camera_base_y = camera.position.y
 	process_mode = Node.PROCESS_MODE_PAUSABLE
+
+	SignalBus.ui_exclusive_opened.connect(func(): _dialog_active = true)
+	SignalBus.ui_exclusive_closed.connect(func(): _dialog_active = false)
 	
 #endregion
 
-
-# ==============================================================================
 #region INPUT — MOUSE
-# ==============================================================================
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -2489,16 +2134,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region PROCESS — CÂMERA E DEBUG
-# ------------------------------------------------------------------------------
 # Câmera roda no framerate real para evitar jitter durante strafe.
 # Debug labels atualizam aqui — nunca no _physics_process.
-# ==============================================================================
 
 func _process(_delta: float) -> void:
 	if health.is_dead():
+		return
+	if _dialog_active:
 		return
 
 	_handle_camera()
@@ -2514,19 +2157,20 @@ func _process(_delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region PHYSICS PROCESS — MOVIMENTO E FÍSICA
-# ------------------------------------------------------------------------------
 # Movimento, gravidade e interação rodam no ciclo de física.
 # Câmera NÃO está aqui — está em _process.
-# ==============================================================================
 
 func _physics_process(delta: float) -> void:
 	
 	if health.is_dead():
 		return
-
+	if _dialog_active:
+		velocity.x = move_toward(velocity.x, 0, deceleration * delta)
+		velocity.z = move_toward(velocity.z, 0, deceleration * delta)
+		move_and_slide()
+		return
+	
 	_handle_gravity(delta)
 	_handle_input()
 	_handle_stamina(delta)
@@ -2541,10 +2185,7 @@ func _physics_process(delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CÂMERA
-# ==============================================================================
 
 func _handle_camera() -> void:
 	if mouse_delta == Vector2.ZERO:
@@ -2559,21 +2200,18 @@ func _handle_camera() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region MOVIMENTO
-# ==============================================================================
 
 func _handle_input() -> void:
 	input_direction = Input.get_vector(
 		"move_left", "move_right", "move_forward", "move_backward"
 	)
 
-
 func _handle_gravity(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-
+	elif Input.is_action_just_pressed("jump"):
+		velocity.y = jump_velocity
 
 func _handle_movement(delta: float) -> void:
 	var direction: Vector3 = (
@@ -2589,10 +2227,7 @@ func _handle_movement(delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region STAMINA
-# ==============================================================================
 
 func _handle_stamina(delta: float) -> void:
 	var is_sprinting: bool = Input.is_action_pressed("sprint")
@@ -2610,10 +2245,7 @@ func _handle_stamina(delta: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region INTERAÇÃO
-# ==============================================================================
 
 func _handle_interaction() -> void:
 	if not Input.is_action_just_pressed("interact"):
@@ -2638,10 +2270,7 @@ func can_collect_wood(amount: int) -> bool:
 
 #endregion
 
-
-# ==============================================================================
 #region CROSSHAIR
-# ==============================================================================
 
 func _update_crosshair() -> void:
 	if not interaction_ray.is_colliding():
@@ -2665,13 +2294,9 @@ func _update_crosshair() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region SAÚDE
-# ------------------------------------------------------------------------------
 # Fachadas públicas — delegam ao HealthComponent.
 # Nenhum estado de vida é armazenado aqui.
-# ==============================================================================
 
 func take_damage(amount: float) -> void:
 	health.take_damage(amount)
@@ -2682,13 +2307,10 @@ func heal(amount: float) -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Player\Components\health_component.gd
 ============================================================
-# ==============================================================================
 # HEALTH COMPONENT
-# ------------------------------------------------------------------------------
 # Responsabilidade única: gerenciar o estado de vida do player.
 #
 # - Vida atual e máxima
@@ -2698,19 +2320,14 @@ ARQUIVO: Scripts\Player\Components\health_component.gd
 #
 # O PlayerController não armazena vida — toda verdade está aqui.
 # Sistemas externos (HUD, DeathScreen) ouvem os signals.
-# ==============================================================================
 
 class_name HealthComponent
 extends Node
 
-
-# ==============================================================================
 #region SIGNALS
-# ------------------------------------------------------------------------------
 # HUD ouve health_changed para atualizar a barra.
 # DeathScreen ouve player_died para exibir a tela.
 # Sistemas de feedback ouvem player_damaged para efeitos visuais/sonoros.
-# ==============================================================================
 
 ## Emitido sempre que a vida muda (dano ou cura).
 ## Ouvido por: HUD
@@ -2726,10 +2343,7 @@ signal player_died
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO
-# ==============================================================================
 
 ## Vida máxima do player.
 ## TODO (Refatoração 4): mover para PlayerData.tres
@@ -2740,12 +2354,8 @@ signal player_died
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADO INTERNO
-# ------------------------------------------------------------------------------
 # Toda a verdade de vida está aqui. Nenhum outro script armazena esses valores.
-# ==============================================================================
 
 var _god_mode: bool = false
 var _current_health: float = 0.0
@@ -2755,30 +2365,21 @@ var _invincibility_timer: float = 0.0
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	_current_health = max_health
 
 #endregion
 
-
-# ==============================================================================
 #region PROCESS
-# ==============================================================================
 
 func _process(delta: float) -> void:
 	_tick_invincibility(delta)
 
 #endregion
 
-
-# ==============================================================================
 #region API PÚBLICA
-# ==============================================================================
 
 ## Aplica dano ao player.
 ## Ignorado se morto ou invencível.
@@ -2805,7 +2406,6 @@ func take_damage(amount: float) -> void:
 	if _current_health <= 0.0:
 		_die()
 
-
 ## Cura o player pelo valor informado.
 ## Ignorado se morto. Limitado ao máximo.
 func heal(amount: float) -> void:
@@ -2821,7 +2421,6 @@ func heal(amount: float) -> void:
 		" | Vida atual: " + str(_current_health)
 	)
 
-
 ## Mata o player imediatamente, ignorando i-frames e vida atual.
 ## Útil para o DevConsole (kill_player) e armadilhas instakill futuras.
 func kill() -> void:
@@ -2830,11 +2429,9 @@ func kill() -> void:
 	_current_health = 0.0
 	_die()
 
-
 ## Retorna true se o player está morto.
 func is_dead() -> bool:
 	return _is_dead
-
 
 ## Retorna a vida atual como porcentagem (0.0 a 1.0).
 ## Usado pela HUD para atualizar a barra proporcionalmente.
@@ -2843,11 +2440,9 @@ func get_percent() -> float:
 		return 0.0
 	return _current_health / max_health
 
-
 func toggle_invincibility() -> bool:
 	_god_mode = !_god_mode
 	return _god_mode
-
 
 ## Aumenta vida máxima e cura o mesmo valor — usado por power-ups
 func increase_max(amount: float) -> void:
@@ -2856,13 +2451,9 @@ func increase_max(amount: float) -> void:
 	health_changed.emit(_current_health, max_health)
 	DebugManager.log("HealthComponent", "Vida máxima: " + str(max_health))
 
-
 #endregion
 
-
-# ==============================================================================
 #region INTERNO — MORTE
-# ==============================================================================
 
 func _die() -> void:
 	_is_dead = true
@@ -2874,10 +2465,7 @@ func _die() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region INTERNO — I-FRAMES
-# ==============================================================================
 
 func _tick_invincibility(delta: float) -> void:
 	if not _is_invincible:
@@ -2891,20 +2479,15 @@ func _tick_invincibility(delta: float) -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Player\Components\inventory_component.gd
 ============================================================
-# ==============================================================================
 # INVENTORY COMPONENT
-# ------------------------------------------------------------------------------
 # Gerencia o inventário de madeira do player.
 # Limite baseado em max_capacity (bolsa), não no objetivo da noite.
-# ==============================================================================
 
 class_name InventoryComponent
 extends Node
-
 
 #region SIGNALS
 ## Emitido sempre que madeira ou capacidade mudam.
@@ -2912,17 +2495,14 @@ extends Node
 signal wood_changed(current: int, max_cap: int, goal: int)
 #endregion
 
-
 #region CONFIGURAÇÃO
 ## Capacidade base da bolsa — 5 slots
 @export var max_capacity: int = 5
 #endregion
 
-
 #region ESTADO INTERNO
 var _wood_count: int = 0
 #endregion
-
 
 #region API PÚBLICA
 
@@ -2932,25 +2512,20 @@ func add_wood(amount: int) -> void:
 	DebugManager.log("InventoryComponent",
 		"Madeira: " + str(_wood_count) + "/" + str(max_capacity))
 
-
 func remove_wood(amount: int) -> void:
 	_wood_count = maxi(_wood_count - amount, 0)
 	_emit()
 
-
 func can_collect_wood(amount: int) -> bool:
 	return _wood_count + amount <= max_capacity
 
-
 func get_wood_count() -> int:
 	return _wood_count
-
 
 func reset() -> void:
 	_wood_count = 0
 	_emit()
 	DebugManager.log("InventoryComponent", "Inventário resetado.")
-
 
 ## Aumenta capacidade máxima da bolsa — chamado por upgrades
 func increase_capacity(amount: int) -> void:
@@ -2959,20 +2534,16 @@ func increase_capacity(amount: int) -> void:
 	DebugManager.log("InventoryComponent",
 		"Capacidade: " + str(max_capacity))
 
-
 func _emit() -> void:
 	wood_changed.emit(_wood_count, max_capacity, GameManager.wood_goal)
 
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Player\Components\stamina_component.gd
 ============================================================
-# ==============================================================================
 # STAMINA COMPONENT
-# ------------------------------------------------------------------------------
 # Responsabilidade única: gerenciar o estado de stamina do player.
 #
 # - Stamina atual e máxima
@@ -2980,15 +2551,11 @@ ARQUIVO: Scripts\Player\Components\stamina_component.gd
 # - Recuperação com delay
 #
 # O PlayerController não armazena stamina — toda verdade está aqui.
-# ==============================================================================
 
 class_name StaminaComponent
 extends Node
 
-
-# ==============================================================================
 #region SIGNALS
-# ==============================================================================
 
 ## Emitido sempre que a stamina muda.
 ## Ouvido por: HUD
@@ -2996,10 +2563,7 @@ signal stamina_changed(new_value: float, max_value: float)
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO
-# ==============================================================================
 
 @export var max_stamina: float            = 100.0
 @export var drain_rate: float             = 25.0
@@ -3008,30 +2572,21 @@ signal stamina_changed(new_value: float, max_value: float)
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADO INTERNO
-# ==============================================================================
 
 var _current_stamina: float       = 0.0
 var _recovery_timer: float        = 0.0
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	_current_stamina = max_stamina
 
 #endregion
 
-
-# ==============================================================================
 #region API PÚBLICA
-# ==============================================================================
 
 ## Consome stamina por delta — chamado pelo PlayerController ao correr.
 func consume(amount: float) -> void:
@@ -3040,7 +2595,6 @@ func consume(amount: float) -> void:
 	_recovery_timer = recovery_delay
 	stamina_changed.emit(_current_stamina, max_stamina)
 
-
 ## Recupera stamina por delta — chamado pelo PlayerController quando não corre.
 func restore(amount: float) -> void:
 	var before := _current_stamina
@@ -3048,22 +2602,18 @@ func restore(amount: float) -> void:
 	if _current_stamina != before:
 		stamina_changed.emit(_current_stamina, max_stamina)
 
-
 ## Tick do delay de recuperação — chamado pelo PlayerController no _physics_process.
 func tick_recovery_timer(delta: float) -> void:
 	if _recovery_timer > 0.0:
 		_recovery_timer -= delta
 
-
 ## Retorna true se pode correr (tem stamina e delay zerado).
 func can_sprint() -> bool:
 	return _current_stamina > 0.0
 
-
 ## Retorna true se o delay de recuperação ainda está ativo.
 func is_in_recovery_delay() -> bool:
 	return _recovery_timer > 0.0
-
 
 ## Retorna stamina como porcentagem (0.0 a 1.0).
 func get_percent() -> float:
@@ -3071,27 +2621,40 @@ func get_percent() -> float:
 		return 0.0
 	return _current_stamina / max_stamina
 
-
 ## Aumenta stamina máxima — usado por power-ups
 func increase_max(amount: float) -> void:
 	max_stamina += amount
 	stamina_changed.emit(_current_stamina, max_stamina)
 	DebugManager.log("StaminaComponent", "Stamina máxima: " + str(max_stamina))
 
-
 #endregion
 
+
+============================================================
+ARQUIVO: Scripts\Resources\dialog_data.gd
+============================================================
+class_name DialogData
+extends Resource
+
+## Chave do nome do NPC no CSV de localização
+@export var speaker_name_key: String = ""
+
+## Linhas de diálogo — cada elemento é uma chave CSV
+@export var lines: Array[String] = []
+
+## Labels dos botões de escolha — chaves CSV
+@export var choice_labels: Array[String] = ["CHOICE_CLOSE"]
+
+## IDs internos das escolhas — emitidos pelo signal dialog_choice_made
+@export var choice_ids: Array[String] = ["close"]
 
 
 ============================================================
 ARQUIVO: Scripts\Resources\lantern_data.gd
 ============================================================
-# ==============================================================================
 # LANTERN DATA
-# ------------------------------------------------------------------------------
 # Parâmetros completos de uma lanterna via Resource.
 # Novas lanternas = novos .tres — zero código novo.
-# ==============================================================================
 
 class_name LanternData
 extends Resource
@@ -3126,24 +2689,17 @@ extends Resource
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Resources\powerup_data.gd
 ============================================================
-# ==============================================================================
 # POWERUP DATA
-# ------------------------------------------------------------------------------
 # Resource que define um power-up disponível no jogo.
 # Crie um .tres para cada power-up no Inspector.
-# ==============================================================================
 
 class_name PowerUpData
 extends Resource
 
-
-# ==============================================================================
 #region IDENTIFICAÇÃO
-# ==============================================================================
 
 ## ID único — usado pelo DevConsole (give_powerup [id])
 @export var id: String = ""
@@ -3156,10 +2712,7 @@ extends Resource
 
 #endregion
 
-
-# ==============================================================================
 #region EFEITO
-# ==============================================================================
 
 ## Tipo do efeito aplicado ao player
 @export_enum(
@@ -3181,16 +2734,12 @@ extends Resource
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Resources\shop_item_data.gd
 ============================================================
-# ==============================================================================
 # SHOP ITEM DATA
-# ------------------------------------------------------------------------------
 # Define um item vendível pelo Vendedor.
 # Vendedor vende lanternas e upgrades de inventário.
-# ==============================================================================
 
 class_name ShopItemData
 extends Resource
@@ -3212,15 +2761,11 @@ extends Resource
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Resources\vendor_data.gd
 ============================================================
-# ==============================================================================
 # VENDOR DATA
-# ------------------------------------------------------------------------------
 # Agrupa os itens disponíveis no vendedor.
-# ==============================================================================
 
 class_name VendorData
 extends Resource
@@ -3228,13 +2773,10 @@ extends Resource
 @export var items: Array[ShopItemData] = []
 
 
-
 ============================================================
 ARQUIVO: Scripts\Systems\cabin_door.gd
 ============================================================
-# ==============================================================================
 # CABIN DOOR
-# ------------------------------------------------------------------------------
 # Porta física da cabana com abertura/fechamento animado.
 #
 # Hierarquia esperada na cena:
@@ -3252,15 +2794,11 @@ ARQUIVO: Scripts\Systems\cabin_door.gd
 #   CLOSED  — porta fechada, bloqueia passagem
 #   OPEN    — porta aberta (85°), vão liberado
 #   VENDOR  — vendedor presente; player abre a porta e inicia o fluxo
-# ==============================================================================
 
 class_name CabinDoor
 extends Interactable
 
-
-# ==============================================================================
 #region ESTADOS
-# ==============================================================================
 
 enum DoorState { OPEN, CLOSED, VENDOR }
 
@@ -3268,10 +2806,7 @@ var state: DoorState = DoorState.CLOSED
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO
-# ==============================================================================
 
 ## Ângulo de abertura em graus
 @export var open_angle_deg: float = 85.0
@@ -3281,28 +2816,19 @@ var state: DoorState = DoorState.CLOSED
 
 #endregion
 
-
-# ==============================================================================
 #region NÓS
-# ==============================================================================
 
 @onready var door_pivot: Node3D = $DoorPivot
 
 #endregion
 
-
-# ==============================================================================
 #region RUNTIME
-# ==============================================================================
 
 var _tween: Tween = null
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	SignalBus.night_transition_finished.connect(_on_night_transition_finished)
@@ -3312,10 +2838,7 @@ func _ready() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region INTERAÇÃO
-# ==============================================================================
 
 func interact() -> void:
 	match state:
@@ -3324,19 +2847,11 @@ func interact() -> void:
 		DoorState.OPEN:
 			set_state(DoorState.CLOSED)
 		DoorState.VENDOR:
-			# Abre a porta fisicamente antes de iniciar o fluxo do vendedor
-			# A porta permanece em estado VENDOR até vendor_dismissed ser emitido
 			_animate_door(open_angle_deg)
-			# Placeholder até Passo E (DialogSystem)
-			# Será: SignalBus.dialog_requested.emit(dialog_data, self)
-			SignalBus.shop_opened.emit()
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADOS
-# ==============================================================================
 
 func set_state(new_state: DoorState) -> void:
 	state = new_state
@@ -3354,10 +2869,7 @@ func set_state(new_state: DoorState) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region ANIMAÇÃO
-# ==============================================================================
 
 func _animate_door(target_angle_deg: float) -> void:
 	if _tween != null and _tween.is_valid():
@@ -3375,19 +2887,14 @@ func _animate_door(target_angle_deg: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region LISTENERS — SIGNALS
-# ==============================================================================
 
 func _on_night_transition_finished() -> void:
-	# start_night() já foi chamado pela NightTransition antes deste signal
-	set_state(DoorState.CLOSED)
-
+	if state != DoorState.VENDOR:
+		set_state(DoorState.CLOSED)
 
 func _on_vendor_arrived() -> void:
 	set_state(DoorState.VENDOR)
-
 
 func _on_vendor_left() -> void:
 	# Fecha a porta e libera para uso normal
@@ -3396,54 +2903,41 @@ func _on_vendor_left() -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\Systems\safe_zone.gd
 ============================================================
-# ==============================================================================
 # SAFE ZONE
-# ------------------------------------------------------------------------------
 # Detecta quando o player entra ou sai da zona segura.
 #
 # RESPONSABILIDADE ÚNICA: detectar o player e emitir o evento.
 # Não conhece EnemyDirector, não conhece nenhum outro sistema.
 # Qualquer sistema que precise reagir à safe zone conecta ao SignalBus.
-# ==============================================================================
 
 class_name SafeZone
 extends Area3D
 
-
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		SignalBus.player_entered_safe_zone.emit()
-
 
 func _on_body_exited(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		SignalBus.player_exited_safe_zone.emit()
 
 
-
 ============================================================
 ARQUIVO: Scripts\UI\death_screen.gd
 ============================================================
-# ==============================================================================
 # DEATH SCREEN
-# ------------------------------------------------------------------------------
 # Tela de morte do Emberveil.
 # Fluxo: fade in escuro → texto → botão de retry
 #
 # Futuramente: estatísticas da run (noite atingida, inimigos mortos, etc)
-# ==============================================================================
 
 class_name DeathScreen
 extends CanvasLayer
 
-
-# ==============================================================================
 #region REFERÊNCIAS
-# ==============================================================================
 
 # Fundo preto que faz o fade
 @onready var fade_rect: ColorRect = $FadeRect
@@ -3459,10 +2953,7 @@ extends CanvasLayer
 
 #endregion
 
-
-# ==============================================================================
 #region CONFIGURAÇÃO
-# ==============================================================================
 
 # Duração do fade in (segundos)
 @export var fade_duration := 1.5
@@ -3478,10 +2969,7 @@ var death_messages := [
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	visible = false
@@ -3493,12 +2981,8 @@ func _ready() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region MOSTRAR TELA DE MORTE
-# ------------------------------------------------------------------------------
 # Chamado pelo player ao morrer.
-# ==============================================================================
 
 func show_death_screen() -> void:
 	visible = true
@@ -3527,10 +3011,7 @@ func fade_in():
 
 #endregion
 
-
-# ==============================================================================
 #region BOTÕES
-# ==============================================================================
 
 func _on_retry_button_pressed():
 	# Despausa caso esteja pausado
@@ -3542,13 +3023,10 @@ func _on_retry_button_pressed():
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\UI\dev_console.gd
 ============================================================
-# ==============================================================================
 # DEV CONSOLE
-# ------------------------------------------------------------------------------
 # Console de desenvolvimento para testar sistemas em runtime.
 #
 # USO:
@@ -3564,14 +3042,10 @@ ARQUIVO: Scripts\UI\dev_console.gd
 #
 # REMOVER EM PRODUÇÃO:
 # DebugManager.DEBUG_ENABLED = false → console nunca é instanciado.
-# ==============================================================================
  
 extends CanvasLayer
  
- 
-# ==============================================================================
 #region NÓS
-# ==============================================================================
  
 @onready var panel: Panel          = $Panel
 @onready var output: RichTextLabel = $Panel/VBox/Output
@@ -3579,10 +3053,7 @@ extends CanvasLayer
  
 #endregion
  
- 
-# ==============================================================================
 #region ESTADO
-# ==============================================================================
  
 var _commands: Dictionary      = {}
 var _history: Array[String]    = []
@@ -3594,10 +3065,7 @@ const MAX_OUTPUT_LINES: int = 100
 const MAX_CONSOLE_HEIGHT_RATIO: float = 0.33  # ← adiciona esta linha
 #endregion
  
- 
-# ==============================================================================
 #region READY
-# ==============================================================================
  
 func _ready() -> void:
 	_setup_layout()
@@ -3611,15 +3079,12 @@ func _ready() -> void:
 	input.text_submitted.connect(_on_command_submitted)
 	input.gui_input.connect(_on_input_gui_input)
 	
-	
 	_register_all_commands()
 	_print_output("[color=yellow]DevConsole iniciado. Digite [b]help[/b] para ver os comandos.[/color]")
  
 #endregion
  
-# ==============================================================================
 #region Bloquear abrir outras coisas quando o console está aberto
-# ==============================================================================
 
 func _on_ui_exclusive_opened() -> void:
 	# Só bloqueia se NÃO foi o próprio console que abriu
@@ -3631,9 +3096,7 @@ func _on_ui_exclusive_closed() -> void:
 	
 #endregion
 
-# ==============================================================================
 #region CONFIGURANDO TAMANHO DO CONSOLE POR CÓDIGO
-# ==============================================================================
 
 func _setup_layout() -> void:
 	# PANEL — altura fixa, cresce para cima a partir do fundo esquerdo
@@ -3664,7 +3127,6 @@ func _setup_layout() -> void:
 	input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	input.placeholder_text      = "Digite um comando..."
 
-
 func _update_panel_size() -> void:
 	var screen_height: float = get_viewport().get_visible_rect().size.y
 	var max_height: float    = screen_height * MAX_CONSOLE_HEIGHT_RATIO
@@ -3684,10 +3146,7 @@ func _update_panel_size() -> void:
 	
 #endregion
  
-
-# ==============================================================================
 #region INPUT — TOGGLE E HISTÓRICO
-# ==============================================================================
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Toggle com botão lateral traseiro do mouse
@@ -3695,7 +3154,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_XBUTTON1:
 			_toggle()
 			get_viewport().set_input_as_handled()
-
 
 # Captura setas DIRETAMENTE no LineEdit — evita conflito com foco do controle
 func _on_input_gui_input(event: InputEvent) -> void:
@@ -3710,9 +3168,7 @@ func _on_input_gui_input(event: InputEvent) -> void:
 
 #endregion
  
-# ==============================================================================
 #region TOGGLE
-# ==============================================================================
  
 func _toggle() -> void:
 	panel.visible = !panel.visible
@@ -3730,10 +3186,7 @@ func _toggle() -> void:
  
 #endregion
  
- 
-# ==============================================================================
 #region HISTÓRICO
-# ==============================================================================
  
 func _navigate_history(direction: int) -> void:
 	if _history.is_empty():
@@ -3744,10 +3197,7 @@ func _navigate_history(direction: int) -> void:
  
 #endregion
  
- 
-# ==============================================================================
 #region PROCESSAMENTO DE COMANDOS
-# ==============================================================================
  
 func _on_command_submitted(text: String) -> void:
 	var trimmed: String = text.strip_edges()
@@ -3777,10 +3227,7 @@ func _on_command_submitted(text: String) -> void:
 	input.grab_focus()  # ← mantém foco após executar comando
 #endregion
  
- 
-# ==============================================================================
 #region OUTPUT
-# ==============================================================================
  
 func _print_output(text: String) -> void:
 	output.append_text(text + "\n")
@@ -3792,10 +3239,7 @@ func _print_output(text: String) -> void:
  
 #endregion
  
- 
-# ==============================================================================
 #region REGISTRO DE COMANDOS
-# ==============================================================================
  
 func _register(cmd_name: String, callable: Callable, description: String, group: String = "geral") -> void:
 	_commands[cmd_name] = {
@@ -3803,7 +3247,6 @@ func _register(cmd_name: String, callable: Callable, description: String, group:
 		"description": description,
 		"group":       group
 	}
-
 
 func _register_all_commands() -> void:
 	_register("help", _cmd_help, "lista todos os comandos", "geral")
@@ -3840,20 +3283,17 @@ func _register_all_commands() -> void:
 	_register("set_slow",   _cmd_set_slow,   "set_slow [n] — altera fator de slow (0.0 a 1.0)", "lamparina")
 	_register("ultimate", _cmd_ultimate, "ativa o ultimate da lamparina", "lamparina")
 	
-	
 	# MUNDO
 	_register("timescale",   _cmd_timescale,   "timescale [n] — altera Engine.time_scale", "mundo")
 	_register("fps",         _cmd_fps,         "exibe FPS atual",                           "mundo")
 	_register("pool_status", _cmd_pool_status, "inimigos ativos vs disponíveis no pool",    "mundo")
 	_register("devlight", _cmd_devlight, "toggle de iluminação de desenvolvimento", "mundo")
 	
-	
 	# POWER UPS
 	_register("give_powerup",        _cmd_give_powerup,        "give_powerup [id]",        "powerups")
 	_register("list_powerups",       _cmd_list_powerups,       "lista power-ups ativos",    "powerups")
 	_register("open_powerup_screen", _cmd_open_powerup_screen, "abre tela de escolha",      "powerups")
 	_register("reset_powerups",      _cmd_reset_powerups,      "remove todos os power-ups", "powerups")
-
 
 	# PLACEHOLDERS — descomentar quando os sistemas existirem
 	_register("add_coins",      _cmd_add_coins,      "add_coins [n]",      "economia")
@@ -3865,10 +3305,7 @@ func _register_all_commands() -> void:
 
 #endregion
  
- 
-# ==============================================================================
 #region COMANDOS — HELP
-# ==============================================================================
  
 func _cmd_help(_args: Array) -> void:
 	# Agrupa comandos por categoria
@@ -3891,10 +3328,7 @@ func _cmd_help(_args: Array) -> void:
  
 #endregion
  
- 
-# ==============================================================================
 #region COMANDOS — NOITE E LOOP
-# ==============================================================================
  
 func _cmd_set_night(args: Array) -> void:
 	if args.is_empty():
@@ -3906,7 +3340,6 @@ func _cmd_set_night(args: Array) -> void:
 	GameManager.night_changed.emit(n)
 	_print_output("[color=green]Noite definida para " + str(n) + "[/color]")
  
- 
 func _cmd_next_night(_args: Array) -> void:
 	var player := _get_player()
 	if player == null: return
@@ -3917,20 +3350,17 @@ func _cmd_next_night(_args: Array) -> void:
 	GameManager.advance_to_next_night(player)
 	_print_output("[color=green]Avançou para noite " + str(GameManager.current_night) + "[/color]")
  
- 
 func _cmd_set_wood_goal(args: Array) -> void:
 	if args.is_empty():
 		_print_output("[color=red]Uso: set_wood_goal [n][/color]"); return
 	GameManager.wood_goal = int(args[0])
 	_print_output("[color=green]Objetivo de madeira: " + str(GameManager.wood_goal) + "[/color]")
  
- 
 func _cmd_complete_night(_args: Array) -> void:
 	GameManager.delivered_wood  = GameManager.wood_goal
 	GameManager.night_completed = true
 	GameManager.night_objective_reached.emit()
 	_print_output("[color=green]Noite marcada como completa.[/color]")
- 
  
 func _cmd_reset_night(_args: Array) -> void:
 	GameManager.delivered_wood  = 0
@@ -3939,14 +3369,10 @@ func _cmd_reset_night(_args: Array) -> void:
  
 #endregion
  
- 
-# ==============================================================================
 #region COMANDOS — PLAYER
-# ==============================================================================
  
 func _get_player() -> Node:
 	return get_tree().get_first_node_in_group("player")
- 
  
 func _cmd_god(_args: Array) -> void:
 	var player := _get_player()
@@ -3955,7 +3381,6 @@ func _cmd_god(_args: Array) -> void:
 	var active: bool = player.health.toggle_invincibility()
 	_print_output("[color=green]God mode: " + ("ON" if active else "OFF") + "[/color]")
  
-
 func _cmd_set_health(args: Array) -> void:
 	if args.is_empty():
 		_print_output("[color=red]Uso: set_health [n][/color]"); return
@@ -3965,7 +3390,6 @@ func _cmd_set_health(args: Array) -> void:
 	hc._current_health = clampf(float(args[0]), 0.0, hc.max_health)
 	hc.health_changed.emit(hc._current_health, hc.max_health)
 	_print_output("[color=green]Vida: " + str(hc._current_health) + "[/color]")
- 
  
 func _cmd_set_stamina(args: Array) -> void:
 	if args.is_empty():
@@ -3977,7 +3401,6 @@ func _cmd_set_stamina(args: Array) -> void:
 	sc.stamina_changed.emit(sc._current_stamina, sc.max_stamina)
 	_print_output("[color=green]Stamina: " + str(sc._current_stamina) + "[/color]")
  
- 
 func _cmd_set_energy(args: Array) -> void:
 	if args.is_empty():
 		_print_output("[color=red]Uso: set_energy [n][/color]"); return
@@ -3987,7 +3410,6 @@ func _cmd_set_energy(args: Array) -> void:
 	lantern.current_energy = clampf(float(args[0]), 0.0, lantern.max_energy)
 	_print_output("[color=green]Energia: " + str(lantern.current_energy) + "[/color]")
  
- 
 func _cmd_add_wood(args: Array) -> void:
 	if args.is_empty():
 		_print_output("[color=red]Uso: add_wood [n][/color]"); return
@@ -3996,13 +3418,11 @@ func _cmd_add_wood(args: Array) -> void:
 	player.inventory.add_wood(int(args[0]))
 	_print_output("[color=green]Madeira adicionada: " + args[0] + "[/color]")
  
- 
 func _cmd_kill_player(_args: Array) -> void:
 	var player := _get_player()
 	if player == null: return
 	player.health.kill()
 	_print_output("[color=red]Player morreu.[/color]")
-
 
 func _cmd_teleport(args: Array) -> void:
 	if args.size() < 3:
@@ -4014,22 +3434,17 @@ func _cmd_teleport(args: Array) -> void:
 		str(player.global_position) + "[/color]") 
 #endregion
  
- 
-# ==============================================================================
 #region COMANDOS — INIMIGOS
-# ==============================================================================
  
 func _cmd_kill_all(_args: Array) -> void:
 	for i in range(EnemyDirector.instance.active_enemies.size() - 1, -1, -1):
 		EnemyDirector.instance.return_to_pool(EnemyDirector.instance.active_enemies[i])
 	_print_output("[color=green]Todos os inimigos devolvidos ao pool.[/color]")
  
- 
 func _cmd_disable_enemies(_args: Array) -> void:
 	EnemyDirector.instance.state = EnemyDirector.DirectorState.IDLE
 	EnemyDirector.instance.player_inside_safe_zone = true
 	_print_output("[color=green]EnemyDirector pausado.[/color]")
- 
  
 func _cmd_enable_enemies(_args: Array) -> void:
 	EnemyDirector.instance.player_inside_safe_zone = false
@@ -4037,13 +3452,11 @@ func _cmd_enable_enemies(_args: Array) -> void:
 	EnemyDirector.instance.cooldown_timer = 3.0
 	_print_output("[color=green]EnemyDirector retomado.[/color]")
  
- 
 func _cmd_spawn_wave(args: Array) -> void:
 	var n: int = 1 if args.is_empty() else int(args[0])
 	EnemyDirector.instance.enemies_remaining_in_wave += n
 	EnemyDirector.instance.state = EnemyDirector.DirectorState.SPAWNING
 	_print_output("[color=green]Spawnando " + str(n) + " inimigos.[/color]")
- 
  
 func _cmd_set_enemy_speed(args: Array) -> void:
 	if args.is_empty():
@@ -4056,14 +3469,10 @@ func _cmd_set_enemy_speed(args: Array) -> void:
  
 #endregion
  
- 
-# ==============================================================================
 #region COMANDOS — LAMPARINA
-# ==============================================================================
  
 func _get_lantern() -> Node:
 	return get_tree().get_first_node_in_group("lantern")
- 
  
 func _cmd_fill_energy(_args: Array) -> void:
 	var lantern := _get_lantern()
@@ -4071,7 +3480,6 @@ func _cmd_fill_energy(_args: Array) -> void:
 		_print_output("[color=red]Lanterna não encontrada.[/color]"); return
 	lantern.current_energy = lantern.max_energy
 	_print_output("[color=green]Energia reabastecida.[/color]")
- 
  
 func _cmd_drain_energy(_args: Array) -> void:
 	var lantern := _get_lantern()
@@ -4081,7 +3489,6 @@ func _cmd_drain_energy(_args: Array) -> void:
 	lantern.set_combat_mode(false)
 	_print_output("[color=green]Energia zerada.[/color]")
  
- 
 func _cmd_infinite_energy(_args: Array) -> void:
 	var lantern := _get_lantern()
 	if lantern == null:
@@ -4090,7 +3497,6 @@ func _cmd_infinite_energy(_args: Array) -> void:
 	lantern.energy_drain = 0.0 if _infinite_energy else 10.0
 	_print_output("[color=green]Energia infinita: " + ("ON" if _infinite_energy else "OFF") + "[/color]")
  
-
 func _cmd_set_damage(args: Array) -> void:
 	if args.is_empty():
 		_print_output("[color=red]Uso: set_damage [n][/color]"); return
@@ -4098,7 +3504,6 @@ func _cmd_set_damage(args: Array) -> void:
 	if lantern == null: return
 	lantern.damage_per_second = float(args[0])
 	_print_output("[color=green]Dano por segundo: " + args[0] + "[/color]")
-
 
 func _cmd_set_slow(args: Array) -> void:
 	if args.is_empty():
@@ -4108,21 +3513,15 @@ func _cmd_set_slow(args: Array) -> void:
 	lantern.slow_factor = clampf(float(args[0]), 0.0, 1.0)
 	_print_output("[color=green]Slow factor: " + args[0] + "[/color]")
 
-
 func _cmd_ultimate(_args: Array) -> void:
 	var lantern := _get_lantern()
 	if lantern == null: return
 	lantern.use_ultimate()
 	_print_output("[color=green]Ultimate ativado.[/color]")
 
-
-
 #endregion
  
- 
-# ==============================================================================
 #region COMANDOS — MUNDO E DEBUG
-# ==============================================================================
  
 func _cmd_timescale(args: Array) -> void:
 	if args.is_empty():
@@ -4130,10 +3529,8 @@ func _cmd_timescale(args: Array) -> void:
 	Engine.time_scale = clampf(float(args[0]), 0.01, 10.0)
 	_print_output("[color=green]Time scale: " + str(Engine.time_scale) + "[/color]")
  
- 
 func _cmd_fps(_args: Array) -> void:
 	_print_output("[color=green]FPS: " + str(Engine.get_frames_per_second()) + "[/color]")
- 
  
 func _cmd_pool_status(_args: Array) -> void:
 	var active: int = EnemyDirector.instance.active_enemies.size()
@@ -4145,8 +3542,6 @@ func _cmd_pool_status(_args: Array) -> void:
 func _cmd_quit(_args: Array) -> void:
 	_print_output("[color=red]Fechando o jogo...[/color]")
 	get_tree().quit()
-
-
 
 func _cmd_devlight(_args: Array) -> void:
 	var env_node: WorldEnvironment = get_tree().get_first_node_in_group("world_environment")
@@ -4190,16 +3585,13 @@ func _cmd_devlight(_args: Array) -> void:
  
 #endregion
 
-# ==============================================================================
 #region COMANDOS — ECONOMIA
-# ==============================================================================
 
 func _cmd_add_coins(args: Array) -> void:
 	if args.is_empty():
 		_print_output("[color=red]Uso: add_coins [n][/color]"); return
 	GameManager.add_coins(int(args[0]))
 	_print_output("[color=green]Moedas: " + str(GameManager.coins) + "[/color]")
-
 
 func _cmd_set_coins(args: Array) -> void:
 	if args.is_empty():
@@ -4210,9 +3602,7 @@ func _cmd_set_coins(args: Array) -> void:
 
 #endregion
 
-# ==============================================================================
 #region COMANDOS — POWERUPS
-# ==============================================================================
 
 func _cmd_give_powerup(args: Array) -> void:
 	if args.is_empty():
@@ -4229,7 +3619,6 @@ func _cmd_give_powerup(args: Array) -> void:
 			return
 	_print_output("[color=red]Power-up '" + args[0] + "' não encontrado.[/color]")
 
-
 func _cmd_list_powerups(_args: Array) -> void:
 	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
 	if pm == null:
@@ -4240,14 +3629,12 @@ func _cmd_list_powerups(_args: Array) -> void:
 	for pu: PowerUpData in pm.active_powerups:
 		_print_output("  [color=cyan]" + pu.id + "[/color] — " + pu.display_name)
 
-
 func _cmd_open_powerup_screen(_args: Array) -> void:
 	var screen: Node = get_tree().get_first_node_in_group("powerup_screen")
 	if screen == null:
 		_print_output("[color=red]PowerUpScreen não encontrada.[/color]"); return
 	screen._on_transition_finished()
 	_print_output("[color=green]PowerUpScreen aberta.[/color]")
-
 
 func _cmd_reset_powerups(_args: Array) -> void:
 	var pm: PowerUpManager = get_tree().get_first_node_in_group("powerup_manager")
@@ -4257,13 +3644,240 @@ func _cmd_reset_powerups(_args: Array) -> void:
 #endregion
 
 
+============================================================
+ARQUIVO: Scripts\UI\dialog_screen.gd
+============================================================
+# DIALOG SCREEN
+# Sistema genérico de diálogo reutilizável para qualquer NPC.
+# Layout definido no editor — código cuida apenas da lógica.
+
+extends CanvasLayer
+
+#region NÓS
+
+@onready var background: ColorRect            = $Background
+@onready var speaker_name: Label              = $MarginContainer/VBoxContainer/SpeakerName
+@onready var line_text: RichTextLabel         = $MarginContainer/VBoxContainer/LineText
+@onready var advance_hint: Label              = $MarginContainer/VBoxContainer/AdvanceHint
+@onready var buttons_container: HBoxContainer = $ButtonsContainer
+
+#endregion
+
+#region CONFIGURAÇÃO
+
+@export var char_delay: float = 0.03
+
+#endregion
+
+#region ESTADO
+
+var _data: DialogData        = null
+var _npc_node: Node3D        = null
+var _current_line: int       = 0
+var _is_typing: bool         = false
+var _skip_typing: bool       = false
+var _waiting_for_input: bool = false
+var _player: Node            = null
+var _arm_and_lantern: Node3D = null
+
+#endregion
+
+#region READY
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	visible      = false
+	SignalBus.dialog_requested.connect(_on_dialog_requested)
+	SignalBus.shop_closed.connect(_on_shop_closed)
+
+#endregion
+
+#region ABRIR DIÁLOGO
+
+func _on_dialog_requested(data: DialogData, npc_node: Node3D) -> void:
+	_data         = data
+	_npc_node     = npc_node
+	_current_line = 0
+	_player       = get_tree().get_first_node_in_group("player")
+
+	if _player:
+		_arm_and_lantern = _player.get_node_or_null("Visual/ArmAndLantern")
+		if _arm_and_lantern:
+			for child in _arm_and_lantern.get_children():
+				if not child is OmniLight3D:
+					child.visible = false
+		_tween_camera_to_npc()
+
+	SignalBus.player_entered_safe_zone.emit()
+
+	speaker_name.text    = tr(data.speaker_name_key)
+	advance_hint.visible = false
+	_clear_buttons()
+
+	visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	SignalBus.ui_exclusive_opened.emit()
+
+	_show_line(_current_line)
+
+#endregion
+
+#region CÂMERA
+
+func _tween_camera_to_npc() -> void:
+	if _player == null or _npc_node == null:
+		return
+	var dir: Vector3    = (_npc_node.global_position - _player.global_position).normalized()
+	var target_y: float = atan2(-dir.x, -dir.z)
+	var tween           := create_tween()
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(_player, "rotation:y", target_y, 0.4)
+
+#endregion
+
+#region TYPEWRITER
+
+func _show_line(index: int) -> void:
+	if _data == null or index >= _data.lines.size():
+		return
+
+	_clear_buttons()
+	line_text.text       = ""
+	_is_typing           = true
+	_skip_typing         = false
+	_waiting_for_input   = false
+	advance_hint.visible = false
+
+	var full_text: String = tr(_data.lines[index])
+
+	for i in full_text.length():
+		if _skip_typing:
+			break
+		line_text.text += full_text[i]
+		await get_tree().create_timer(char_delay).timeout
+
+	line_text.text = full_text
+	_is_typing     = false
+	_skip_typing   = false
+
+	if index == _data.lines.size() - 1:
+		_show_buttons()
+	else:
+		_waiting_for_input   = true
+		advance_hint.visible = true
+
+#endregion
+
+#region INPUT
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not visible:
+		return
+
+	var is_advance: bool = (
+		event.is_action_pressed("interact") or
+		(event is InputEventMouseButton and event.pressed
+			and event.button_index == MOUSE_BUTTON_LEFT)
+	)
+
+	if not is_advance:
+		return
+
+	get_viewport().set_input_as_handled()
+
+	if _is_typing:
+		_skip_typing = true
+		return
+
+	if _waiting_for_input:
+		_waiting_for_input   = false
+		advance_hint.visible = false
+		_current_line       += 1
+		_show_line(_current_line)
+
+#endregion
+
+#region BOTÕES
+
+func _show_buttons() -> void:
+	_clear_buttons()
+	advance_hint.visible = false
+
+	for i in _data.choice_labels.size():
+		var btn := Button.new()
+		btn.text                 = tr(_data.choice_labels[i])
+		btn.custom_minimum_size  = Vector2(0.0, 30.0)
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+		var normal := StyleBoxFlat.new()
+		normal.bg_color     = Color(0.08, 0.07, 0.04, 0.9)
+		normal.border_color = Color(1.0, 0.78, 0.2, 0.5)
+		normal.set_border_width_all(1)
+		normal.set_corner_radius_all(3)
+		btn.add_theme_stylebox_override("normal", normal)
+
+		var hover := StyleBoxFlat.new()
+		hover.bg_color     = Color(0.18, 0.14, 0.06, 0.95)
+		hover.border_color = Color(1.0, 0.78, 0.2, 1.0)
+		hover.set_border_width_all(1)
+		hover.set_corner_radius_all(3)
+		btn.add_theme_stylebox_override("hover", hover)
+
+		btn.add_theme_color_override("font_color",       Color(1.0, 0.78, 0.2))
+		btn.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.6))
+		btn.add_theme_font_size_override("font_size", 14)
+
+		btn.pressed.connect(_on_choice_pressed.bind(_data.choice_ids[i]))
+		buttons_container.add_child(btn)
+
+func _clear_buttons() -> void:
+	for child in buttons_container.get_children():
+		child.queue_free()
+
+func _on_choice_pressed(id: String) -> void:
+	SignalBus.dialog_choice_made.emit(id)
+	if id == "buy":
+		visible = false
+		return
+	_close()
+
+#endregion
+
+#region FECHAR
+
+func _close() -> void:
+	visible   = false
+	_data     = null
+	_npc_node = null
+	_clear_buttons()
+	advance_hint.visible = false
+
+	if _player and _arm_and_lantern:
+		for child in _arm_and_lantern.get_children():
+			child.visible = true
+		_arm_and_lantern = null
+
+	_player = null
+
+	SignalBus.player_exited_safe_zone.emit()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	SignalBus.ui_exclusive_closed.emit()
+	SignalBus.dialog_closed.emit()
+
+func _on_shop_closed() -> void:
+	if _data == null:
+		return
+	visible = true
+	_show_buttons()
+
+#endregion
+
 
 ============================================================
 ARQUIVO: Scripts\UI\hud.gd
 ============================================================
-# ==============================================================================
 # HUD — DIEGÉTICA
-# ------------------------------------------------------------------------------
 # Infraestrutura de signals para a HUD diegética do Emberveil.
 #
 # NÃO usa elementos 2D tradicionais.
@@ -4276,14 +3890,10 @@ ARQUIVO: Scripts\UI\hud.gd
 # 1. Conecta o signal do componente no _ready()
 # 2. Cria o método _on_X_changed() correspondente
 # 3. Implementa o feedback visual no modelo 3D
-# ==============================================================================
 
 extends CanvasLayer
 
-
-# ==============================================================================
 #region REFERÊNCIAS
-# ==============================================================================
 
 # Componentes do player — cacheados no _ready()
 var _health: HealthComponent     = null
@@ -4293,16 +3903,12 @@ var _lantern: Lantern            = null
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	# Aguarda um frame para garantir que o player está na árvore
 	await get_tree().process_frame
 	_connect_signals()
-
 
 func _connect_signals() -> void:
 	var player: Node = get_tree().get_first_node_in_group("player")
@@ -4333,17 +3939,12 @@ func _connect_signals() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CALLBACKS — VIDA
-# ------------------------------------------------------------------------------
 # Futuramente: acionar animação de runas/pulseira no braço do player
-# ==============================================================================
 
 func _on_health_changed(current: float, max_value: float) -> void:
 	DebugManager.log("HUD", "Vida: " + str(current) + "/" + str(max_value))
 	# TODO: atualizar elemento diegético de vida no braço
-
 
 func _on_player_damaged(_amount: float) -> void:
 	DebugManager.log("HUD", "Player tomou dano — feedback visual aqui")
@@ -4351,12 +3952,8 @@ func _on_player_damaged(_amount: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CALLBACKS — STAMINA
-# ------------------------------------------------------------------------------
 # Futuramente: acionar elemento diegético no braço
-# ==============================================================================
 
 func _on_stamina_changed(current: float, max_value: float) -> void:
 	DebugManager.log("HUD", "Stamina: " + str(current) + "/" + str(max_value))
@@ -4364,12 +3961,8 @@ func _on_stamina_changed(current: float, max_value: float) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CALLBACKS — ENERGIA DA LAMPARINA
-# ------------------------------------------------------------------------------
 # Futuramente: atualizar medidor integrado ao modelo 3D da lanterna
-# ==============================================================================
 
 func _on_energy_changed(current: float, max_value: float) -> void:
 	DebugManager.log("HUD", "Energia: " + str(current) + "/" + str(max_value))
@@ -4381,13 +3974,9 @@ func _on_ultimate_used() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CALLBACKS — INVENTÁRIO
-# ------------------------------------------------------------------------------
 # Madeira não tem contador permanente na tela.
 # Informação contextualizada apenas na lareira.
-# ==============================================================================
 
 func _on_wood_changed(current: int, max_cap: int, goal: int) -> void:
 	DebugManager.log("HUD",
@@ -4403,12 +3992,8 @@ func _on_coins_changed(amount: int) -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region CALLBACKS — OBJETIVO DA NOITE
-# ------------------------------------------------------------------------------
 # Futuramente: lareira comunica visualmente que o objetivo foi concluído
-# ==============================================================================
 
 func _on_night_objective_reached() -> void:
 	DebugManager.log("HUD", "Objetivo da noite concluído!")
@@ -4417,28 +4002,22 @@ func _on_night_objective_reached() -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\UI\night_transition.gd
 ============================================================
-# ==============================================================================
 # NIGHT TRANSITION
-# ==============================================================================
 
 extends CanvasLayer
-
 
 #region NÓS
 @onready var fade_rect: ColorRect = $FadeRect
 @onready var night_label: Label   = $NightLabel
 #endregion
 
-
 #region CONFIGURAÇÃO
 @export var fade_duration: float = 1.0
 @export var hold_duration: float = 1.5
 #endregion
-
 
 #region READY
 func _ready() -> void:
@@ -4448,7 +4027,6 @@ func _ready() -> void:
 	night_label.visible  = false
 	SignalBus.night_transition_started.connect(_on_transition_started)
 #endregion
-
 
 #region TRANSIÇÃO
 func _on_transition_started() -> void:
@@ -4481,12 +4059,10 @@ func _on_transition_started() -> void:
 	GameManager.start_night()
 	SignalBus.night_transition_finished.emit()
 
-
 func _fade(_from: float, to: float) -> void:
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate:a", to, fade_duration)
 	await tween.finished
-
 
 func _reset_player() -> void:
 	var spawn: Node  = get_tree().get_first_node_in_group("spawn_point")
@@ -4500,7 +4076,6 @@ func _reset_player() -> void:
 	if lantern:
 		lantern.add_energy(lantern.max_energy)
 
-
 func _reset_resources() -> void:
 	var resources := get_tree().get_nodes_in_group("resource_pickup")
 	for r in resources:
@@ -4512,47 +4087,34 @@ func _reset_resources() -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\UI\pause_menu.gd
 ============================================================
-# ==============================================================================
 # PAUSE MENU
-# ------------------------------------------------------------------------------
 # Menu de pausa básico para desenvolvimento.
 # ESC → pausa o jogo e libera o mouse
 # ESC novamente → retoma e trava o mouse
 #
 # Futuramente receberá: botão de configurações, voltar ao menu, etc.
-# ==============================================================================
 
 class_name PauseMenu
 extends CanvasLayer
 
-
-# ==============================================================================
 #region REFERÊNCIAS
-# ==============================================================================
 
 # Painel de fundo do pause — esconde/mostra o menu
 @onready var panel = $Panel
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADO
-# ==============================================================================
 
 # True quando o jogo está pausado
 var is_paused := false
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready():
 	# Começa escondido e sem pausar
@@ -4566,10 +4128,7 @@ func _ready():
 
 #endregion
 
-
-# ==============================================================================
 #region INPUT
-# ==============================================================================
 
 func _unhandled_input(event):
 	if event is InputEventKey and event.pressed:
@@ -4578,10 +4137,7 @@ func _unhandled_input(event):
 
 #endregion
 
-
-# ==============================================================================
 #region PAUSE
-# ==============================================================================
 
 func toggle_pause():
 	is_paused = !is_paused
@@ -4600,15 +4156,11 @@ func toggle_pause():
 
 #endregion
 
-
-# ==============================================================================
 #region BOTÕES
-# ==============================================================================
 
 # Botão "Retomar" — fecha o pause
 func _on_resume_button_pressed():
 	toggle_pause()
-
 
 # Botão "Sair" — fecha o jogo
 # Útil durante desenvolvimento para sair sem Alt+F4
@@ -4617,10 +4169,7 @@ func _on_quit_button_pressed():
 
 #endregion
 
-
-# ==============================================================================
 #region bloqueia outras UI enquanto estiver aberto
-# ==============================================================================
 func _on_ui_exclusive_opened() -> void:
 	# Só bloqueia se NÃO foi o próprio PauseMenu que abriu
 	if not is_paused:
@@ -4632,23 +4181,16 @@ func _on_ui_exclusive_closed() -> void:
 #endregion
 
 
-
 ============================================================
 ARQUIVO: Scripts\UI\powerup_screen.gd
 ============================================================
-# ==============================================================================
 # POWERUP SCREEN
-# ------------------------------------------------------------------------------
 # Exibe 3 power-ups aleatórios para o player escolher ao completar a noite.
 # Layout configurado via código — independente de versão do Godot.
-# ==============================================================================
 
 extends CanvasLayer
 
-
-# ==============================================================================
 #region NÓS
-# ==============================================================================
 
 @onready var background: ColorRect          = $Background
 @onready var title: Label                   = $Background/Title
@@ -4661,20 +4203,14 @@ extends CanvasLayer
 
 #endregion
 
-
-# ==============================================================================
 #region ESTADO
-# ==============================================================================
 
 var _choices: Array[PowerUpData]     = []
 var _powerup_manager: PowerUpManager = null
 
 #endregion
 
-
-# ==============================================================================
 #region READY
-# ==============================================================================
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -4685,10 +4221,7 @@ func _ready() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region LAYOUT
-# ==============================================================================
 
 func _setup_layout() -> void:
 	var screen := get_viewport().get_visible_rect().size
@@ -4754,15 +4287,11 @@ func _setup_layout() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region ABRIR TELA
-# ==============================================================================
 
 func _setup_cards_once() -> void:
 	for i in cards.size():
 		cards[i].pressed.connect(_on_card_selected.bind(i))
-
 
 func _on_transition_finished() -> void:
 	_powerup_manager = get_tree().get_first_node_in_group("powerup_manager")
@@ -4788,17 +4317,13 @@ func _on_transition_finished() -> void:
 
 #endregion
 
-
-# ==============================================================================
 #region SELECIONAR POWER-UP
-# ==============================================================================
 
 func _on_card_selected(index: int) -> void:
 	var player: Node = get_tree().get_first_node_in_group("player")
 	if player and _powerup_manager:
 		_powerup_manager.apply(_choices[index], player)
 	_close()
-
 
 func _close() -> void:
 	visible           = false
@@ -4809,9 +4334,8 @@ func _close() -> void:
 
 #endregion
 
-
 ############################################################
-#  CENAS (.tscn — estrutura) (20 arquivos)
+#  CENAS (.tscn — estrutura) (21 arquivos)
 ############################################################
 
 ============================================================
@@ -4831,6 +4355,7 @@ ARQUIVO: Scenes\main.tscn
 [ext_resource type="PackedScene" uid="uid://du0yx043iafwq" path="res://Scenes/InteractiveItems/sap_pickup.tscn" id="11_wsu2k"]
 [ext_resource type="Script" uid="uid://ce1uvxfngtvcx" path="res://Scenes/Systems/dev_tools_loader.gd" id="12_6iyac"]
 [ext_resource type="PackedScene" uid="uid://dvj6p8u5ipyfo" path="res://Scenes/UI/powerup_screen.tscn" id="12_u50mg"]
+[ext_resource type="PackedScene" uid="uid://by3xsob4kx1ap" path="res://Scenes/UI/dialog_screen.tscn" id="14_1w6v2"]
 [ext_resource type="Script" uid="uid://bushq70mf42iw" path="res://Scripts/Managers/powerup_manager.gd" id="14_cbgmd"]
 [ext_resource type="PackedScene" uid="uid://h0j1d8nfpe5m" path="res://Scenes/UI/night_transition.tscn" id="14_wsu2k"]
 [ext_resource type="Script" uid="uid://cvc3m8511bw0i" path="res://Scripts/Resources/powerup_data.gd" id="15_1w6v2"]
@@ -4903,6 +4428,7 @@ collision_mask = 0
 [node name="DeathScreen" parent="UI" unique_id=1132231461 instance=ExtResource("11_d1ilt")]
 [node name="NightTransition" parent="UI" unique_id=1762464355 instance=ExtResource("14_wsu2k")]
 [node name="PowerupScreen" parent="UI" unique_id=1631288617 instance=ExtResource("12_u50mg")]
+[node name="DialogScreen" parent="UI" unique_id=61470964 instance=ExtResource("14_1w6v2")]
 [node name="DevTools" type="Node" parent="." unique_id=1665922896]
 script = ExtResource("12_6iyac")
 [node name="PowerUpManager" type="Node" parent="." unique_id=1943538765 groups=["powerup_manager"]]
@@ -5152,6 +4678,22 @@ script = ExtResource("1_f7lxs")
 
 
 ============================================================
+ARQUIVO: Scenes\UI\dialog_screen.tscn
+============================================================
+[gd_scene format=3 uid="uid://by3xsob4kx1ap"]
+[ext_resource type="Script" uid="uid://d0qp7635a0o7q" path="res://Scripts/UI/dialog_screen.gd" id="1_74j0h"]
+[node name="DialogScreen" type="CanvasLayer" unique_id=61470964 groups=["dialog_screen"]]
+script = ExtResource("1_74j0h")
+[node name="Background" type="ColorRect" parent="." unique_id=754263366]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=676957771]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=2052812202]
+[node name="SpeakerName" type="Label" parent="MarginContainer/VBoxContainer" unique_id=448587781]
+[node name="LineText" type="RichTextLabel" parent="MarginContainer/VBoxContainer" unique_id=88042916]
+[node name="AdvanceHint" type="Label" parent="MarginContainer/VBoxContainer" unique_id=14144641]
+[node name="ButtonsContainer" type="HBoxContainer" parent="." unique_id=971670142]
+
+
+============================================================
 ARQUIVO: Scenes\UI\night_transition.tscn
 ============================================================
 [gd_scene format=3 uid="uid://h0j1d8nfpe5m"]
@@ -5304,9 +4846,13 @@ ARQUIVO: Scenes\World\vendor.tscn
 [gd_scene format=3 uid="uid://bakj3iec8y8nf"]
 [ext_resource type="Script" uid="uid://dyb2djtgkke7" path="res://Scripts/Interactables/vendor.gd" id="1_ipkdi"]
 [ext_resource type="Resource" uid="uid://d1w74cdf7dr1f" path="res://Resources/vendor_default.tres" id="2_1tu6m"]
+[ext_resource type="Resource" uid="uid://csqfewbvq40gy" path="res://Resources/Dialogs/vendor_greeting.tres" id="3_yig1v"]
+[ext_resource type="Resource" uid="uid://5sokxxl20kku" path="res://Resources/Dialogs/vendor_farewell.tres" id="4_fr4ja"]
 [node name="Vendor" type="Node3D" unique_id=666602362 groups=["interactable", "vendor"]]
 script = ExtResource("1_ipkdi")
 vendor_data = ExtResource("2_1tu6m")
+dialog_data = ExtResource("3_yig1v")
+farewell_data = ExtResource("4_fr4ja")
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1988254927]
 collision_layer = 9
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=60546962]
@@ -5351,7 +4897,7 @@ script = ExtResource("1_p4sc5")
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
 
 ############################################################
-#  RESOURCES (.tres) (20 arquivos)
+#  RESOURCES (.tres) (22 arquivos)
 ############################################################
 
 ============================================================
@@ -5383,6 +4929,39 @@ ARQUIVO: Resources\vendor_default.tres
 script = ExtResource("2_j3vg8")
 items = Array[ExtResource("1_oin87")]([ExtResource("2_hsjx7"), ExtResource("3_ivl2o"), ExtResource("4_pdxya"), ExtResource("5_k6c2m")])
 metadata/_custom_type_script = "uid://bm84bld0hqn4c"
+
+
+
+============================================================
+ARQUIVO: Resources\Dialogs\vendor_farewell.tres
+============================================================
+[gd_resource type="Resource" script_class="DialogData" format=3 uid="uid://5sokxxl20kku"]
+
+[ext_resource type="Script" uid="uid://b87sp12hiblk2" path="res://Scripts/Resources/dialog_data.gd" id="1_oetay"]
+
+[resource]
+script = ExtResource("1_oetay")
+speaker_name_key = "VENDOR_NAME"
+lines = Array[String](["VENDOR_FAREWELL_L1"])
+choice_ids = Array[String](["leave"])
+metadata/_custom_type_script = "uid://b87sp12hiblk2"
+
+
+
+============================================================
+ARQUIVO: Resources\Dialogs\vendor_greeting.tres
+============================================================
+[gd_resource type="Resource" script_class="DialogData" format=3 uid="uid://csqfewbvq40gy"]
+
+[ext_resource type="Script" uid="uid://b87sp12hiblk2" path="res://Scripts/Resources/dialog_data.gd" id="1_ttfby"]
+
+[resource]
+script = ExtResource("1_ttfby")
+speaker_name_key = "VENDOR_NAME"
+lines = Array[String](["VENDOR_GREET_L1", "VENDOR_GREET_L2"])
+choice_labels = Array[String](["CHOICE_BUY", "CHOICE_LEAVE"])
+choice_ids = Array[String](["buy", "leave"])
+metadata/_custom_type_script = "uid://b87sp12hiblk2"
 
 
 
@@ -5698,5 +5277,5 @@ metadata/_custom_type_script = "uid://ccyj3irl40o6a"
 
 
 ============================================================
-TOTAL: 37 scripts | 20 cenas | 20 resources
+TOTAL: 39 scripts | 21 cenas | 22 resources
 ============================================================

@@ -34,6 +34,8 @@ extends CharacterBody3D
 @export var acceleration: float = 30.0
 @export var deceleration: float   = 45.0
 
+@export var jump_velocity: float = 4.5
+
 var current_speed: float      = walk_speed
 var input_direction: Vector2  = Vector2.ZERO
 
@@ -114,11 +116,16 @@ func _handle_camera_bob(delta: float) -> void:
 #region READY
 # ==============================================================================
 
+var _dialog_active: bool = false
+
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	interaction_ray.add_exception(self)
 	_camera_base_y = camera.position.y
 	process_mode = Node.PROCESS_MODE_PAUSABLE
+
+	SignalBus.ui_exclusive_opened.connect(func(): _dialog_active = true)
+	SignalBus.ui_exclusive_closed.connect(func(): _dialog_active = false)
 	
 #endregion
 
@@ -143,6 +150,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(_delta: float) -> void:
 	if health.is_dead():
+		return
+	if _dialog_active:
 		return
 
 	_handle_camera()
@@ -170,7 +179,12 @@ func _physics_process(delta: float) -> void:
 	
 	if health.is_dead():
 		return
-
+	if _dialog_active:
+		velocity.x = move_toward(velocity.x, 0, deceleration * delta)
+		velocity.z = move_toward(velocity.z, 0, deceleration * delta)
+		move_and_slide()
+		return
+	
 	_handle_gravity(delta)
 	_handle_input()
 	_handle_stamina(delta)
@@ -217,6 +231,8 @@ func _handle_input() -> void:
 func _handle_gravity(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= gravity * delta
+	elif Input.is_action_just_pressed("jump"):
+		velocity.y = jump_velocity
 
 
 func _handle_movement(delta: float) -> void:

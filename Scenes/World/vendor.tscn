@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dyb2djtgkke7" path="res://Scripts/Interactables/vendor.gd" id="1_ipkdi"]
 [ext_resource type="Resource" uid="uid://d1w74cdf7dr1f" path="res://Resources/vendor_default.tres" id="2_1tu6m"]
+[ext_resource type="Resource" uid="uid://csqfewbvq40gy" path="res://Resources/Dialogs/vendor_greeting.tres" id="3_yig1v"]
+[ext_resource type="Resource" uid="uid://5sokxxl20kku" path="res://Resources/Dialogs/vendor_farewell.tres" id="4_fr4ja"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tu6m"]
 albedo_color = Color(0.16485596, 0, 0.2890625, 1)
@@ -16,6 +18,8 @@ height = 3.5
 [node name="Vendor" type="Node3D" unique_id=666602362 groups=["interactable", "vendor"]]
 script = ExtResource("1_ipkdi")
 vendor_data = ExtResource("2_1tu6m")
+dialog_data = ExtResource("3_yig1v")
+farewell_data = ExtResource("4_fr4ja")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1988254927]
 collision_layer = 9

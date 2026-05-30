@@ -1,0 +1,9 @@
+keys,pt_BR
+VENDOR_NAME,O Homem das Lanternas
+VENDOR_GREET_L1,Você ficou mais tempo desta vez.
+VENDOR_GREET_L2,Tenho coisas que podem ser úteis.
+VENDOR_FAREWELL_L1,Até a próxima.
+CHOICE_BUY,Comprar
+CHOICE_LEAVE,Não obrigado
+CHOICE_CLOSE,Fechar
+CHOICE_CONTINUE,Continuar

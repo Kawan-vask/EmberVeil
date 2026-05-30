@@ -99,11 +99,6 @@ func _apply_night_settings() -> void:
 		" | Objetivo de madeira: " + str(wood_goal)
 	)
 	
-	# Vendedor aparece nas noites 4, 7, 10, 13...
-	if current_night > 1 and (current_night - 1) % 3 == 0:
-		SignalBus.vendor_available.emit()
-		DebugManager.log("GameManager", "Vendedor chegou na noite " + str(current_night))
-
 
 
 ## Retorna um valor escalado pela noite.
@@ -122,6 +117,12 @@ func get_scaled_value(base_value: float, scale_per_night: float) -> float:
 func start_night() -> void:
 	night_active = true
 	night_started.emit()
+	
+	# Vendedor aparece nas noites 4, 7, 10, 13...
+	if current_night > 1 and (current_night - 1) % 3 == 0:
+		SignalBus.vendor_available.emit()
+		DebugManager.log("GameManager", "Vendedor chegou na noite " + str(current_night))
+
 	DebugManager.log("GameManager", "Noite " + str(current_night) + " iniciada!")
 
 
