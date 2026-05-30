@@ -83,10 +83,6 @@ signal vendor_available
 @warning_ignore("unused_signal")
 signal vendor_dismissed
 
-## Emitido pela porta ao interagir no estado VENDOR
-@warning_ignore("unused_signal")
-signal shop_opened
-
 #endregion
 
 

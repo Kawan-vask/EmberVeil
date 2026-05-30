@@ -3,7 +3,6 @@ extends Interactable
 
 @export var vendor_data: VendorData
 @export var dialog_data: DialogData
-@export var farewell_data: DialogData
 
 #region READY
 func _ready() -> void:
@@ -21,12 +20,16 @@ func interact() -> void:
 
 #region ESCOLHA DO DIÁLOGO
 func _on_choice_made(id: String) -> void:
+	if not visible:
+		return
 	match id:
 		"buy":
 			SignalBus.shop_requested.emit()
 		"leave":
 			SignalBus.vendor_dismissed.emit()
 #endregion
+
+
 
 #region LISTENERS
 func _on_vendor_arrived() -> void:

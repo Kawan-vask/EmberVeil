@@ -92,6 +92,15 @@ func _handle_camera_bob(delta: float) -> void:
 	
 #endregion
 
+#===============================================================================
+#region ESTADO DO DIÁLOGO
+
+## True enquanto DialogScreen está ativa — bloqueia câmera e movimento
+var _dialog_active: bool = false
+
+#endregion
+
+
 # ==============================================================================
 #region NODE REFERENCES
 # ==============================================================================
@@ -116,16 +125,14 @@ func _handle_camera_bob(delta: float) -> void:
 #region READY
 # ==============================================================================
 
-var _dialog_active: bool = false
-
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	interaction_ray.add_exception(self)
 	_camera_base_y = camera.position.y
 	process_mode = Node.PROCESS_MODE_PAUSABLE
-
 	SignalBus.ui_exclusive_opened.connect(func(): _dialog_active = true)
 	SignalBus.ui_exclusive_closed.connect(func(): _dialog_active = false)
+	
 	
 #endregion
 

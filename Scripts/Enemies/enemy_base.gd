@@ -141,26 +141,22 @@ const NAV_THROTTLE: float = 0.15
 # ==============================================================================
 
 func activate() -> void:
-	# Lê stats do Resource
 	if data != null:
-		max_health      = data.max_health
-		move_speed      = data.move_speed
-		rotation_speed  = data.rotation_speed
-		attack_damage   = data.attack_damage
-		attack_cooldown = data.attack_cooldown
+		max_health       = data.max_health
+		move_speed       = data.move_speed
+		rotation_speed   = data.rotation_speed
+		attack_damage    = data.attack_damage
+		attack_cooldown  = data.attack_cooldown
 		despawn_distance = data.despawn_distance
 
-	current_health         = max_health
-	current_state          = State.CHASE
-	
-	player = get_tree().get_first_node_in_group("player")
-	current_health = max_health
-	current_state = State.CHASE
-	slow_multiplier = 1.0
+	current_health       = max_health
+	current_state        = State.CHASE
+	player               = get_tree().get_first_node_in_group("player")
+	slow_multiplier      = 1.0
 	player_inside_attack = false
-	attack_timer = 0.0
+	attack_timer         = 0.0
 	_frames_since_activate = 0
-	_is_active = true
+	_is_active           = true
 
 
 func reset() -> void:

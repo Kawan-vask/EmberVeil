@@ -32,7 +32,7 @@ func _on_transition_started() -> void:
 	visible = true
 	get_tree().paused = true
 
-	await _fade(0.0, 1.0)
+	await _fade(1.0)
 
 	night_label.text    = "NOITE " + str(GameManager.current_night)
 	night_label.visible = true
@@ -46,7 +46,7 @@ func _on_transition_started() -> void:
 
 	night_label.visible = false
 
-	await _fade(1.0, 0.0)
+	await _fade(0.0)
 
 	# Despausa e reseta ANTES de emitir finished
 	# Assim a PowerUpScreen recebe o jogo já despausado e pausa por conta própria
@@ -59,7 +59,7 @@ func _on_transition_started() -> void:
 	SignalBus.night_transition_finished.emit()
 
 
-func _fade(_from: float, to: float) -> void:
+func _fade(to: float) -> void:
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "modulate:a", to, fade_duration)
 	await tween.finished

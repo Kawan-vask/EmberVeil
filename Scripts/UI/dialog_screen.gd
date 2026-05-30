@@ -110,7 +110,7 @@ func _show_line(index: int) -> void:
 	var full_text: String = tr(_data.lines[index])
 
 	for i in full_text.length():
-		if _skip_typing:
+		if _skip_typing or not is_inside_tree():
 			break
 		line_text.text += full_text[i]
 		await get_tree().create_timer(char_delay).timeout
