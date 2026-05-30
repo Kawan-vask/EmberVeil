@@ -24,11 +24,11 @@ emission_energy_multiplier = 3.0
 [node name="BaseLampModel" unique_id=1655334363 instance=ExtResource("1_af5yx")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 
-[node name="Lente Cristal" parent="Lamp Backup/Lens/Lente Móvel" parent_id_path=PackedInt32Array(149536510) index="3" unique_id=571725925]
+[node name="Lente Cristal" parent="Lamp Backup/Lens/Lente Móvel" parent_id_path=PackedInt32Array(2043380510) index="3" unique_id=3363761]
 surface_material_override/0 = SubResource("StandardMaterial3D_af5yx")
 
-[node name="Glass" parent="Lamp Backup/Medidor Energia" parent_id_path=PackedInt32Array(1591245105) index="0" unique_id=180333376]
+[node name="Glass" parent="Lamp Backup/Medidor Energia" parent_id_path=PackedInt32Array(1949671501) index="0" unique_id=1019185074]
 surface_material_override/0 = SubResource("StandardMaterial3D_bx58i")
 
-[node name="EnergyBar" parent="Lamp Backup/Medidor Energia" parent_id_path=PackedInt32Array(1591245105) index="15" unique_id=1007396210]
+[node name="EnergyBar" parent="Lamp Backup/Medidor Energia" parent_id_path=PackedInt32Array(1949671501) index="15" unique_id=729338616]
 surface_material_override/0 = SubResource("StandardMaterial3D_e1ffo")

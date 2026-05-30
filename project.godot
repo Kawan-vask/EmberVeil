@@ -22,6 +22,7 @@ DebugManager="*uid://bqo3eyqa1jycn"
 SignalBus="*uid://c7v6du1kbbgc1"
 GameManager="*uid://dw7u2aulva3fh"
 Layers="*uid://mngkneehkcvj"
+PhantomCameraManager="*uid://duq6jhf6unyis"
 
 [display]
 
@@ -30,6 +31,10 @@ window/size/viewport_height=1080
 window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/phantom_camera/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
 
 [global_group]
 
